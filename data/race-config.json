@@ -259,8 +259,8 @@
   "sponsors": {
     "note": "logo is null where no file exists yet — those render as text in the marquee and footer. 'Uber-Bolt' in early source material was a mishearing of Ver-Bolt, confirmed against their actual logo; Ver-Chem (a related company, same logo sheet) added alongside it. Switch, AfriGuard, Oasis and dabeb-elram are the three flyer logos the brief flagged as illegible at source resolution, plus one more found alongside them — all confirmed once real files arrived.",
     "list": [
-      { "name": "Midvaal Local Municipality", "logo": null },
-      { "name": "Meyerton Athletics Club", "logo": null },
+      { "name": "Midvaal Local Municipality", "logo": "midvaal-municipality.jpg" },
+      { "name": "Meyerton Athletics Club", "logo": "mac.jpeg" },
       { "name": "MAF (Mission Aviation Fellowship)", "logo": "maf.jpeg" },
       { "name": "Ver-Bolt", "logo": "ver-bolt.png" },
       { "name": "Ver-Chem", "logo": "ver-chem.png" },

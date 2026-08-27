@@ -135,11 +135,14 @@ with the same design tokens and screenshotting it with headless Chrome at exact 
   "http://localhost:8000/path-to-a-1200x630-source.html"
 ```
 
-Update the headline/date copy in that source file and re-run if the hero copy changes
-significantly. (The current image renders its headline in a serif fallback rather than Big
-Shoulders Display — headless Chrome's `--screenshot` flag doesn't reliably wait for webfonts to
-finish loading before capturing. It still reads cleanly; re-run with a longer artificial delay
-baked into the source file if pixel-perfect font matching matters enough to fix.)
+The headline is the real wordmark image (`assets/img/madmac-wordmark.png`, cropped tight from the
+club's own logo file — a plain flat "MIDVAAL MADMAC" with no clown and no sponsor strip, useful
+elsewhere too), not typeset text — no font-loading race to worry about if you regenerate it. The
+source HTML that composited it isn't kept in the repo (a one-off build step); recreate it from
+this doc if the copy changes: same design tokens as `site.css`, `<img class="wordmark">` with
+`height: 220px` sized against the wordmark's actual aspect ratio, `align-self: flex-start` inside
+the flex column (without it, `align-items: stretch` distorts the image — a real bug hit while
+building this).
 
 ## Domain
 
@@ -188,16 +191,12 @@ rather than guessed:
 - Written confirmation MadMac is on the CMA's 2027 approved-qualifier list and the Two Oceans
   qualifier list (the page states the qualifying standard and windows factually, but doesn't claim
   MadMac's own approved-list status either way)
-- Logos for 2 of the 20 sponsors: Midvaal Local Municipality and Meyerton Athletics Club. The
-  other 18 — including Switch, AfriGuard, Oasis Water and dabeb-elram, the "three more logos on
-  the flyer aren't legible at this resolution" the original brief flagged, plus Ver-Chem alongside
-  Ver-Bolt once the real logos showed "Uber-Bolt" was a mishearing — have real files in
-  `assets/img/sponsors/` and render as images in both the marquee and footer wall. See
-  `sponsors.list` in `race-config.json`. Drop the missing two in the same folder and add a `logo`
-  entry each.
-- The plain flat MadMac wordmark on its own (no clown, no sponsor strip) — every source image
-  has it composited into a larger flyer graphic. The circular clown badge
-  (`assets/img/madmac-badge.jpg`) works as the header/footer brand mark instead and is in use now.
+- Nothing — all 20 sponsors have real logos now, including Midvaal Local Municipality and
+  Meyerton Athletics Club (the last two), Switch, AfriGuard, Oasis Water and dabeb-elram (the
+  "three more logos on the flyer aren't legible at this resolution" the original brief flagged,
+  plus one extra), and Ver-Chem alongside Ver-Bolt once the real logos showed "Uber-Bolt" in the
+  brief was a mishearing. All in `assets/img/sponsors/`, referenced from `sponsors.list` in
+  `race-config.json`, rendering as images in the marquee and footer.
 - Exact flyer/t-shirt hex values, to replace the approximated palette
 - The gallery carousel and header/footer badge now use real 2025 MadMac photos, sourced from the
   club's own Facebook page — see `assets/img/gallery/` and README section above. Still worth
