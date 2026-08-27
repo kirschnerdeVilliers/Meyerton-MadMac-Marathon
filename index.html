@@ -106,15 +106,21 @@
 <body data-analytics-provider="none" data-analytics-ga4="" data-analytics-plausible="">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
-  <div class="container">
+  <div class="container header-row">
     <a class="brand" href="#top">
       <span class="brand-mark" aria-hidden="true"></span>
       Midvaal MadMac
     </a>
+    <nav class="site-nav" aria-label="Section"><a href="#qualifiers">Qualifiers</a><a href="#distances">Distances</a><a href="#route">Route</a><a href="#prizes">Prizes</a><a href="#faq">FAQ</a></nav>
     <div class="header-cta">
       <a class="btn btn-primary" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="header">Enter now</a>
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="visually-hidden">Menu</span>
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+      </button>
     </div>
   </div>
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Section" hidden><a href="#qualifiers" class="mobile-nav-link">Qualifiers</a><a href="#distances" class="mobile-nav-link">Distances</a><a href="#route" class="mobile-nav-link">Route</a><a href="#prizes" class="mobile-nav-link">Prizes</a><a href="#faq" class="mobile-nav-link">FAQ</a></nav>
 </header>
 
 <main id="main">
@@ -815,6 +821,16 @@
 </section>
 
 </main>
+<section class="sponsor-marquee" aria-hidden="true">
+  <p class="marquee-label">Proudly supported by</p>
+  <div class="marquee-viewport">
+    <div class="marquee-track">
+      <div class="marquee-set"><span class="marquee-item">Midvaal Local Municipality</span><span class="marquee-item">Meyerton Athletics Club</span><span class="marquee-item">MAF (Mission Aviation Fellowship)</span><span class="marquee-item">Uber-Bolt</span><span class="marquee-item">designdex</span><span class="marquee-item">Flexilube</span><span class="marquee-item">The Crazy Store</span><span class="marquee-item">90-6</span><span class="marquee-item">Mogu Mogu</span><span class="marquee-item">Platō Coffee</span><span class="marquee-item">TM Tyremart</span><span class="marquee-item">HarvestFresh</span><span class="marquee-item">Lynca Meats</span><span class="marquee-item">32Gi Sports Nutrition</span><span class="marquee-item">Tork Craft</span></div>
+      <div class="marquee-set"><span class="marquee-item">Midvaal Local Municipality</span><span class="marquee-item">Meyerton Athletics Club</span><span class="marquee-item">MAF (Mission Aviation Fellowship)</span><span class="marquee-item">Uber-Bolt</span><span class="marquee-item">designdex</span><span class="marquee-item">Flexilube</span><span class="marquee-item">The Crazy Store</span><span class="marquee-item">90-6</span><span class="marquee-item">Mogu Mogu</span><span class="marquee-item">Platō Coffee</span><span class="marquee-item">TM Tyremart</span><span class="marquee-item">HarvestFresh</span><span class="marquee-item">Lynca Meats</span><span class="marquee-item">32Gi Sports Nutrition</span><span class="marquee-item">Tork Craft</span></div>
+    </div>
+  </div>
+</section>
+
 <footer class="site-footer" id="footer">
   <div class="container">
     <div class="footer-grid">
@@ -850,6 +866,7 @@
   </div>
 </footer>
 
+<script src="assets/js/nav.js" defer></script>
 <script src="assets/js/countdown.js" defer></script>
 <script src="assets/js/route.js" defer></script>
 <script src="assets/js/carousel.js" defer></script>

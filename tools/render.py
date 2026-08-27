@@ -185,18 +185,36 @@ def quote_svg_favicon():
 
 # ---------------------------------------------------------------- header --
 
+NAV_LINKS = [
+    ("#qualifiers", "Qualifiers"),
+    ("#distances", "Distances"),
+    ("#route", "Route"),
+    ("#prizes", "Prizes"),
+    ("#faq", "FAQ"),
+]
+
+
 def build_header():
+    desktop_links = "".join(f'<a href="{href}">{label}</a>' for href, label in NAV_LINKS)
+    mobile_links = "".join(f'<a href="{href}" class="mobile-nav-link">{label}</a>' for href, label in NAV_LINKS)
+
     return f"""<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
-  <div class="container">
+  <div class="container header-row">
     <a class="brand" href="#top">
       <span class="brand-mark" aria-hidden="true"></span>
       Midvaal MadMac
     </a>
+    <nav class="site-nav" aria-label="Section">{desktop_links}</nav>
     <div class="header-cta">
       {cta("Enter now", "header")}
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="visually-hidden">Menu</span>
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+      </button>
     </div>
   </div>
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Section" hidden>{mobile_links}</nav>
 </header>
 """
 
@@ -879,6 +897,24 @@ def build_email():
 """
 
 
+# ------------------------------------------------------------- sponsor marquee --
+
+def build_sponsor_marquee():
+    sponsors = CONFIG["sponsors"]["list"]
+    # duplicated once so the CSS animation can loop seamlessly from -50%
+    item_html = "".join(f'<span class="marquee-item">{esc(s)}</span>' for s in sponsors)
+    return f"""<section class="sponsor-marquee" aria-hidden="true">
+  <p class="marquee-label">Proudly supported by</p>
+  <div class="marquee-viewport">
+    <div class="marquee-track">
+      <div class="marquee-set">{item_html}</div>
+      <div class="marquee-set">{item_html}</div>
+    </div>
+  </div>
+</section>
+"""
+
+
 # ------------------------------------------------------------------ footer --
 
 def build_footer():
@@ -975,6 +1011,7 @@ def main():
         build_faq(),
         build_email(),
         "</main>",
+        build_sponsor_marquee(),
         build_footer(),
     ])
 
@@ -984,6 +1021,7 @@ def main():
 {build_head()}</head>
 <body {body_attrs}>
 {body}
+<script src="assets/js/nav.js" defer></script>
 <script src="assets/js/countdown.js" defer></script>
 <script src="assets/js/route.js" defer></script>
 <script src="assets/js/carousel.js" defer></script>

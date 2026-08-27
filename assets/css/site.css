@@ -207,7 +207,7 @@ a.link:hover { color: var(--orange); }
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
 }
-.site-header .container {
+.header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -225,6 +225,7 @@ a.link:hover { color: var(--orange); }
   font-size: 1.35rem;
   color: var(--ink-0);
   letter-spacing: 0.01em;
+  flex-shrink: 0;
 }
 .brand .brand-mark {
   width: 34px; height: 34px;
@@ -235,6 +236,49 @@ a.link:hover { color: var(--orange); }
 .header-cta { display: flex; align-items: center; gap: var(--space-3); }
 .header-cta .btn { display: none; }
 @media (min-width: 560px) { .header-cta .btn { display: inline-flex; } }
+
+/* ---------- section nav ---------- */
+.site-nav { display: none; align-items: center; gap: var(--space-5); flex: 1; justify-content: center; }
+.site-nav a {
+  font-size: 0.88rem; font-weight: 600; color: var(--ink-300); text-decoration: none;
+  white-space: nowrap; transition: color 0.15s ease;
+}
+.site-nav a:hover { color: var(--ink-0); }
+@media (min-width: 900px) { .site-nav { display: flex; } }
+
+.nav-toggle {
+  position: relative; width: 40px; height: 40px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: 1px solid var(--border-strong); border-radius: var(--radius-s);
+  cursor: pointer;
+}
+@media (min-width: 900px) { .nav-toggle { display: none; } }
+.nav-toggle-bars, .nav-toggle-bars::before, .nav-toggle-bars::after {
+  width: 18px; height: 2px; background: var(--ink-0); border-radius: 2px;
+}
+.nav-toggle-bars { position: relative; }
+.nav-toggle-bars::before, .nav-toggle-bars::after {
+  content: ""; position: absolute; left: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.nav-toggle-bars::before { top: -6px; }
+.nav-toggle-bars::after { top: 6px; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars { background: transparent; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars::before { transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars::after { transform: translateY(-6px) rotate(-45deg); }
+
+.mobile-nav {
+  display: flex; flex-direction: column;
+  border-top: 1px solid var(--border);
+  background: var(--navy-950);
+}
+.mobile-nav[hidden] { display: none; }
+.mobile-nav-link {
+  padding: var(--space-4) var(--space-5); font-weight: 600; color: var(--ink-100);
+  text-decoration: none; border-bottom: 1px solid var(--border);
+}
+.mobile-nav-link:last-child { border-bottom: none; }
+@media (min-width: 900px) { .mobile-nav { display: none !important; } }
 
 /* ---------- route motif (signature element) ---------- */
 .route-motif {
@@ -677,6 +721,33 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
 .email-status.error { color: #ff8a65; }
 
 /* ---------- footer ---------- */
+/* ---------- sponsor marquee ---------- */
+.sponsor-marquee { padding-block: var(--space-6); border-top: 1px solid var(--border); }
+.marquee-label {
+  text-align: center; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-faint); margin-bottom: var(--space-4);
+}
+.marquee-viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track { display: flex; width: max-content; animation: marquee-scroll 38s linear infinite; }
+.marquee-set { display: flex; align-items: center; flex-shrink: 0; }
+.marquee-item {
+  flex-shrink: 0; padding-inline: var(--space-6); font-size: 0.95rem; font-weight: 600;
+  color: var(--ink-300); white-space: nowrap; opacity: 0.75;
+  border-right: 1px solid var(--border);
+}
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .marquee-viewport { overflow-x: auto; }
+}
+
 .site-footer { background: var(--bg-sunken); padding-block: var(--space-8) var(--space-6); border-top: 1px solid var(--border); }
 .footer-grid { display: grid; gap: var(--space-6); }
 @media (min-width: 760px) { .footer-grid { grid-template-columns: repeat(4, 1fr); } }

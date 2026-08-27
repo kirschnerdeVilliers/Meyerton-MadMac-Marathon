@@ -48,6 +48,15 @@ browser:
 - `assets/js/email.js` — client-side email validation and the honest "not connected yet" message
   when no signup endpoint is configured
 - `assets/js/analytics.js` — the GA4/Plausible wrapper and outbound-click tracking
+- `assets/js/carousel.js` — the prev/next buttons on the photo carousel (the carousel itself is a
+  native CSS scroll-snap track and works without JS — this just adds explicit click targets)
+- `assets/js/nav.js` — the mobile header hamburger menu (desktop nav is pure CSS, no JS involved)
+
+Section nav links in the header (`NAV_LINKS` in `tools/render.py`) point at five section ids —
+add, remove or reorder entries there if the page's section structure changes; the mobile menu is
+generated from the same list. The sponsor marquee at the foot of the page (`build_sponsor_marquee`
+in `tools/render.py`) reads from the same `sponsors.list` in `race-config.json` as the footer, so
+there's still only one place to edit the sponsor roster.
 
 ## Updating for the 2027 edition
 
@@ -177,8 +186,13 @@ rather than guessed:
 - Written confirmation MadMac is on the CMA's 2027 approved-qualifier list and the Two Oceans
   qualifier list (the page states the qualifying standard and windows factually, but doesn't claim
   MadMac's own approved-list status either way)
-- Vector logo files (MadMac wordmark, MAC, sponsors, the clown mascot artwork) — sponsors currently
-  render as plain text chips in the footer
+- Logo files as actual files on disk, not just visible in chat — the MadMac wordmark and the
+  sponsor logo strip have both been shown during this build, but there's no tool available that
+  pulls a pasted chat image onto the filesystem, so neither could be used directly yet. Save them
+  into `assets/img/` (e.g. `assets/img/madmac-wordmark.png`, plus individual sponsor logo files if
+  available) and say so — swapping the header/footer brand mark and the marquee text for real
+  logos from there is a small, fast change. The clown mascot artwork is still needed too. Sponsors
+  currently render as plain text chips in the footer and marquee
 - Exact flyer/t-shirt hex values, to replace the approximated palette
 - Race photography — the hero and OG image work typographically (no start-line or terrain photo
   was on disk at build time), and the gallery carousel only has three photos, pulled from Race
