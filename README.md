@@ -202,8 +202,9 @@ rather than guessed:
   for Comrades 2027 and Two Oceans 2027" section (currently described, not linked)
 - Email capture endpoint URL (see above)
 - Analytics IDs (GA4/Plausible) and Meta Pixel ID
-- Organiser contact — email, phone, WhatsApp number (Facebook link is wired; the rest render only
-  if present in `race-config.json` → `contact`)
+- Organiser phone / WhatsApp number — email is wired (`midvaalmadmac@gmail.com`, found on the
+  club's public Facebook "About" page) and Facebook is linked; phone/WhatsApp still render only if
+  present in `race-config.json` → `contact`
 - Instagram, if MAC has one
 - Bag-drop, parking and spectator-access specifics for the practical info section
 - How the R59 crossing is marshalled
