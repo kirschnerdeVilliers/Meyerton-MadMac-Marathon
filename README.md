@@ -135,6 +135,30 @@ baked into the source file if pixel-perfect font matching matters enough to fix.
 URL, OG tags and JSON-LD all derive from it. Update it to the real production domain before launch
 and re-render.
 
+## Proof, FAQ and gallery content
+
+The "What runners say" (testimonials + photo carousel) and FAQ sections pull real content, not
+placeholders:
+
+- `data/race-config.json` → `testimonials`: rating, review count, and quote cards — sourced from
+  Race Pass's public listing page (name, distance, year, quote text; obvious concatenation typos
+  in the source, e.g. "reallyenjoyable", were cleaned up, wording otherwise unchanged).
+- `data/race-config.json` → `faq`: the six Q&As Race Pass itself publishes (their entry
+  cancellation/substitution/transfer policy, number collection, race-number lookup), plus three
+  MadMac-specific ones answered from facts already in this config (qualifier status, race-day
+  entry, the cut-off-vs-qualifying-standard distinction).
+- `data/race-config.json` → `gallery` + `assets/img/gallery/*.jpg`: three real photos from the
+  2025 edition, sourced from Race Pass's own public photo storage (their "Show all photos" gallery
+  actually returned six images — three were genuine MadMac shots, three were thumbnails for
+  unrelated suggested races on the same page, and were discarded). Facebook wasn't accessible at
+  build time (no login), so this gallery is thinner than the club's own albums likely allow — see
+  "Still needed" below.
+
+To add more photos: drop files in `assets/img/gallery/`, add an entry to `gallery.photos` in
+`race-config.json` (file name, alt text, caption), and re-render. To refresh testimonials, repeat
+the Race Pass scrape (their reviews and FAQ answers are behind click-to-expand accordions, not
+present in the initial HTML — see `git log` / ask for the extraction approach if redoing this).
+
 ## Still needed at handover
 
 Blocking honest copy on the page right now:
@@ -156,8 +180,10 @@ rather than guessed:
 - Vector logo files (MadMac wordmark, MAC, sponsors, the clown mascot artwork) — sponsors currently
   render as plain text chips in the footer
 - Exact flyer/t-shirt hex values, to replace the approximated palette
-- Race photography — no start-line or terrain photo exists on disk, so the hero and OG image work
-  typographically. Both have an obvious slot to drop a real photo into later.
+- Race photography — the hero and OG image work typographically (no start-line or terrain photo
+  was on disk at build time), and the gallery carousel only has three photos, pulled from Race
+  Pass rather than the club's own, larger Facebook albums, which weren't accessible without a
+  login. All three have an obvious slot to take real photos whenever they're supplied.
 - Direct URL for the Vaalweekblad/Citizen qualifier-angle coverage referenced in the "Qualifying
   for Comrades 2027 and Two Oceans 2027" section (currently described, not linked)
 - Email capture endpoint URL (see above)

@@ -198,6 +198,60 @@
     "appeals": "Referee's decision final; appeals require a form and a R500 deposit, refunded if successful."
   },
   "amenities": ["Toilets", "Food and drink", "Parking", "Medical", "Bag storage", "Hydration stations"],
+  "testimonials": {
+    "source": "Race Pass",
+    "sourceUrl": "https://racepass.com/za/races/midvaal-madmac",
+    "rating": 4.8,
+    "reviewCount": 176,
+    "quotes": [
+      { "name": "Simphiwe", "distance": "42.2km", "year": 2025, "quote": "Best race. It has stolen my heart — it's on my bucket list of races to run again." },
+      { "name": "Cara", "distance": "42.2km", "year": 2025, "quote": "Very well organised race." },
+      { "name": "Raeford", "distance": "10km", "year": 2025, "quote": "What an awesome race. Was a really enjoyable event." },
+      { "name": "Owen", "distance": "10km", "year": 2025, "quote": "Great race, good route." }
+    ]
+  },
+  "gallery": {
+    "note": "Sourced from Race Pass's public event photos (the 2025 edition) — Facebook access wasn't available at build time. See README for adding more from the club's own albums.",
+    "photos": [
+      { "file": "finish-line-celebration-2025.jpg", "alt": "Runners celebrating at the MadMac finish line in 2025, with the club's clown mascot in the background", "caption": "Finish line, 2025" },
+      { "file": "course-marshal-2025.jpg", "alt": "A course marshal in a rainbow wig directing runners with a flag along a Randvaal road", "caption": "On course" },
+      { "file": "finish-chute-2025.jpg", "alt": "A group of runners wearing festive wigs crossing the MadMac finish line together", "caption": "Crossing the line" }
+    ]
+  },
+  "faq": [
+    {
+      "q": "Is MadMac an approved Comrades and Two Oceans qualifier?",
+      "a": "MadMac is positioned and marketed as a single-lap Comrades and Totalsports Two Oceans Marathon qualifier, and has carried that status in previous editions. Written confirmation of the 2027 approved-qualifier listing for both races is being obtained — check back closer to race day if this matters to your entry decision."
+    },
+    {
+      "q": "What time do I need to run to qualify?",
+      "a": "Under 4:59:59 for the 42.2km, for both the Comrades centenary and Two Oceans 2027. That's the qualifying standard, not MadMac's own 6h30 cut-off — see the qualifier panel above."
+    },
+    {
+      "q": "Can I enter on race day?",
+      "a": "No. Manual entries are available at the collection points listed above, subject to availability, but there is no entry on race day itself."
+    },
+    {
+      "q": "Can I cancel my entry?",
+      "a": "No, cancellations aren't allowed. This is a Race Pass entry-terms policy, not a MadMac-specific one — see Race Pass's own terms for the full detail."
+    },
+    {
+      "q": "Can I substitute my entry to another person?",
+      "a": "Yes, substitutions are allowed up to 20 days before race day, from your Race Pass \"My races\" page."
+    },
+    {
+      "q": "Can I transfer my entry to another race?",
+      "a": "Yes, transfers to another race are allowed up to 20 days before race day, from your Race Pass \"My races\" page."
+    },
+    {
+      "q": "Where do I collect my race number?",
+      "a": "Five points across Johannesburg and the Vaal in race week, plus the venue itself — see the number collection table above. A Postnet-to-Postnet delivery option is also available through Race Pass."
+    },
+    {
+      "q": "How will I find my race number?",
+      "a": "Race Pass publishes a race-number lookup closer to race day, linked from your entry confirmation."
+    }
+  ],
   "sponsors": {
     "note": "Logos supplied as brand marks only where vector files are available; text fallback otherwise.",
     "list": [

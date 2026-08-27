@@ -426,8 +426,7 @@ def build_distances():
     <p class="eyebrow">Distances &amp; entry fees</p>
     <h2>Pick your distance</h2>
     <p class="lede mt-6 max-narrow">
-      All four distances start and finish at Café du Cirque. Prices step up twice before race
-      day — once at the end of August, once when online entries close.
+      All four distances start and finish at Café du Cirque.
     </p>
 
     <div class="deadline-strip">
@@ -485,6 +484,7 @@ def build_route():
             <div class="route-stat"><div class="num">{d['cutoffDisplay']}</div><div class="lbl">Cut-off</div></div>
           </div>
           <div class="elevation-profile">{elevation_svg}</div>
+          <p class="route-caveat">* Elevation from Strava's terrain model, not a survey — indicative, not to the metre.</p>
           <p class="route-desc">{esc(d['routeDescription'])}</p>
           <p class="route-desc">{esc(d['profileSummary'])}</p>
           <div class="route-links">
@@ -499,23 +499,17 @@ def build_route():
     return f"""<section class="section-pad" id="route">
   <div class="container">
     <p class="eyebrow">The route</p>
-    <h2>Rendered from the official GPX, not a login-walled map</h2>
+    <h2>Four routes, one start line</h2>
     <p class="lede mt-6 max-narrow">
-      Every distance below is drawn from MadMac's own GPX files — no Strava sign-up wall, no
-      "noindex" route page. Elevation follows Strava's terrain model rather than a survey, so
-      treat the vertical figures as indicative: accurate enough to describe the course, not to
-      quote to the metre.
+      The marathon rolls gently to halfway, climbs once around 20km, then drops away over the
+      final two kilometres into the finish. The 22km front-loads its climbing early and descends
+      home. The 11km stays closest to the village, in the suburban streets short of the
+      smallholding grid the 22km reaches. The 5km barely leaves the flat — 13m of vertical spread
+      across the whole loop.
     </p>
 
     <div class="route-tabs" role="tablist" aria-label="Select a distance to view its route">{tabs}</div>
     {''.join(panels)}
-
-    <div class="r59-note">
-      <strong>One crossing to know about:</strong> the 11km, 22km and 42.2km all cross the R59
-      (Sybrand van Niekerk Freeway) at the Karee Road / Randvaal Road crossing — the one point on
-      course where you'll want your wits about you. Marshalling detail for the 2026 edition is
-      still being confirmed.
-    </div>
 
     <div class="cta-strip">
       {cta("Enter now", "after-route")}
@@ -533,9 +527,20 @@ def build_qualifying_prose():
     two_oceans = q["twoOceans"]
     flagship = dist_by_id("42_2km")
 
+    stats = [
+        (f"{comrades['entryCap']:,}", f"Comrades centenary entries — up from {comrades['previousCap']:,}"),
+        (f"{two_oceans['entryCap']:,}", f"Two Oceans Ultra entries — up from {two_oceans['previousCap']:,}"),
+        ("~49 000", "runners chasing a sub-5:00 marathon in this window"),
+        ("100th", f"Comrades edition — {comrades['edition'].split('—')[-1].strip()}"),
+    ]
+    stat_cards = "".join(
+        f"""<div class="stat-card"><div class="stat-num">{esc(val)}</div><div class="stat-lbl">{esc(lbl)}</div></div>"""
+        for val, lbl in stats
+    )
+
     return f"""<section class="qualifying-prose section-pad" id="qualifying-2027">
   <div class="container container--narrow">
-    <p class="eyebrow">Long read for qualifier hunters</p>
+    <p class="eyebrow">For qualifier hunters</p>
     <h2>Qualifying for Comrades 2027 and Two Oceans 2027</h2>
 
     <p class="lede mt-6">
@@ -543,43 +548,37 @@ def build_qualifying_prose():
       October date matters more than usual.
     </p>
 
+    <div class="stat-grid">{stat_cards}</div>
+
+    <div class="qual-caveat" style="margin-top: 2rem;">
+      <p><strong>MadMac's online entries close 22 September 2026 at 21:00 — the same day the
+      Comrades centenary ballot closes.</strong> Two qualifier-shaped decisions, one week, one date.</p>
+    </div>
+
     <h3>Comrades Marathon 2027 — the centenary</h3>
     <p>
-      Comrades 2027 is the {comrades['edition']}, run on {comrades['dateDisplay']}. The entry cap
-      has been raised to {comrades['entryCap']:,}, up from {comrades['previousCap']:,} the year
-      before. The qualifying window runs {comrades['qualifyingWindowDisplay']}, and the standard is
-      a 42.2km marathon in under 4:59:59. {comrades['ballotNote']}
+      The {comrades['edition']}, run {comrades['dateDisplay']}. Qualifying window:
+      {comrades['qualifyingWindowDisplay']}, standard: a 42.2km marathon under 4:59:59.
     </p>
 
     <h3>Totalsports Two Oceans Marathon 2027</h3>
     <p>
-      Two Oceans' {two_oceans['raceType']} on {two_oceans['dateDisplay']} has raised its field from
-      {two_oceans['previousCap']:,} to {two_oceans['entryCap']:,}. Qualifiers run
+      The {two_oceans['raceType']}, run {two_oceans['dateDisplay']}. Qualifiers run
       {two_oceans['qualifyingWindowDisplay']} count, and {two_oceans['seedingNote'].lower()}
-    </p>
-
-    <h3>Why that makes this window unusual</h3>
-    <p>
-      Combined, that is roughly 49 000 runners across two races who need a sub-5:00 marathon in
-      this window — among the largest qualifier demand South Africa has seen. MadMac falls on
-      {CONFIG['edition']['dateDisplay']}, comfortably inside both windows, and its online entries
-      close the same day the Comrades centenary ballot does.
     </p>
 
     <h3>Is MadMac fast enough for that standard?</h3>
     <p>
-      The marathon is genuinely flat: about {flagship['totalAscentM']}m of total ascent across
-      {flagship['gpxDistanceKm']:.2f}km, computed from the official GPX. {flagship['profileSummary']}
-      That puts it in the same territory as a fast big-city marathon, and the downhill finish is
-      a real asset if you're chasing a specific time.
+      Yes: about {flagship['totalAscentM']}m of total ascent across {flagship['gpxDistanceKm']:.2f}km,
+      computed from the official GPX — the same territory as a fast big-city marathon.
+      {flagship['profileSummary']} The downhill finish is a real asset if you're chasing a time.
     </p>
 
     <h3>What "single lap" actually means here</h3>
     <p>
       The marathon does not repeat a circuit — the thing runners actually object to in multi-lap
-      qualifier races. It does include out-and-back sections, which you'll see if you look closely
-      at the map in the route section above; the "single lap" claim is about the absence of a
-      repeated loop, not a claim that the course never doubles back on itself.
+      qualifier races. It does include out-and-back sections, visible on the map above; "single
+      lap" means no repeated loop, not that the course never doubles back on itself.
     </p>
 
     <ul>
@@ -629,13 +628,13 @@ def build_prizes():
         <div class="total">{rand(prize['totalR'])}</div>
         <p style="margin-top: 0.25rem;">total prize money across every distance</p>
       </div>
-      <p style="max-width: 40ch; color: var(--ink-100);">{prize['equalGenderStatement']}
-      It's a real position, and it isn't universal in South African road running.</p>
+      <p style="max-width: 40ch; color: var(--ink-100);">{prize['equalGenderStatement']}</p>
     </div>
 
     <p class="mt-6" style="max-width: none;">
-      Most of the MadMac field is over 40 — the highlighted rows below pay down to second and
-      third place in every masters category, not just the open field.
+      The MadMac field is well spread across the age categories, and the prize money is spread to
+      match — the highlighted rows below pay down to second and third place in every masters
+      category, not just the open field.
     </p>
 
     <div class="prize-table-wrap">
@@ -644,7 +643,75 @@ def build_prizes():
         <tbody>{''.join(rows)}</tbody>
       </table>
     </div>
-    <p style="margin-top: 1rem; font-size: 0.85rem;">{prize['paymentNote']}</p>
+    <p class="prize-footnote">* {prize['paymentNote']}</p>
+  </div>
+</section>
+"""
+
+
+# ------------------------------------------------------------------- proof --
+
+def build_proof():
+    t = CONFIG["testimonials"]
+    gallery = CONFIG["gallery"]
+
+    quote_cards = "".join(
+        f"""<figure class="quote-card">
+      <blockquote>&ldquo;{esc(q['quote'])}&rdquo;</blockquote>
+      <figcaption>{esc(q['name'])} &middot; {esc(q['distance'])} &middot; {q['year']}</figcaption>
+    </figure>"""
+        for q in t["quotes"]
+    )
+
+    carousel_items = "".join(
+        f"""<figure class="carousel-item">
+      <img src="assets/img/gallery/{esc(p['file'])}" alt="{esc(p['alt'])}" loading="lazy" width="1000" height="667">
+      <figcaption>{esc(p['caption'])}</figcaption>
+    </figure>"""
+        for p in gallery["photos"]
+    )
+
+    return f"""<section class="section-pad" id="proof">
+  <div class="container">
+    <p class="eyebrow">What runners say</p>
+    <h2>{t['rating']} stars, {t['reviewCount']} reviews</h2>
+    <p class="lede mt-6 max-narrow">
+      Via <a class="link" href="{esc(t['sourceUrl'])}" target="_blank" rel="noopener">Race Pass</a>,
+      from runners who've actually finished.
+    </p>
+
+    <div class="quote-grid">{quote_cards}</div>
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="Photos from previous MadMac editions">
+        <div class="carousel-track">{carousel_items}</div>
+      </div>
+      <div class="carousel-nav">
+        <button type="button" class="btn btn-ghost btn-sm carousel-prev" aria-label="Previous photo">&larr;</button>
+        <button type="button" class="btn btn-ghost btn-sm carousel-next" aria-label="Next photo">&rarr;</button>
+      </div>
+    </div>
+  </div>
+</section>
+"""
+
+
+# -------------------------------------------------------------------- faq --
+
+def build_faq():
+    faqs = CONFIG["faq"]
+    items = "".join(
+        f"""<details class="faq-item">
+      <summary>{esc(item['q'])}</summary>
+      <p>{esc(item['a'])}</p>
+    </details>"""
+        for item in faqs
+    )
+    return f"""<section class="section-pad" id="faq">
+  <div class="container container--narrow">
+    <p class="eyebrow">FAQ</p>
+    <h2>Questions people actually ask</h2>
+    <div class="faq-list mt-6">{items}</div>
   </div>
 </section>
 """
@@ -902,8 +969,10 @@ def main():
         build_qualifying_prose(),
         build_prizes(),
         divider(),
+        build_proof(),
         build_what_you_get(),
         build_practical(),
+        build_faq(),
         build_email(),
         "</main>",
         build_footer(),
@@ -917,6 +986,7 @@ def main():
 {body}
 <script src="assets/js/countdown.js" defer></script>
 <script src="assets/js/route.js" defer></script>
+<script src="assets/js/carousel.js" defer></script>
 <script src="assets/js/email.js" defer></script>
 <script src="assets/js/analytics.js" defer></script>
 </body>
