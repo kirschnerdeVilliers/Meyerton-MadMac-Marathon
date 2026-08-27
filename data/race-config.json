@@ -257,24 +257,28 @@
     }
   ],
   "sponsors": {
-    "note": "logo is null where no file exists yet — those render as text in the marquee and footer. 'Uber-Bolt' in early source material was a mishearing of Ver-Bolt, confirmed against their actual logo; Ver-Chem (a related company, same logo sheet) added alongside it.",
+    "note": "logo is null where no file exists yet — those render as text in the marquee and footer. 'Uber-Bolt' in early source material was a mishearing of Ver-Bolt, confirmed against their actual logo; Ver-Chem (a related company, same logo sheet) added alongside it. Switch, AfriGuard, Oasis and dabeb-elram are the three flyer logos the brief flagged as illegible at source resolution, plus one more found alongside them — all confirmed once real files arrived.",
     "list": [
       { "name": "Midvaal Local Municipality", "logo": null },
       { "name": "Meyerton Athletics Club", "logo": null },
-      { "name": "MAF (Mission Aviation Fellowship)", "logo": null },
+      { "name": "MAF (Mission Aviation Fellowship)", "logo": "maf.jpeg" },
       { "name": "Ver-Bolt", "logo": "ver-bolt.png" },
       { "name": "Ver-Chem", "logo": "ver-chem.png" },
       { "name": "designdex", "logo": "designdex.jpeg" },
       { "name": "Flexilube", "logo": "flexilube.png" },
       { "name": "The Crazy Store", "logo": "crazy-store.png" },
-      { "name": "90-6", "logo": null },
-      { "name": "Mogu Mogu", "logo": null },
+      { "name": "90-6", "logo": "90-6fm.png" },
+      { "name": "Mogu Mogu", "logo": "mogu-mogu.png" },
       { "name": "Platō Coffee", "logo": "plato-coffee.png" },
       { "name": "TM Tyremart", "logo": "tm-tyremart.png" },
       { "name": "HarvestFresh", "logo": "harvestfresh.png" },
       { "name": "Lynca Meats", "logo": "lynca-meats.png" },
       { "name": "32Gi Sports Nutrition", "logo": "32gi.png" },
-      { "name": "Tork Craft", "logo": "tork-craft.png" }
+      { "name": "Tork Craft", "logo": "tork-craft.png" },
+      { "name": "Switch Energy Drink", "logo": "switch.jpg" },
+      { "name": "AfriGuard", "logo": "afriguard.jpeg" },
+      { "name": "Oasis Water", "logo": "oasis.png" },
+      { "name": "dabeb-elram", "logo": "dabeb-elram.png" }
     ]
   },
   "contact": {

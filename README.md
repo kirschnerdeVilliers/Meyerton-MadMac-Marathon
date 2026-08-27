@@ -188,11 +188,13 @@ rather than guessed:
 - Written confirmation MadMac is on the CMA's 2027 approved-qualifier list and the Two Oceans
   qualifier list (the page states the qualifying standard and windows factually, but doesn't claim
   MadMac's own approved-list status either way)
-- Logos for 5 of the 15 sponsors: Midvaal Local Municipality, Meyerton Athletics Club, MAF, 90-6,
-  Mogu Mogu. The other 11 (plus Ver-Chem, added alongside Ver-Bolt once the real logos showed
-  "Uber-Bolt" in the original brief was a mishearing) have real files in `assets/img/sponsors/`
-  and render as images in both the marquee and footer — see `sponsors.list` in
-  `race-config.json`. Drop the missing five in the same folder and add a `logo` entry each.
+- Logos for 2 of the 20 sponsors: Midvaal Local Municipality and Meyerton Athletics Club. The
+  other 18 — including Switch, AfriGuard, Oasis Water and dabeb-elram, the "three more logos on
+  the flyer aren't legible at this resolution" the original brief flagged, plus Ver-Chem alongside
+  Ver-Bolt once the real logos showed "Uber-Bolt" was a mishearing — have real files in
+  `assets/img/sponsors/` and render as images in both the marquee and footer wall. See
+  `sponsors.list` in `race-config.json`. Drop the missing two in the same folder and add a `logo`
+  entry each.
 - The plain flat MadMac wordmark on its own (no clown, no sponsor strip) — every source image
   has it composited into a larger flyer graphic. The circular clown badge
   (`assets/img/madmac-badge.jpg`) works as the header/footer brand mark instead and is in use now.
