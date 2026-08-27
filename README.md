@@ -115,7 +115,10 @@ you have an ID.
   `assets/css/site.css`.
 - The recurring route-line graphic (hero background, section dividers, footer) is the *actual*
   42.2km GPX track, projected and normalised by `build_motif()` in `tools/build-routes.py` — not a
-  generic decorative squiggle.
+  generic decorative squiggle. In the hero specifically it draws itself in on a slow loop (CSS
+  `stroke-dashoffset` animation, calibrated against the real path length computed alongside the
+  projection), and stops on `prefers-reduced-motion`. The section-divider and footer instances of
+  the same motif stay static — animation is scoped to the hero only, via `motif_svg(animate=True)`.
 - Fonts are Google Fonts (Big Shoulders Display for headings, Inter for body), loaded with
   `preconnect` + `display=swap`. If self-hosting fonts is preferred later, swap the `<link>` tags
   in `build_head()` for local `@font-face` declarations.
@@ -156,12 +159,11 @@ placeholders:
   cancellation/substitution/transfer policy, number collection, race-number lookup), plus three
   MadMac-specific ones answered from facts already in this config (qualifier status, race-day
   entry, the cut-off-vs-qualifying-standard distinction).
-- `data/race-config.json` → `gallery` + `assets/img/gallery/*.jpg`: three real photos from the
-  2025 edition, sourced from Race Pass's own public photo storage (their "Show all photos" gallery
-  actually returned six images — three were genuine MadMac shots, three were thumbnails for
-  unrelated suggested races on the same page, and were discarded). Facebook wasn't accessible at
-  build time (no login), so this gallery is thinner than the club's own albums likely allow — see
-  "Still needed" below.
+- `data/race-config.json` → `gallery` + `assets/img/gallery/*.jpg`: seven real photos from the
+  2025 edition (start line, on-course marshalling, the race MC, finishers, medals), pulled from
+  the club's own public Facebook page. The header/footer brand mark (`assets/img/madmac-badge.jpg`)
+  and 11 of the 15 sponsor logos (`assets/img/sponsors/`) came from the same source, supplied
+  directly rather than scraped — see "Still needed" below for the handful still missing.
 
 To add more photos: drop files in `assets/img/gallery/`, add an entry to `gallery.photos` in
 `race-config.json` (file name, alt text, caption), and re-render. To refresh testimonials, repeat
@@ -186,18 +188,19 @@ rather than guessed:
 - Written confirmation MadMac is on the CMA's 2027 approved-qualifier list and the Two Oceans
   qualifier list (the page states the qualifying standard and windows factually, but doesn't claim
   MadMac's own approved-list status either way)
-- Logo files as actual files on disk, not just visible in chat — the MadMac wordmark and the
-  sponsor logo strip have both been shown during this build, but there's no tool available that
-  pulls a pasted chat image onto the filesystem, so neither could be used directly yet. Save them
-  into `assets/img/` (e.g. `assets/img/madmac-wordmark.png`, plus individual sponsor logo files if
-  available) and say so — swapping the header/footer brand mark and the marquee text for real
-  logos from there is a small, fast change. The clown mascot artwork is still needed too. Sponsors
-  currently render as plain text chips in the footer and marquee
+- Logos for 5 of the 15 sponsors: Midvaal Local Municipality, Meyerton Athletics Club, MAF, 90-6,
+  Mogu Mogu. The other 11 (plus Ver-Chem, added alongside Ver-Bolt once the real logos showed
+  "Uber-Bolt" in the original brief was a mishearing) have real files in `assets/img/sponsors/`
+  and render as images in both the marquee and footer — see `sponsors.list` in
+  `race-config.json`. Drop the missing five in the same folder and add a `logo` entry each.
+- The plain flat MadMac wordmark on its own (no clown, no sponsor strip) — every source image
+  has it composited into a larger flyer graphic. The circular clown badge
+  (`assets/img/madmac-badge.jpg`) works as the header/footer brand mark instead and is in use now.
 - Exact flyer/t-shirt hex values, to replace the approximated palette
-- Race photography — the hero and OG image work typographically (no start-line or terrain photo
-  was on disk at build time), and the gallery carousel only has three photos, pulled from Race
-  Pass rather than the club's own, larger Facebook albums, which weren't accessible without a
-  login. All three have an obvious slot to take real photos whenever they're supplied.
+- The gallery carousel and header/footer badge now use real 2025 MadMac photos, sourced from the
+  club's own Facebook page — see `assets/img/gallery/` and README section above. Still worth
+  adding: a strong single photo for the hero itself and the OG share image, both of which still
+  work typographically.
 - Direct URL for the Vaalweekblad/Citizen qualifier-angle coverage referenced in the "Qualifying
   for Comrades 2027 and Two Oceans 2027" section (currently described, not linked)
 - Email capture endpoint URL (see above)

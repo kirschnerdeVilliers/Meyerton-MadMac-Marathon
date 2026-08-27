@@ -65,7 +65,12 @@ def cta(label, position, distance=None, classes="btn btn-primary"):
     )
 
 
-def motif_svg(extra_class="", stroke_width="2"):
+def motif_svg(extra_class="", stroke_width="2", animate=False):
+    polyline_class = "route-motif-draw" if animate else ""
+    dash_attrs = ""
+    if animate:
+        length = MOTIF["pathLength"]
+        dash_attrs = f'style="--motif-length: {length}"'
     return (
         f'<svg viewBox="{MOTIF["viewBox"]}" preserveAspectRatio="xMidYMid meet" '
         f'class="{extra_class}" aria-hidden="true">'
@@ -73,7 +78,8 @@ def motif_svg(extra_class="", stroke_width="2"):
         f'<stop offset="0%" stop-color="#2fae6a"/><stop offset="52%" stop-color="#f5c518"/>'
         f'<stop offset="100%" stop-color="#ef6a1f"/></linearGradient></defs>'
         f'<polyline points="{MOTIF["points"]}" fill="none" stroke="url(#motifGradient)" '
-        f'stroke-width="{stroke_width}" stroke-linecap="round" stroke-linejoin="round"/>'
+        f'stroke-width="{stroke_width}" stroke-linecap="round" stroke-linejoin="round" '
+        f'class="{polyline_class}" {dash_attrs}/>'
         f"</svg>"
     )
 
@@ -202,7 +208,7 @@ def build_header():
 <header class="site-header">
   <div class="container header-row">
     <a class="brand" href="#top">
-      <span class="brand-mark" aria-hidden="true"></span>
+      <img class="brand-mark" src="assets/img/madmac-badge.jpg" alt="" width="40" height="40">
       Midvaal MadMac
     </a>
     <nav class="site-nav" aria-label="Section">{desktop_links}</nav>
@@ -227,7 +233,7 @@ def build_hero():
     flagship = dist_by_id("42_2km")
 
     return f"""<section class="hero" id="top">
-  <div class="route-motif" aria-hidden="true">{motif_svg("route-motif-line")}</div>
+  <div class="route-motif" aria-hidden="true">{motif_svg("route-motif-line", animate=True)}</div>
   <div class="container hero-inner">
     <div>
       <p class="eyebrow">{ed["dateDisplay"]} &middot; Meyerton, Gauteng</p>
@@ -899,10 +905,20 @@ def build_email():
 
 # ------------------------------------------------------------- sponsor marquee --
 
+def sponsor_marquee_item(sponsor):
+    if sponsor.get("logo"):
+        return (
+            f'<span class="marquee-item marquee-item-logo">'
+            f'<img src="assets/img/sponsors/{esc(sponsor["logo"])}" alt="{esc(sponsor["name"])}" loading="lazy">'
+            f"</span>"
+        )
+    return f'<span class="marquee-item">{esc(sponsor["name"])}</span>'
+
+
 def build_sponsor_marquee():
     sponsors = CONFIG["sponsors"]["list"]
     # duplicated once so the CSS animation can loop seamlessly from -50%
-    item_html = "".join(f'<span class="marquee-item">{esc(s)}</span>' for s in sponsors)
+    item_html = "".join(sponsor_marquee_item(s) for s in sponsors)
     return f"""<section class="sponsor-marquee" aria-hidden="true">
   <p class="marquee-label">Proudly supported by</p>
   <div class="marquee-viewport">
@@ -933,18 +949,27 @@ def build_footer():
     if contact.get("instagram"):
         contact_items.append(f'<li><a href="{esc(contact["instagram"])}" target="_blank" rel="noopener">Instagram</a></li>')
 
-    sponsor_chips = "".join(f'<span class="sponsor-chip">{esc(s)}</span>' for s in sponsors)
+    def sponsor_chip(sponsor):
+        if sponsor.get("logo"):
+            return (
+                f'<span class="sponsor-chip sponsor-chip-logo">'
+                f'<img src="assets/img/sponsors/{esc(sponsor["logo"])}" alt="{esc(sponsor["name"])}" loading="lazy">'
+                f"</span>"
+            )
+        return f'<span class="sponsor-chip">{esc(sponsor["name"])}</span>'
+
+    sponsor_chips = "".join(sponsor_chip(s) for s in sponsors)
 
     return f"""<footer class="site-footer" id="footer">
   <div class="container">
     <div class="footer-grid">
       <div class="footer-col">
         <div class="footer-brand">
-          <span class="brand-mark" aria-hidden="true"></span>
+          <img class="brand-mark" src="assets/img/madmac-badge.jpg" alt="" width="40" height="40">
           <strong style="font-family: var(--font-display); font-style: italic; color: var(--ink-0);">Midvaal MadMac</strong>
         </div>
         <p style="font-size: 0.85rem;">Organised by {esc(CONFIG['edition']['organiser'])}.</p>
-        <p class="footer-clown">Finishing at Café du Cirque — yes, that clown is the club mascot.</p>
+        <p class="footer-clown">Finishing at Café du Cirque — yes, that's the club mascot.</p>
       </div>
       <div class="footer-col">
         <h4>Contact</h4>

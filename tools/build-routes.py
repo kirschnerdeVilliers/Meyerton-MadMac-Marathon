@@ -233,10 +233,18 @@ def build_motif(gpx_path, out_path, view_w=1000, view_h=400, pad=24):
         idxs.append(len(pts) - 1)
     coords = [proj(xs[i], ys[i]) for i in idxs]
     points_str = " ".join(f"{x:.1f},{y:.1f}" for x, y in coords)
+    # length in viewBox units, for calibrating the stroke-dasharray "draw the
+    # route" animation in CSS — computed from the same simplified points the
+    # browser will actually render, so dasharray and rendered path agree
+    path_length = sum(
+        math.hypot(coords[i + 1][0] - coords[i][0], coords[i + 1][1] - coords[i][1])
+        for i in range(len(coords) - 1)
+    )
 
     out_path.write_text(json.dumps({
         "viewBox": f"0 0 {view_w} {view_h}",
         "points": points_str,
+        "pathLength": round(path_length, 1),
     }))
     return points_str
 

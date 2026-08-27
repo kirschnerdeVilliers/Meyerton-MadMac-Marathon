@@ -211,11 +211,15 @@
     ]
   },
   "gallery": {
-    "note": "Sourced from Race Pass's public event photos (the 2025 edition) — Facebook access wasn't available at build time. See README for adding more from the club's own albums.",
+    "note": "Sourced from the club's own Facebook page (public post photos, 2025 edition).",
     "photos": [
-      { "file": "finish-line-celebration-2025.jpg", "alt": "Runners celebrating at the MadMac finish line in 2025, with the club's clown mascot in the background", "caption": "Finish line, 2025" },
-      { "file": "course-marshal-2025.jpg", "alt": "A course marshal in a rainbow wig directing runners with a flag along a Randvaal road", "caption": "On course" },
-      { "file": "finish-chute-2025.jpg", "alt": "A group of runners wearing festive wigs crossing the MadMac finish line together", "caption": "Crossing the line" }
+      { "file": "start-line-2025-a.jpg", "alt": "Runners at the MadMac start line in 2025, with Café du Cirque's sign and the club's clown mascot in the foreground", "caption": "Start line, 2025" },
+      { "file": "course-marshal-2025.jpg", "alt": "A course marshal in a blue wig and hi-vis vest at the 5km marker on a Randvaal road", "caption": "On course" },
+      { "file": "mc-2025.jpg", "alt": "The race MC in full clown costume with a red wig, holding a tablet and microphone", "caption": "Race MC" },
+      { "file": "start-line-2025-b.jpg", "alt": "A wide shot of the MadMac start-line field running past Café du Cirque", "caption": "Start line" },
+      { "file": "crazy-store-2025.jpg", "alt": "A Crazy Store volunteer in a rainbow wig celebrating at the finish area", "caption": "Crazy Store crew" },
+      { "file": "finisher-2025.jpg", "alt": "MadMac finishers running together, one wearing festive wigs, near the finish", "caption": "Finishers" },
+      { "file": "medals-2025.jpg", "alt": "A pile of MadMac finisher medals on blue and yellow ribbons", "caption": "Finisher medals" }
     ]
   },
   "faq": [
@@ -253,11 +257,24 @@
     }
   ],
   "sponsors": {
-    "note": "Logos supplied as brand marks only where vector files are available; text fallback otherwise.",
+    "note": "logo is null where no file exists yet — those render as text in the marquee and footer. 'Uber-Bolt' in early source material was a mishearing of Ver-Bolt, confirmed against their actual logo; Ver-Chem (a related company, same logo sheet) added alongside it.",
     "list": [
-      "Midvaal Local Municipality", "Meyerton Athletics Club", "MAF (Mission Aviation Fellowship)",
-      "Uber-Bolt", "designdex", "Flexilube", "The Crazy Store", "90-6", "Mogu Mogu",
-      "Platō Coffee", "TM Tyremart", "HarvestFresh", "Lynca Meats", "32Gi Sports Nutrition", "Tork Craft"
+      { "name": "Midvaal Local Municipality", "logo": null },
+      { "name": "Meyerton Athletics Club", "logo": null },
+      { "name": "MAF (Mission Aviation Fellowship)", "logo": null },
+      { "name": "Ver-Bolt", "logo": "ver-bolt.png" },
+      { "name": "Ver-Chem", "logo": "ver-chem.png" },
+      { "name": "designdex", "logo": "designdex.jpeg" },
+      { "name": "Flexilube", "logo": "flexilube.png" },
+      { "name": "The Crazy Store", "logo": "crazy-store.png" },
+      { "name": "90-6", "logo": null },
+      { "name": "Mogu Mogu", "logo": null },
+      { "name": "Platō Coffee", "logo": "plato-coffee.png" },
+      { "name": "TM Tyremart", "logo": "tm-tyremart.png" },
+      { "name": "HarvestFresh", "logo": "harvestfresh.png" },
+      { "name": "Lynca Meats", "logo": "lynca-meats.png" },
+      { "name": "32Gi Sports Nutrition", "logo": "32gi.png" },
+      { "name": "Tork Craft", "logo": "tork-craft.png" }
     ]
   },
   "contact": {
