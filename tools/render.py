@@ -379,7 +379,7 @@ def build_why():
   <div class="container">
     <p class="eyebrow">Why run this one</p>
     <h2>Four reasons, no adjectives</h2>
-    <div class="reasons-grid">{cards}</div>
+    <div class="reasons-grid" data-reveal>{cards}</div>
   </div>
 </section>
 """
@@ -466,7 +466,7 @@ def build_distances():
       </div>
     </div>
 
-    <div class="distance-cards">{''.join(cards)}</div>
+    <div class="distance-cards" data-reveal>{''.join(cards)}</div>
     {table}
 
     <div class="cta-strip">
@@ -551,15 +551,23 @@ def build_qualifying_prose():
     two_oceans = q["twoOceans"]
     flagship = dist_by_id("42_2km")
 
+    def sa_num(n):
+        return f"{n:,}".replace(",", " ")
+
+    # (target int, prefix, suffix, label) — target/prefix/suffix drive the
+    # count-up animation in motion.js; it always lands on the exact string
+    # rendered here, so the animated version can never disagree with it.
     stats = [
-        (f"{comrades['entryCap']:,}", f"Comrades centenary entries — up from {comrades['previousCap']:,}"),
-        (f"{two_oceans['entryCap']:,}", f"Two Oceans Ultra entries — up from {two_oceans['previousCap']:,}"),
-        ("~49 000", "runners chasing a sub-5:00 marathon in this window"),
-        ("100th", f"Comrades edition — {comrades['edition'].split('—')[-1].strip()}"),
+        (comrades["entryCap"], "", "", f"Comrades centenary entries — up from {sa_num(comrades['previousCap'])}"),
+        (two_oceans["entryCap"], "", "", f"Two Oceans Ultra entries — up from {sa_num(two_oceans['previousCap'])}"),
+        (49000, "~", "", "runners chasing a sub-5:00 marathon in this window"),
+        (100, "", "th", f"Comrades edition — {comrades['edition'].split('—')[-1].strip()}"),
     ]
     stat_cards = "".join(
-        f"""<div class="stat-card"><div class="stat-num">{esc(val)}</div><div class="stat-lbl">{esc(lbl)}</div></div>"""
-        for val, lbl in stats
+        f'''<div class="stat-card"><div class="stat-num" data-count-target="{target}" '''
+        f'''data-count-final="{esc(prefix + sa_num(target) + suffix)}">{esc(prefix + sa_num(target) + suffix)}</div>'''
+        f'''<div class="stat-lbl">{esc(lbl)}</div></div>'''
+        for target, prefix, suffix, lbl in stats
     )
 
     return f"""<section class="qualifying-prose section-pad" id="qualifying-2027">
@@ -572,9 +580,9 @@ def build_qualifying_prose():
       October date matters more than usual.
     </p>
 
-    <div class="stat-grid">{stat_cards}</div>
+    <div class="stat-grid" data-reveal>{stat_cards}</div>
 
-    <div class="qual-caveat" style="margin-top: 2rem;">
+    <div class="qual-caveat" data-reveal style="margin-top: 2rem;">
       <p><strong>MadMac's online entries close 22 September 2026 at 21:00 — the same day the
       Comrades centenary ballot closes.</strong> Two qualifier-shaped decisions, one week, one date.</p>
     </div>
@@ -661,7 +669,7 @@ def build_prizes():
       category, not just the open field.
     </p>
 
-    <div class="prize-table-wrap">
+    <div class="prize-table-wrap" data-reveal>
       <table class="prize-table">
         <thead><tr><th>Category</th><th>Place</th><th>42.2km</th><th>22km</th><th>11km</th></tr></thead>
         <tbody>{''.join(rows)}</tbody>
@@ -704,9 +712,9 @@ def build_proof():
       from runners who've actually finished.
     </p>
 
-    <div class="quote-grid">{quote_cards}</div>
+    <div class="quote-grid" data-reveal>{quote_cards}</div>
 
-    <div class="carousel-wrap">
+    <div class="carousel-wrap" data-reveal>
       <div class="carousel" tabindex="0" aria-label="Photos from previous MadMac editions">
         <div class="carousel-track">{carousel_items}</div>
       </div>
@@ -735,7 +743,7 @@ def build_faq():
   <div class="container container--narrow">
     <p class="eyebrow">FAQ</p>
     <h2>Questions people actually ask</h2>
-    <div class="faq-list mt-6">{items}</div>
+    <div class="faq-list mt-6" data-reveal>{items}</div>
   </div>
 </section>
 """
@@ -757,7 +765,7 @@ def build_what_you_get():
     <p class="eyebrow">What you get</p>
     <h2>Medal, shirt, timing, refreshments</h2>
 
-    <div class="perks-grid">
+    <div class="perks-grid" data-reveal>
       <div class="perk-card">
         <h3>Race t-shirt</h3>
         <p>{esc(perks['tshirt'])}</p>
@@ -818,14 +826,14 @@ def build_practical():
       convenience, not just admin.
     </p>
 
-    <div class="collection-table-wrap">
+    <div class="collection-table-wrap" data-reveal>
       <table class="collection-table">
         <thead><tr><th>Date</th><th>Time</th><th>Venue</th></tr></thead>
         <tbody>{rows}</tbody>
       </table>
     </div>
 
-    <div class="practical-notes">
+    <div class="practical-notes" data-reveal>
       <div class="practical-note">
         <strong>On site</strong>
         {', '.join(amenities)}, confirmed on Race Pass.
@@ -905,14 +913,29 @@ def build_email():
 
 # ------------------------------------------------------------- sponsor marquee --
 
-def sponsor_marquee_item(sponsor):
+def sponsor_content(sponsor):
+    """Inner content for one sponsor slot: real logo image, or plain text
+    where no file exists yet."""
     if sponsor.get("logo"):
+        return f'<img src="assets/img/sponsors/{esc(sponsor["logo"])}" alt="{esc(sponsor["name"])}" loading="lazy">'
+    return esc(sponsor["name"])
+
+
+def sponsor_tag(sponsor, css_class, inner):
+    """Wraps sponsor_content in a link to their site when a URL is
+    supplied, opening in a new tab so the marquee/footer never navigates a
+    visitor away from the entry page; falls back to a plain span."""
+    if sponsor.get("url"):
         return (
-            f'<span class="marquee-item marquee-item-logo">'
-            f'<img src="assets/img/sponsors/{esc(sponsor["logo"])}" alt="{esc(sponsor["name"])}" loading="lazy">'
-            f"</span>"
+            f'<a class="{css_class}" href="{esc(sponsor["url"])}" '
+            f'target="_blank" rel="noopener sponsored">{inner}</a>'
         )
-    return f'<span class="marquee-item">{esc(sponsor["name"])}</span>'
+    return f'<span class="{css_class}">{inner}</span>'
+
+
+def sponsor_marquee_item(sponsor):
+    css_class = "marquee-item marquee-item-logo" if sponsor.get("logo") else "marquee-item"
+    return sponsor_tag(sponsor, css_class, sponsor_content(sponsor))
 
 
 def build_sponsor_marquee():
@@ -950,13 +973,8 @@ def build_footer():
         contact_items.append(f'<li><a href="{esc(contact["instagram"])}" target="_blank" rel="noopener">Instagram</a></li>')
 
     def sponsor_chip(sponsor):
-        if sponsor.get("logo"):
-            return (
-                f'<span class="sponsor-chip sponsor-chip-logo">'
-                f'<img src="assets/img/sponsors/{esc(sponsor["logo"])}" alt="{esc(sponsor["name"])}" loading="lazy">'
-                f"</span>"
-            )
-        return f'<span class="sponsor-chip">{esc(sponsor["name"])}</span>'
+        css_class = "sponsor-chip sponsor-chip-logo" if sponsor.get("logo") else "sponsor-chip"
+        return sponsor_tag(sponsor, css_class, sponsor_content(sponsor))
 
     sponsor_chips = "".join(sponsor_chip(s) for s in sponsors)
 
@@ -1050,6 +1068,7 @@ def main():
 <script src="assets/js/countdown.js" defer></script>
 <script src="assets/js/route.js" defer></script>
 <script src="assets/js/carousel.js" defer></script>
+<script src="assets/js/motion.js" defer></script>
 <script src="assets/js/email.js" defer></script>
 <script src="assets/js/analytics.js" defer></script>
 </body>

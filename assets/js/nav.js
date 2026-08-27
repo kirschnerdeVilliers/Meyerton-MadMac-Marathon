@@ -1,10 +1,22 @@
-/* Mobile header nav: toggles the collapsed section menu. Desktop shows the
-   full nav inline (pure CSS, no JS involved); this only runs the
-   hamburger/dropdown behaviour below the 900px breakpoint. */
+/* Header behaviour: the mobile hamburger/dropdown menu, and a small
+   compact-on-scroll effect on the sticky header (subtle, functional —
+   not decorative motion). Desktop nav itself is pure CSS, no JS involved. */
 (function () {
   "use strict";
 
+  function initCompactHeader() {
+    var header = document.querySelector(".site-header");
+    if (!header) return;
+    var THRESHOLD = 40;
+    function onScroll() {
+      header.classList.toggle("is-scrolled", window.scrollY > THRESHOLD);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
   function init() {
+    initCompactHeader();
     var toggle = document.querySelector(".nav-toggle");
     var menu = document.getElementById("mobile-nav");
     if (!toggle || !menu) return;

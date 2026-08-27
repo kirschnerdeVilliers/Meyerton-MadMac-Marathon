@@ -99,6 +99,16 @@
     }
   }
 
+  // Draws the elevation line in once per panel (stroke-dashoffset, calibrated
+  // in tools/build-routes.py). Re-adding the class on an already-revealed
+  // panel is a harmless no-op, so this is safe to call on every tab switch.
+  function revealElevation(panel) {
+    if (!panel) return;
+    panel.querySelectorAll(".elevation-draw").forEach(function (el) {
+      el.classList.add("elevation-visible");
+    });
+  }
+
   function activateTab(tabs, panels, tab) {
     tabs.forEach(function (t) {
       var selected = t === tab;
@@ -110,8 +120,10 @@
       panel.hidden = panel.id !== targetId;
     });
     var distId = tab.getAttribute("data-dist");
-    initMap(document.getElementById(targetId), distId);
+    var targetPanel = document.getElementById(targetId);
+    initMap(targetPanel, distId);
     invalidateVisibleMap(distId);
+    revealElevation(targetPanel);
   }
 
   function initTabs() {
@@ -138,14 +150,18 @@
       var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            initMap(document.getElementById(activeTab.getAttribute("aria-controls")), activeTab.getAttribute("data-dist"));
+            var activePanel = document.getElementById(activeTab.getAttribute("aria-controls"));
+            initMap(activePanel, activeTab.getAttribute("data-dist"));
+            revealElevation(activePanel);
             observer.disconnect();
           }
         });
       }, { rootMargin: "200px" });
       observer.observe(section);
     } else if (activeTab) {
-      initMap(document.getElementById(activeTab.getAttribute("aria-controls")), activeTab.getAttribute("data-dist"));
+      var activePanelFallback = document.getElementById(activeTab.getAttribute("aria-controls"));
+      initMap(activePanelFallback, activeTab.getAttribute("data-dist"));
+      revealElevation(activePanelFallback);
     }
   }
 

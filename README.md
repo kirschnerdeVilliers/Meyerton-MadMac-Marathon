@@ -49,14 +49,24 @@ browser:
   when no signup endpoint is configured
 - `assets/js/analytics.js` — the GA4/Plausible wrapper and outbound-click tracking
 - `assets/js/carousel.js` — the prev/next buttons on the photo carousel (the carousel itself is a
-  native CSS scroll-snap track and works without JS — this just adds explicit click targets)
-- `assets/js/nav.js` — the mobile header hamburger menu (desktop nav is pure CSS, no JS involved)
+  native CSS scroll-snap track and works without JS), plus a slow autoplay that pauses on
+  hover/touch/focus and only runs while the carousel is actually on screen
+- `assets/js/nav.js` — the mobile header hamburger menu, and a small compact-on-scroll effect on
+  the sticky header (desktop nav itself is pure CSS, no JS involved)
+- `assets/js/motion.js` — two scroll-triggered enhancements, both pure progressive enhancement:
+  a fade/rise reveal on elements marked `data-reveal` in the markup, and a count-up on the
+  qualifying-section stat numbers (`data-count-target` / `data-count-final`) that always lands on
+  the exact server-rendered text — the animated version can never disagree with the real number.
+  Both no-op under `prefers-reduced-motion`, and the "hidden" starting state for reveal is only
+  ever applied by this script, never in static CSS, so content is fully visible with JS off.
 
 Section nav links in the header (`NAV_LINKS` in `tools/render.py`) point at five section ids —
 add, remove or reorder entries there if the page's section structure changes; the mobile menu is
 generated from the same list. The sponsor marquee at the foot of the page (`build_sponsor_marquee`
 in `tools/render.py`) reads from the same `sponsors.list` in `race-config.json` as the footer, so
-there's still only one place to edit the sponsor roster.
+there's still only one place to edit the sponsor roster — each entry now also carries a `url`
+(sponsor website, opens in a new tab, `rel="noopener sponsored"`) alongside `logo`; leave `url`
+null to render without a link.
 
 ## Updating for the 2027 edition
 
@@ -119,6 +129,10 @@ you have an ID.
   `stroke-dashoffset` animation, calibrated against the real path length computed alongside the
   projection), and stops on `prefers-reduced-motion`. The section-divider and footer instances of
   the same motif stay static — animation is scoped to the hero only, via `motif_svg(animate=True)`.
+  Each elevation profile in the route section uses the same "real path length, CSS
+  stroke-dashoffset" technique (computed in `build_elevation_svg()`), but draws in once — on
+  first scroll into view, and again on every tab switch — rather than looping, since it's
+  something a visitor actively opened rather than ambient background motion.
 - Fonts are Google Fonts (Big Shoulders Display for headings, Inter for body), loaded with
   `preconnect` + `display=swap`. If self-hosting fonts is preferred later, swap the `<link>` tags
   in `build_head()` for local `@font-face` declarations.

@@ -93,6 +93,11 @@ def build_elevation_svg(dist_km, eles, accent, width=900, height=220):
         return pad_t + plot_h - ((e - emin) / erange) * plot_h
 
     pts_line = " ".join(f"{x(d):.1f},{y(e):.1f}" for d, e in zip(dist_km, eles))
+    line_coords = [(x(d), y(e)) for d, e in zip(dist_km, eles)]
+    line_length = sum(
+        math.hypot(line_coords[i + 1][0] - line_coords[i][0], line_coords[i + 1][1] - line_coords[i][1])
+        for i in range(len(line_coords) - 1)
+    )
     area = (
         f"{x(0):.1f},{y(eles[0]):.1f} "
         + pts_line
@@ -130,7 +135,7 @@ def build_elevation_svg(dist_km, eles, accent, width=900, height=220):
 {"".join(gridlines)}
 {axis_labels}
 <polygon class="profile-area" points="{area}"/>
-<polyline class="profile-line" points="{pts_line}"/>
+<polyline class="profile-line elevation-draw" points="{pts_line}" style="--elev-length: {line_length:.1f}"/>
 </svg>'''
     return svg
 
