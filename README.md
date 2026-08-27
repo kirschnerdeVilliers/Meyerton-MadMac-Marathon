@@ -135,14 +135,15 @@ with the same design tokens and screenshotting it with headless Chrome at exact 
   "http://localhost:8000/path-to-a-1200x630-source.html"
 ```
 
-The headline is the real wordmark image (`assets/img/madmac-wordmark.png`, cropped tight from the
-club's own logo file — a plain flat "MIDVAAL MADMAC" with no clown and no sponsor strip, useful
-elsewhere too), not typeset text — no font-loading race to worry about if you regenerate it. The
-source HTML that composited it isn't kept in the repo (a one-off build step); recreate it from
-this doc if the copy changes: same design tokens as `site.css`, `<img class="wordmark">` with
-`height: 220px` sized against the wordmark's actual aspect ratio, `align-self: flex-start` inside
-the flex column (without it, `align-items: stretch` distorts the image — a real bug hit while
-building this).
+Update the headline/date copy in that source file and re-run if the hero copy changes
+significantly. (The current image renders its headline in a serif fallback rather than Big
+Shoulders Display — headless Chrome's `--screenshot` flag doesn't reliably wait for webfonts to
+finish loading before capturing. It still reads cleanly; re-run with a longer artificial delay
+baked into the source file if pixel-perfect font matching matters enough to fix.)
+
+A real, tightly-cropped flat wordmark also exists now (`assets/img/madmac-wordmark.png` — no
+clown, no sponsor strip, cropped from the club's own logo file) if a future version of this image
+should use the actual logo instead of typeset text.
 
 ## Domain
 
