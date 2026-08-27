@@ -1,0 +1,234 @@
+{
+  "_comment": "Single source of truth for the MadMac landing page. Edit this file to update the site for a future edition — see README.md.",
+  "edition": {
+    "year": 2026,
+    "raceName": "Midvaal MadMac",
+    "date": "2026-10-04",
+    "dateDisplay": "Sunday 4 October 2026",
+    "organiser": "Meyerton Athletics Club (MAC)",
+    "venueName": "Café du Cirque",
+    "venueAddress": "Plot 116, Springbok Road, Daleside, Randvaal",
+    "coordinates": { "lat": -26.4877514, "lng": 28.061836 },
+    "positioning": "Single Lap Comrades and Totalsports Two Oceans Marathon qualifier",
+    "totalFieldSize": 2500,
+    "totalPrizeMoney": 100000,
+    "raceDifficulty": "Intermediate",
+    "racePassRating": 4.8
+  },
+  "entries": {
+    "entryUrl": "https://racepass.com/za/races/midvaal-madmac",
+    "onlineCloseDate": "2026-09-22T21:00:00+02:00",
+    "onlineCloseDisplay": "22 September 2026 at 21:00",
+    "lateFeeStartDate": "2026-08-31T23:59:59+02:00",
+    "lateFeeStartDisplay": "after 31 August 2026",
+    "manualEntryNote": "Manual entries available at collection points only (not on race day), subject to availability. No entries on race day."
+  },
+  "facebook": {
+    "pageUrl": "https://www.facebook.com/share/1Bj9Fo2PZJ/",
+    "pageName": "Midvaal Madmac Marathon"
+  },
+  "resultsUrl": "https://www.finishtime.co.za",
+  "qualifiers": {
+    "standard": "42.2km in under 4:59:59 (sub-5:00)",
+    "cutoffCaveat": "The race cut-off is 6h30. The qualifying standard for both Comrades and Two Oceans is 4:59:59 — finishing inside the cut-off does not mean you have qualified.",
+    "comrades": {
+      "name": "Comrades Marathon 2027",
+      "edition": "100th edition — Centenary Down Run",
+      "date": "2027-06-13",
+      "dateDisplay": "13 June 2027",
+      "entryCap": 28000,
+      "previousCap": 22000,
+      "qualifyingWindowStart": "2026-06-15",
+      "qualifyingWindowEnd": "2027-05-03",
+      "qualifyingWindowDisplay": "15 June 2026 – 3 May 2027",
+      "ballotCloseDate": "2026-09-22",
+      "ballotCloseDisplay": "22 September 2026",
+      "ballotNote": "The Comrades general ballot closes 22 September 2026 — the same day MadMac's online entries close."
+    },
+    "twoOceans": {
+      "name": "Totalsports Two Oceans Marathon 2027",
+      "raceType": "56km Ultra",
+      "date": "2027-04-04",
+      "dateDisplay": "4 April 2027",
+      "entryCap": 21000,
+      "previousCap": 14000,
+      "qualifyingWindowStart": "2026-05-01",
+      "qualifyingWindowDisplay": "qualifiers run after 1 May 2026",
+      "seedingNote": "A marathon qualifying time is also used for seeding at Two Oceans."
+    },
+    "approvedListStatus": "pending-confirmation",
+    "singleLapNote": "Single lap, no repeated loops — the marathon does not repeat a circuit, though the course does include out-and-back sections."
+  },
+  "course": {
+    "measurementNote": "Course distances are computed from the official GPX exports. Elevation follows Strava's terrain model rather than a survey, so treat vertical figures as indicative.",
+    "measurementCertificateNumber": null,
+    "altitudeApprox": 1500,
+    "r59CrossingNote": "The 11km, 22km and 42.2km all cross the R59 (Sybrand van Niekerk Freeway) at the Karee Road / Randvaal Road crossing.",
+    "surfaceConfirmed": false
+  },
+  "distances": [
+    {
+      "id": "42_2km",
+      "label": "42.2km",
+      "shortLabel": "Marathon",
+      "flagship": true,
+      "gpxDistanceKm": 42.24,
+      "elevationMinM": 1469,
+      "elevationMaxM": 1576,
+      "totalAscentM": "240–320",
+      "startTime": "06:00",
+      "minAge": 20,
+      "cutoffHours": 6.5,
+      "cutoffDisplay": "6h30",
+      "fees": { "earlyBird": 350, "grandmaster": 270, "late": 370 },
+      "freeShirtsFirst": 250,
+      "profileSummary": "The first 20km rolls gently between 1 470m and 1 520m, with the low point around 16km. The only meaningful climb comes between 20km and 24km, gaining about 70m, steepest in the two kilometres to 24km. From 24km to 40km it's rolling at 1 510–1 550m, then it drops away over the final two kilometres into the finish.",
+      "gpxFile": "midvaal-madmac-2026-42.2km.gpx",
+      "stravaRouteUrl": "https://www.strava.com/routes/3487795862419970618",
+      "routeDescription": "Starts in Daleside, with a long eastern out-and-back along Karee Road, a western section crossing the R59 into the Randvaal smallholding grid around 3rd to 5th Road, and loops through Daleside village itself."
+    },
+    {
+      "id": "22km",
+      "label": "22km",
+      "shortLabel": "22km",
+      "flagship": false,
+      "gpxDistanceKm": 22.05,
+      "elevationMinM": 1491,
+      "elevationMaxM": 1576,
+      "totalAscentM": "155–195",
+      "startTime": "06:15",
+      "minAge": 16,
+      "cutoffHours": 4,
+      "cutoffDisplay": "4h00",
+      "fees": { "earlyBird": 220, "grandmaster": 180, "late": 250 },
+      "freeShirtsFirst": 100,
+      "profileSummary": "Climbs about 66m in the first 4km, rolls at altitude through the middle, then descends from 20km to the finish — front-loaded rather than flat.",
+      "gpxFile": "midvaal-madmac-2026-22km.gpx",
+      "stravaRouteUrl": "https://www.strava.com/routes/3487799342087866944",
+      "routeDescription": "Heads west from Daleside, crosses the R59, and runs a rectangular loop through the smallholding grid between 2nd and 8th Road before returning."
+    },
+    {
+      "id": "11km",
+      "label": "11km",
+      "shortLabel": "11km",
+      "flagship": false,
+      "gpxDistanceKm": 11.12,
+      "elevationMinM": 1491,
+      "elevationMaxM": 1559,
+      "totalAscentM": "70–90",
+      "startTime": "06:15",
+      "minAge": 14,
+      "cutoffHours": 2,
+      "cutoffDisplay": "2h00",
+      "fees": { "earlyBird": 180, "grandmaster": 140, "late": 200 },
+      "freeShirtsFirst": 50,
+      "profileSummary": "About 70–90m of ascent, one rise in the first half, descent home. Carries a 10km timing point.",
+      "gpxFile": "midvaal-madmac-2026-11km.gpx",
+      "stravaRouteUrl": "https://www.strava.com/routes/3487807785668489242",
+      "routeDescription": "Crosses the R59 west from Daleside and runs a single loop through the closer-in Randvaal streets around Rolbos, Groenbos and Fynbos, then returns. It does not reach the numbered-road grid the 22km uses, making it the most suburban of the longer distances."
+    },
+    {
+      "id": "5km",
+      "label": "5km",
+      "shortLabel": "5km",
+      "flagship": false,
+      "gpxDistanceKm": 5.19,
+      "elevationMinM": 1485,
+      "elevationMaxM": 1498,
+      "totalAscentM": "15–20",
+      "startTime": "06:30",
+      "minAge": 9,
+      "cutoffHours": 2,
+      "cutoffDisplay": "2h00",
+      "fees": { "earlyBird": 90, "grandmaster": 90, "late": 90 },
+      "freeShirtsFirst": null,
+      "profileSummary": "Effectively pancake flat — 13m of total vertical spread across the whole distance. Exactly what a first-timer or a parent with a nine-year-old wants to hear.",
+      "gpxFile": "midvaal-madmac-2026-5km.gpx",
+      "stravaRouteUrl": "https://www.strava.com/routes/3487801764862617626",
+      "routeDescription": "A compact loop inside Daleside village around Karee Road, Morris Street and Kroonarend Street. Genuinely family-friendly, close to the venue."
+    }
+  ],
+  "prizeMoney": {
+    "totalR": 100000,
+    "equalGenderStatement": "Men's and women's prize money is equal across every distance and every category.",
+    "paymentNote": "Prizes paid electronically, by EFT within seven days, unless WADA testing results are pending.",
+    "categories": [
+      { "category": "Open", "place": "1st", "42_2km": 12000, "22km": 4000, "11km": 1000 },
+      { "category": "Open", "place": "2nd", "42_2km": 6000, "22km": 3000, "11km": 750 },
+      { "category": "Open", "place": "3rd", "42_2km": 3000, "22km": 1500, "11km": 500 },
+      { "category": "Veteran 40+", "place": "1st", "42_2km": 3500, "22km": 2000, "11km": 500 },
+      { "category": "Veteran 40+", "place": "2nd", "42_2km": 2000, "22km": 1500, "11km": 300 },
+      { "category": "Veteran 40+", "place": "3rd", "42_2km": 1000, "22km": 800, "11km": 250 },
+      { "category": "Master 50+", "place": "1st", "42_2km": 1000, "22km": 500, "11km": 250 },
+      { "category": "Master 50+", "place": "2nd", "42_2km": 750, "22km": 250, "11km": null },
+      { "category": "Grandmaster 60+", "place": "1st", "42_2km": 1000, "22km": 350, "11km": 250 },
+      { "category": "Grandmaster 60+", "place": "2nd", "42_2km": 750, "22km": 250, "11km": null },
+      { "category": "Junior", "place": "1st / 2nd / 3rd", "42_2km": null, "22km": null, "11km": "500 / 350 / 250" }
+    ]
+  },
+  "numberCollection": [
+    { "date": "2026-09-29", "dateDisplay": "29 Sept 2026", "time": "11:00–17:30", "venue": "Sportsmans Warehouse, Cresta" },
+    { "date": "2026-09-30", "dateDisplay": "30 Sept 2026", "time": "11:00–17:30", "venue": "Sportsmans Warehouse, East Rand Mall" },
+    { "date": "2026-10-01", "dateDisplay": "1 Oct 2026", "time": "11:00–17:30", "venue": "Sportsmans Warehouse, Fourways" },
+    { "date": "2026-10-02", "dateDisplay": "2 Oct 2026", "time": "11:00–17:30", "venue": "Sportsmans Warehouse, Vanderbijlpark" },
+    { "date": "2026-10-03", "dateDisplay": "3 Oct 2026", "time": "08:00–17:00", "venue": "Café du Cirque, Randvaal" },
+    { "date": "2026-10-04", "dateDisplay": "4 Oct 2026 (race day)", "time": "04:30–05:30", "venue": "Café du Cirque, Randvaal", "raceDay": true }
+  ],
+  "perks": {
+    "tshirt": "Rainbow gradient (green → yellow → orange) with MadMac branding front, sponsor wall back.",
+    "medal": "Silver, distance-stamped (42.2KM / 22KM etc.) on a blue ribbon. Note: the 42.2km medal is issued at the finish, not at any intermediate point — there is no separate 21km medal.",
+    "goodieBags": 1000,
+    "extraShirtFeeR": 250,
+    "platoOffer": {
+      "venue": "Platō Meyerton",
+      "discount": "10% off any drink",
+      "condition": "Show your finisher medal on 4 October. Valid that day only, at that branch only."
+    }
+  },
+  "raceRules": {
+    "timing": "Mat-to-mat chip timing with checkpoints on route.",
+    "distanceBoards": "Every 1km.",
+    "waterpoints": "Roughly every 3km.",
+    "resultsPublishedOn": "finishtime.co.za",
+    "governingBodies": "Run under WA, ASA and AVT rules.",
+    "licenceNote": "ASA-affiliated runners must wear their licence number front and back. Non-affiliated runners need a temporary licence at additional cost and must run in neutral or white colours — required for the 42.2km, 22km and 11km, not the 5km.",
+    "temporaryLicenceFeeR": null,
+    "prohibited": "No seconding, no dogs, no pets, no headphones (unless required by organisers), no cyclists.",
+    "ageCategoryNote": "Age categories determined as at date of competition; proof of age and ID required at prize giving.",
+    "appeals": "Referee's decision final; appeals require a form and a R500 deposit, refunded if successful."
+  },
+  "amenities": ["Toilets", "Food and drink", "Parking", "Medical", "Bag storage", "Hydration stations"],
+  "sponsors": {
+    "note": "Logos supplied as brand marks only where vector files are available; text fallback otherwise.",
+    "list": [
+      "Midvaal Local Municipality", "Meyerton Athletics Club", "MAF (Mission Aviation Fellowship)",
+      "Uber-Bolt", "designdex", "Flexilube", "The Crazy Store", "90-6", "Mogu Mogu",
+      "Platō Coffee", "TM Tyremart", "HarvestFresh", "Lynca Meats", "32Gi Sports Nutrition", "Tork Craft"
+    ]
+  },
+  "contact": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "instagram": null
+  },
+  "analytics": {
+    "provider": "none",
+    "ga4Id": null,
+    "plausibleDomain": null,
+    "metaPixelId": null
+  },
+  "emailCapture": {
+    "endpointUrl": null,
+    "provider": "unconfigured",
+    "fieldName": "email"
+  },
+  "placeholders": {
+    "note": "Facts confirmed nowhere in the source material. The site omits these claims entirely rather than guessing — see README.md 'Still needed' section.",
+    "roadSurfaceSplit": null,
+    "temporaryLicenceFee2026": null,
+    "measurementCertificateNumber": null,
+    "elevenKm10kTimingPurpose": null,
+    "pacingBuses": null
+  }
+}
