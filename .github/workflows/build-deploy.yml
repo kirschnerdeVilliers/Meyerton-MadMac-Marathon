@@ -1,0 +1,79 @@
+name: Build and deploy
+
+# Runs render.py (and build-routes.py, when the GPX source changed) on
+# every push that could affect the built site, then deploys the result to
+# GitHub Pages — including CMS commits from admin/, which land as plain
+# pushes to main like any other commit.
+#
+# If render.py fails (e.g. a CMS edit produced JSON it can't handle), this
+# job stops before the deploy step runs, so the live site keeps serving
+# the last successful build rather than going down. See README.md "For
+# content editors" for how this fits into the CMS workflow.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/race-config.json"
+      - "data/gpx/**"
+      - "assets/img/sponsors/**"
+      - "assets/img/gallery/**"
+      - "tools/**"
+      - "assets/css/**"
+      - "assets/js/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # need the previous commit for the GPX-change check below
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          # Both build scripts are stdlib-only — no requirements.txt, no pip install.
+
+      - name: Check whether GPX source changed
+        id: gpx
+        run: |
+          if git diff --quiet HEAD^ HEAD -- data/gpx/ 2>/dev/null; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Rebuild route data (GPX changed)
+        if: steps.gpx.outputs.changed == 'true'
+        run: python3 tools/build-routes.py
+
+      - name: Render index.html
+        run: python3 tools/render.py
+
+      - name: Exclude .git from the deployed artifact
+        run: rm -rf .git
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
