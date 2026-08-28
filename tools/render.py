@@ -45,6 +45,18 @@ def esc(s):
     )
 
 
+def img_filename(v):
+    """Accepts either a bare filename ("x.png", what every image entry in
+    race-config.json used before the CMS existed) or a full path (what the
+    CMS's image widget typically saves, e.g. "/assets/img/sponsors/x.png")
+    and returns just the filename either way. Callers still prepend the
+    correct folder themselves — this only normalises what the config might
+    contain."""
+    if not v:
+        return v
+    return Path(v).name
+
+
 def dist_by_id(dist_id):
     return next(d for d in CONFIG["distances"] if d["id"] == dist_id)
 
@@ -733,7 +745,7 @@ def build_proof():
 
     carousel_items = "".join(
         f"""<figure class="carousel-item">
-      <img src="assets/img/gallery/{esc(p['file'])}" alt="{esc(p['alt'])}" loading="lazy" width="1000" height="667">
+      <img src="assets/img/gallery/{esc(img_filename(p['file']))}" alt="{esc(p['alt'])}" loading="lazy" width="1000" height="667">
       <figcaption>{esc(p['caption'])}</figcaption>
     </figure>"""
         for p in gallery["photos"]
@@ -953,7 +965,7 @@ def sponsor_content(sponsor):
     """Inner content for one sponsor slot: real logo image, or plain text
     where no file exists yet."""
     if sponsor.get("logo"):
-        return f'<img src="assets/img/sponsors/{esc(sponsor["logo"])}" alt="{esc(sponsor["name"])}" loading="lazy">'
+        return f'<img src="assets/img/sponsors/{esc(img_filename(sponsor["logo"]))}" alt="{esc(sponsor["name"])}" loading="lazy">'
     return esc(sponsor["name"])
 
 

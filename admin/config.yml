@@ -1,0 +1,346 @@
+# Sveltia CMS config — edits data/race-config.json directly, through this
+# form. See README.md "For content editors" for the plain-English version
+# of what's safe to change here.
+#
+# Auth (backend.base_url below) is filled in once the Cloudflare Worker
+# OAuth proxy is deployed — see the CMS rollout plan for the exact steps.
+# Until then this file also works entirely locally via `local_backend`.
+
+backend:
+  name: github
+  repo: kirschnerdeVilliers/Meyerton-MadMac-Marathon
+  branch: main
+  base_url: https://REPLACE-WITH-YOUR-WORKER.workers.dev
+
+local_backend: true
+
+site_url: https://kirschnerdevilliers.github.io/Meyerton-MadMac-Marathon/
+display_url: https://kirschnerdevilliers.github.io/Meyerton-MadMac-Marathon/
+logo_url: /assets/img/madmac-badge.jpg
+
+media_folder: "assets/img"
+public_folder: "/assets/img"
+
+collections:
+  - name: "race"
+    label: "Race content"
+    files:
+      - name: "config"
+        label: "Race config (data/race-config.json)"
+        file: "data/race-config.json"
+        fields:
+
+          - label: "Race basics"
+            name: "edition"
+            widget: object
+            fields:
+              - { label: "Year", name: "year", widget: number, value_type: int }
+              - { label: "Race name", name: "raceName", widget: string }
+              - { label: "Date (YYYY-MM-DD)", name: "date", widget: string, hint: "Format: 2026-10-04" }
+              - { label: "Date, as displayed", name: "dateDisplay", widget: string }
+              - { label: "Organiser", name: "organiser", widget: string }
+              - { label: "Venue name", name: "venueName", widget: string }
+              - { label: "Venue address", name: "venueAddress", widget: string }
+              - label: "Coordinates"
+                name: "coordinates"
+                widget: object
+                fields:
+                  - { label: "Latitude", name: "lat", widget: number, value_type: float }
+                  - { label: "Longitude", name: "lng", widget: number, value_type: float }
+              - { label: "Positioning line", name: "positioning", widget: string }
+              - { label: "Total field size", name: "totalFieldSize", widget: number, value_type: int }
+              - { label: "Total prize money (R)", name: "totalPrizeMoney", widget: number, value_type: int }
+              - { label: "Race Pass difficulty rating", name: "raceDifficulty", widget: string }
+              - { label: "Race Pass star rating", name: "racePassRating", widget: number, value_type: float }
+
+          - label: "Entries"
+            name: "entries"
+            widget: object
+            fields:
+              - { label: "Entry URL (Race Pass)", name: "entryUrl", widget: string }
+              - { label: "Online close date/time (ISO)", name: "onlineCloseDate", widget: string, hint: "Format: 2026-09-22T21:00:00+02:00 — must include the +02:00 offset" }
+              - { label: "Online close, as displayed", name: "onlineCloseDisplay", widget: string }
+              - { label: "Late-fee start date/time (ISO)", name: "lateFeeStartDate", widget: string, hint: "Format: 2026-08-31T23:59:59+02:00 — must include the +02:00 offset" }
+              - { label: "Late-fee start, as displayed", name: "lateFeeStartDisplay", widget: string }
+              - { label: "Manual entry note", name: "manualEntryNote", widget: text }
+
+          - label: "Facebook"
+            name: "facebook"
+            widget: object
+            fields:
+              - { label: "Page URL", name: "pageUrl", widget: string }
+              - { label: "Page name", name: "pageName", widget: string }
+
+          - { label: "Results website URL", name: "resultsUrl", widget: string }
+
+          - label: "Qualifying — Comrades & Two Oceans"
+            name: "qualifiers"
+            widget: object
+            fields:
+              - { label: "Qualifying standard", name: "standard", widget: string }
+              - { label: "Cut-off vs qualifying-standard caveat", name: "cutoffCaveat", widget: text }
+              - label: "Comrades"
+                name: "comrades"
+                widget: object
+                fields:
+                  - { label: "Name", name: "name", widget: string }
+                  - { label: "Edition description", name: "edition", widget: string }
+                  - { label: "Date (YYYY-MM-DD)", name: "date", widget: string }
+                  - { label: "Date, as displayed", name: "dateDisplay", widget: string }
+                  - { label: "Entry cap", name: "entryCap", widget: number, value_type: int }
+                  - { label: "Previous entry cap", name: "previousCap", widget: number, value_type: int }
+                  - { label: "Qualifying window start (YYYY-MM-DD)", name: "qualifyingWindowStart", widget: string }
+                  - { label: "Qualifying window end (YYYY-MM-DD)", name: "qualifyingWindowEnd", widget: string }
+                  - { label: "Qualifying window, as displayed", name: "qualifyingWindowDisplay", widget: string }
+                  - { label: "Ballot close date (YYYY-MM-DD)", name: "ballotCloseDate", widget: string }
+                  - { label: "Ballot close, as displayed", name: "ballotCloseDisplay", widget: string }
+                  - { label: "Ballot note", name: "ballotNote", widget: text }
+              - label: "Two Oceans"
+                name: "twoOceans"
+                widget: object
+                fields:
+                  - { label: "Name", name: "name", widget: string }
+                  - { label: "Race type", name: "raceType", widget: string }
+                  - { label: "Date (YYYY-MM-DD)", name: "date", widget: string }
+                  - { label: "Date, as displayed", name: "dateDisplay", widget: string }
+                  - { label: "Entry cap", name: "entryCap", widget: number, value_type: int }
+                  - { label: "Previous entry cap", name: "previousCap", widget: number, value_type: int }
+                  - { label: "Qualifying window start (YYYY-MM-DD)", name: "qualifyingWindowStart", widget: string }
+                  - { label: "Qualifying window, as displayed", name: "qualifyingWindowDisplay", widget: string }
+                  - { label: "Seeding note", name: "seedingNote", widget: text }
+              - label: "Approved-list status (technical — do not edit casually)"
+                name: "approvedListStatus"
+                widget: string
+                hint: "Used only in internal notes, not shown on the page. Leave as-is unless you know why you're changing it."
+              - { label: "\"Single lap\" explainer note", name: "singleLapNote", widget: text }
+
+          - label: "Course"
+            name: "course"
+            widget: object
+            fields:
+              - { label: "Measurement note", name: "measurementNote", widget: text }
+              - { label: "Measurement certificate number", name: "measurementCertificateNumber", widget: string, required: false }
+              - { label: "Approximate altitude (m)", name: "altitudeApprox", widget: number, value_type: int }
+              - { label: "R59 crossing note", name: "r59CrossingNote", widget: text }
+              - { label: "Surface confirmed?", name: "surfaceConfirmed", widget: boolean }
+
+          - label: "Distances"
+            name: "distances"
+            widget: list
+            min: 4
+            max: 4
+            allow_add: false
+            summary: "{{fields.label}} — {{fields.shortLabel}}"
+            fields:
+              - label: "ID (technical — never change this)"
+                name: "id"
+                widget: string
+                hint: "Must exactly match the distance's route data files. Changing this breaks the route map and elevation chart for this distance."
+              - { label: "Label (e.g. 42.2km)", name: "label", widget: string }
+              - { label: "Short label (e.g. Marathon)", name: "shortLabel", widget: string }
+              - { label: "Is this the flagship distance?", name: "flagship", widget: boolean }
+              - label: "GPX distance (km) — technical, from the route file"
+                name: "gpxDistanceKm"
+                widget: number
+                value_type: float
+              - { label: "Elevation min (m) — technical", name: "elevationMinM", widget: number, value_type: int }
+              - { label: "Elevation max (m) — technical", name: "elevationMaxM", widget: number, value_type: int }
+              - { label: "Total ascent, as displayed (e.g. 240–320)", name: "totalAscentM", widget: string }
+              - { label: "Start time", name: "startTime", widget: string, hint: "24-hour format, e.g. 06:00" }
+              - { label: "Minimum age", name: "minAge", widget: number, value_type: int }
+              - { label: "Cut-off, in hours — technical", name: "cutoffHours", widget: number, value_type: float }
+              - { label: "Cut-off, as displayed (e.g. 6h30)", name: "cutoffDisplay", widget: string }
+              - label: "Entry fees (R)"
+                name: "fees"
+                widget: object
+                fields:
+                  - { label: "Early bird", name: "earlyBird", widget: number, value_type: int }
+                  - { label: "Grandmaster", name: "grandmaster", widget: number, value_type: int }
+                  - { label: "Late (after the deadline)", name: "late", widget: number, value_type: int }
+              - { label: "Free shirts to first N entrants (leave blank if none)", name: "freeShirtsFirst", widget: number, value_type: int, required: false }
+              - { label: "Elevation profile summary (shown on page)", name: "profileSummary", widget: text }
+              - label: "GPX filename — technical, do not change"
+                name: "gpxFile"
+                widget: string
+                hint: "Must match a real file in data/gpx/. Changing this without also replacing that file breaks the GPX download link."
+              - { label: "Strava route URL", name: "stravaRouteUrl", widget: string }
+              - { label: "Route description (shown on page)", name: "routeDescription", widget: text }
+
+          - label: "Prize money"
+            name: "prizeMoney"
+            widget: object
+            fields:
+              - { label: "Total prize money (R)", name: "totalR", widget: number, value_type: int }
+              - { label: "Equal-gender statement", name: "equalGenderStatement", widget: text }
+              - { label: "Payment note", name: "paymentNote", widget: text }
+              - label: "Prize categories"
+                name: "categories"
+                widget: list
+                summary: "{{fields.category}} — {{fields.place}}"
+                fields:
+                  - label: "Category"
+                    name: "category"
+                    widget: string
+                    hint: "If this is a masters/veteran category, keep the exact wording (e.g. \"Veteran 40+\") — it controls a visual highlight on the page."
+                  - { label: "Place (e.g. 1st, or 1st / 2nd / 3rd for combined rows)", name: "place", widget: string }
+                  - { label: "42.2km prize (R) — leave blank for none", name: "42_2km", widget: string, required: false, hint: "Usually a number, but can be text like \"500 / 350 / 250\" for a combined row" }
+                  - { label: "22km prize (R) — leave blank for none", name: "22km", widget: string, required: false }
+                  - { label: "11km prize (R) — leave blank for none", name: "11km", widget: string, required: false }
+
+          - label: "Number collection points"
+            name: "numberCollection"
+            widget: list
+            summary: "{{fields.dateDisplay}} — {{fields.venue}}"
+            fields:
+              - { label: "Date (YYYY-MM-DD)", name: "date", widget: string }
+              - { label: "Date, as displayed", name: "dateDisplay", widget: string }
+              - { label: "Time", name: "time", widget: string }
+              - { label: "Venue", name: "venue", widget: string }
+              - { label: "Is this race-day collection?", name: "raceDay", widget: boolean, required: false }
+
+          - label: "What you get (perks)"
+            name: "perks"
+            widget: object
+            fields:
+              - { label: "T-shirt description", name: "tshirt", widget: text }
+              - { label: "Medal description", name: "medal", widget: text }
+              - { label: "Goodie bags (count)", name: "goodieBags", widget: number, value_type: int }
+              - { label: "Extra shirt fee (R)", name: "extraShirtFeeR", widget: number, value_type: int }
+              - label: "Platō Meyerton offer"
+                name: "platoOffer"
+                widget: object
+                fields:
+                  - { label: "Venue", name: "venue", widget: string }
+                  - { label: "Discount", name: "discount", widget: string }
+                  - { label: "Condition", name: "condition", widget: text }
+
+          - label: "Race rules"
+            name: "raceRules"
+            widget: object
+            fields:
+              - { label: "Timing", name: "timing", widget: text }
+              - { label: "Distance boards", name: "distanceBoards", widget: string }
+              - { label: "Waterpoints", name: "waterpoints", widget: string }
+              - { label: "Results published on", name: "resultsPublishedOn", widget: string }
+              - { label: "Governing bodies", name: "governingBodies", widget: string }
+              - { label: "Licence note", name: "licenceNote", widget: text }
+              - { label: "Temporary licence fee (R) — leave blank if unknown", name: "temporaryLicenceFeeR", widget: number, value_type: int, required: false }
+              - { label: "Prohibited items/behaviour", name: "prohibited", widget: text }
+              - { label: "Age category note", name: "ageCategoryNote", widget: text }
+              - { label: "Appeals process", name: "appeals", widget: text }
+
+          - label: "Amenities"
+            name: "amenities"
+            widget: list
+            field: { label: "Amenity", name: "item", widget: string }
+
+          - label: "Testimonials"
+            name: "testimonials"
+            widget: object
+            fields:
+              - { label: "Source", name: "source", widget: string }
+              - { label: "Source URL", name: "sourceUrl", widget: string }
+              - { label: "Star rating", name: "rating", widget: number, value_type: float }
+              - { label: "Review count", name: "reviewCount", widget: number, value_type: int }
+              - label: "Quotes"
+                name: "quotes"
+                widget: list
+                summary: "{{fields.name}} ({{fields.distance}}, {{fields.year}})"
+                fields:
+                  - { label: "Name", name: "name", widget: string }
+                  - { label: "Distance run", name: "distance", widget: string }
+                  - { label: "Year", name: "year", widget: number, value_type: int }
+                  - { label: "Quote", name: "quote", widget: text }
+
+          - label: "Photo gallery"
+            name: "gallery"
+            widget: object
+            fields:
+              - { label: "Internal note", name: "note", widget: text, required: false }
+              - label: "Photos"
+                name: "photos"
+                widget: list
+                summary: "{{fields.caption}}"
+                fields:
+                  - label: "Photo"
+                    name: "file"
+                    widget: image
+                    media_folder: "/assets/img/gallery"
+                    public_folder: "/assets/img/gallery"
+                    choose_url: false
+                  - label: "Alt text (describe the photo — matters for SEO and screen readers)"
+                    name: "alt"
+                    widget: string
+                  - { label: "Caption (shown under the photo)", name: "caption", widget: string }
+
+          - label: "FAQ"
+            name: "faq"
+            widget: list
+            summary: "{{fields.q}}"
+            fields:
+              - { label: "Question", name: "q", widget: string }
+              - { label: "Answer", name: "a", widget: text }
+
+          - label: "Sponsors"
+            name: "sponsors"
+            widget: object
+            fields:
+              - { label: "Internal note", name: "note", widget: text, required: false }
+              - label: "Sponsor list"
+                name: "list"
+                widget: list
+                summary: "{{fields.name}}"
+                fields:
+                  - { label: "Name", name: "name", widget: string }
+                  - label: "Logo (leave blank to show name as text only)"
+                    name: "logo"
+                    widget: image
+                    required: false
+                    media_folder: "/assets/img/sponsors"
+                    public_folder: "/assets/img/sponsors"
+                    choose_url: false
+                  - { label: "Website URL (leave blank for no link)", name: "url", widget: string, required: false }
+
+          - label: "Contact"
+            name: "contact"
+            widget: object
+            fields:
+              - { label: "Email", name: "email", widget: string, required: false }
+              - { label: "Phone", name: "phone", widget: string, required: false }
+              - { label: "WhatsApp number", name: "whatsapp", widget: string, required: false }
+              - { label: "Instagram URL", name: "instagram", widget: string, required: false }
+
+          - label: "Analytics (technical)"
+            name: "analytics"
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Provider (none / ga4 / plausible)", name: "provider", widget: string }
+              - { label: "GA4 measurement ID", name: "ga4Id", widget: string, required: false }
+              - { label: "Plausible domain", name: "plausibleDomain", widget: string, required: false }
+              - { label: "Meta Pixel ID", name: "metaPixelId", widget: string, required: false }
+
+          - label: "Email capture (technical)"
+            name: "emailCapture"
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Form endpoint URL", name: "endpointUrl", widget: string, required: false }
+              - { label: "Provider name", name: "provider", widget: string }
+              - { label: "Form field name", name: "fieldName", widget: string }
+
+          - label: "Unconfirmed facts (technical — leave blank until confirmed)"
+            name: "placeholders"
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Internal note", name: "note", widget: text, required: false }
+              - { label: "Road surface split", name: "roadSurfaceSplit", widget: string, required: false }
+              - { label: "Temporary licence fee for 2026", name: "temporaryLicenceFee2026", widget: string, required: false }
+              - { label: "Measurement certificate number", name: "measurementCertificateNumber", widget: string, required: false }
+              - { label: "What the 11km's 10km timing point is for", name: "elevenKm10kTimingPurpose", widget: string, required: false }
+              - { label: "Pacing buses", name: "pacingBuses", widget: string, required: false }
+
+          - label: "Internal note (technical — do not edit)"
+            name: "_comment"
+            widget: string

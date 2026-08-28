@@ -159,6 +159,39 @@ A real, tightly-cropped flat wordmark also exists now (`assets/img/madmac-wordma
 clown, no sponsor strip, cropped from the club's own logo file) if a future version of this image
 should use the actual logo instead of typeset text.
 
+## For content editors
+
+Non-technical editors — anyone updating fees, sponsors, FAQ answers, testimonials or photos —
+should use the CMS at `/admin/` instead of touching `race-config.json` or git directly. It's a
+real form: text fields, image upload for sponsor logos and gallery photos, add/remove buttons for
+list items like sponsors or FAQ entries. Saving there commits the change to this repo and rebuilds
+the live site automatically — nothing needs to run by hand.
+
+**Status: built, not yet wired up for real logins.** `admin/config.yml` and `admin/index.html` are
+in place, and the schema has been fully verified against the live config (every field round-trips
+with nothing dropped — checked programmatically, not just spot-checked). What's still needed
+before a non-technical editor can actually use it, none of which I can do without your accounts:
+
+1. A GitHub OAuth App (GitHub → Settings → Developer settings → OAuth Apps → New OAuth App),
+   created under whichever GitHub account should own it.
+2. Sveltia's `sveltia-cms-auth` OAuth proxy deployed to Cloudflare Workers (free tier) with that
+   app's client ID/secret — this is the one new piece of infrastructure, and needs a Cloudflare
+   account.
+3. `admin/config.yml` → `backend.base_url` updated from the placeholder to the deployed Worker's
+   URL.
+4. A `.github/workflows/build-deploy.yml` added so a commit to `data/race-config.json` or
+   `assets/img/{sponsors,gallery}/**` triggers `render.py` and redeploys automatically — right now
+   a CMS save would commit real changes to the repo, but the live site wouldn't update until
+   someone runs `render.py` and pushes by hand, same as today.
+5. GitHub Pages source switched from "Deploy from branch" to "GitHub Actions" (Settings → Pages),
+   so that workflow actually owns publishing.
+6. Each editor added as a repo Collaborator with Write access (Settings → Collaborators), and a
+   GitHub account of their own if they don't have one.
+
+Say the word when you're ready to do the OAuth App and Cloudflare Worker pieces — those need your
+own account logins, so I'll either walk you through them or, if you'd rather, drive it directly
+with your permission once you're at the keyboard.
+
 ## Domain
 
 `tools/render.py` has `SITE_URL = "https://midvaalmadmac.co.za"` as a **placeholder** — canonical
