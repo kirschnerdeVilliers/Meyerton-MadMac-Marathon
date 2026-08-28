@@ -10,7 +10,7 @@ backend:
   name: github
   repo: kirschnerdeVilliers/Meyerton-MadMac-Marathon
   branch: main
-  base_url: https://REPLACE-WITH-YOUR-WORKER.workers.dev
+  base_url: https://sveltia-cms-auth.kirschner-devilliers.workers.dev
 
 local_backend: true
 
