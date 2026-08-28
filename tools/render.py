@@ -144,6 +144,41 @@ def build_head():
         ],
     }
 
+    testimonials = CONFIG["testimonials"]
+    event_jsonld["aggregateRating"] = {
+        "@type": "AggregateRating",
+        "ratingValue": testimonials["rating"],
+        "reviewCount": testimonials["reviewCount"],
+        "bestRating": 5,
+    }
+    # No per-review star rating is included — Race Pass exposes distance,
+    # year and quote text per review, not an individual score, and
+    # reviewRating is optional on schema.org's Review type. Inventing a
+    # star count per quote just to satisfy a rich-result checklist would be
+    # fabricated data, so it's left out.
+    event_jsonld["review"] = [
+        {
+            "@type": "Review",
+            "author": {"@type": "Person", "name": q["name"]},
+            "reviewBody": q["quote"],
+            "datePublished": str(q["year"]),
+        }
+        for q in testimonials["quotes"]
+    ]
+
+    faq_jsonld = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": item["q"],
+                "acceptedAnswer": {"@type": "Answer", "text": item["a"]},
+            }
+            for item in CONFIG["faq"]
+        ],
+    }
+
     return f"""<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
@@ -173,6 +208,7 @@ def build_head():
 <link rel="stylesheet" href="assets/css/site.css">
 
 <script type="application/ld+json">{json.dumps(event_jsonld, indent=0)}</script>
+<script type="application/ld+json">{json.dumps(faq_jsonld, indent=0)}</script>
 """
 
 
