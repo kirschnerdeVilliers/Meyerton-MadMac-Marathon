@@ -162,35 +162,32 @@ should use the actual logo instead of typeset text.
 ## For content editors
 
 Non-technical editors — anyone updating fees, sponsors, FAQ answers, testimonials or photos —
-should use the CMS at `/admin/` instead of touching `race-config.json` or git directly. It's a
-real form: text fields, image upload for sponsor logos and gallery photos, add/remove buttons for
-list items like sponsors or FAQ entries. Saving there commits the change to this repo and rebuilds
-the live site automatically — nothing needs to run by hand.
+should use the CMS at **[/admin/](https://kirschnerdevilliers.github.io/Meyerton-MadMac-Marathon/admin/)**
+instead of touching `race-config.json` or git directly. Log in with a GitHub account, edit, hit
+save. It's a real form: text fields, image upload for sponsor logos and gallery photos, add/remove
+buttons for list items like sponsors or FAQ entries. Saving commits the change to this repo and a
+GitHub Action rebuilds and redeploys the live site automatically, usually within a minute or two —
+nothing needs to run by hand.
 
-**Status: built, not yet wired up for real logins.** `admin/config.yml` and `admin/index.html` are
-in place, and the schema has been fully verified against the live config (every field round-trips
-with nothing dropped — checked programmatically, not just spot-checked). What's still needed
-before a non-technical editor can actually use it, none of which I can do without your accounts:
+**This is fully working, end to end, including a real content edit through it.** To add another
+editor: they need their own GitHub account, added as a repo Collaborator with Write access
+(Settings → Collaborators on GitHub) — the CMS itself needs no separate account of its own.
 
-1. A GitHub OAuth App (GitHub → Settings → Developer settings → OAuth Apps → New OAuth App),
-   created under whichever GitHub account should own it.
-2. Sveltia's `sveltia-cms-auth` OAuth proxy deployed to Cloudflare Workers (free tier) with that
-   app's client ID/secret — this is the one new piece of infrastructure, and needs a Cloudflare
-   account.
-3. `admin/config.yml` → `backend.base_url` updated from the placeholder to the deployed Worker's
-   URL.
-4. A `.github/workflows/build-deploy.yml` added so a commit to `data/race-config.json` or
-   `assets/img/{sponsors,gallery}/**` triggers `render.py` and redeploys automatically — right now
-   a CMS save would commit real changes to the repo, but the live site wouldn't update until
-   someone runs `render.py` and pushes by hand, same as today.
-5. GitHub Pages source switched from "Deploy from branch" to "GitHub Actions" (Settings → Pages),
-   so that workflow actually owns publishing.
-6. Each editor added as a repo Collaborator with Write access (Settings → Collaborators), and a
-   GitHub account of their own if they don't have one.
+A couple of things worth knowing if you're touching the CMS config or its infrastructure:
 
-Say the word when you're ready to do the OAuth App and Cloudflare Worker pieces — those need your
-own account logins, so I'll either walk you through them or, if you'd rather, drive it directly
-with your permission once you're at the keyboard.
+- `admin/config.yml` maps every field in `race-config.json`, including technical ones (analytics,
+  GPX-linked distance fields) that are present but labelled do-not-edit rather than hidden — the
+  CMS drops any field missing from the schema entirely on save, so nothing gets removed from it.
+- The CMS saves an empty optional field as `""`, not JSON `null`, and stores numbers typed into a
+  text-only field (like a prize-money cell, which also has to allow text like `"500 / 350 / 250"`)
+  as a numeric *string*. `tools/render.py` normalises both of these right after loading the config
+  (`normalize_blanks()`, `prize_cell()`) — this isn't a one-off fix, it's how every future save
+  behaves, so don't be surprised the raw JSON looks a little different (pretty-printed, `""` instead
+  of `null`) after someone edits through `/admin/` versus by hand.
+- Auth runs through a small Cloudflare Worker (`sveltia-cms-auth`, deployed separately, not in this
+  repo) that proxies the GitHub OAuth handshake. If login ever breaks, check that the GitHub OAuth
+  App's Client ID (github.com/settings/developers) matches what's set as `GITHUB_CLIENT_ID` on that
+  Worker — they're independent and nothing keeps them in sync automatically.
 
 ## Domain
 
