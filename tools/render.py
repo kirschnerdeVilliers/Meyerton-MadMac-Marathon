@@ -18,7 +18,25 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CONFIG = json.loads((ROOT / "data" / "race-config.json").read_text())
+
+
+def normalize_blanks(obj):
+    """The CMS (Sveltia/Decap) saves an empty optional field as "" rather
+    than JSON null — every not-yet-confirmed field in this config
+    (contact numbers, analytics IDs, placeholders, sponsor URLs, etc.) was
+    written and is read elsewhere in this file as null. Recursively
+    collapse "" back to None right after loading, once, so nothing
+    downstream has to special-case where the data came from."""
+    if isinstance(obj, dict):
+        return {k: normalize_blanks(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [normalize_blanks(v) for v in obj]
+    if obj == "":
+        return None
+    return obj
+
+
+CONFIG = normalize_blanks(json.loads((ROOT / "data" / "race-config.json").read_text()))
 MOTIF = json.loads((ROOT / "assets" / "img" / "route-motif.json").read_text())
 
 SITE_URL = "https://midvaalmadmac.co.za"  # placeholder production domain — see README
@@ -674,6 +692,23 @@ def build_qualifying_prose():
 
 # -------------------------------------------------------------- prize money --
 
+def prize_cell(v):
+    """A prize category cell is usually a rand amount, but can legitimately
+    be combined text like "500 / 350 / 250" — and since the field is a
+    plain string widget in the CMS (it has to be, to allow that text case),
+    a hand-typed number there round-trips as a numeric *string*, not an
+    int. Coerce anything that's actually just digits before formatting, so
+    "R12 000" doesn't silently degrade to a bare "12000" depending on
+    whether a human or the CMS last touched this row."""
+    if v is None:
+        return rand(None)
+    if isinstance(v, (int, float)):
+        return rand(v)
+    if isinstance(v, str) and v.strip().lstrip("-").isdigit():
+        return rand(int(v.strip()))
+    return esc(v)
+
+
 def build_prizes():
     prize = CONFIG["prizeMoney"]
     masters_categories = {"Veteran 40+", "Master 50+", "Grandmaster 60+"}
@@ -682,7 +717,7 @@ def build_prizes():
     for row in prize["categories"]:
         cls = "masters-row" if row["category"] in masters_categories else ""
         vals = "".join(
-            f'<td class="num">{rand(row[k]) if isinstance(row[k], (int, float)) or row[k] is None else row[k]}</td>'
+            f'<td class="num">{prize_cell(row[k])}</td>'
             for k in ("42_2km", "22km", "11km")
         )
         rows.append(f'<tr class="{cls}"><td>{esc(row["category"])}</td><td>{esc(row["place"])}</td>{vals}</tr>')
