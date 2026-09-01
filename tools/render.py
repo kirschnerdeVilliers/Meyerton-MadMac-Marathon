@@ -213,7 +213,9 @@ def build_head():
 <meta name="twitter:description" content="{esc(description)}">
 <meta name="twitter:image" content="{og_image}">
 
-<link rel="icon" href="data:image/svg+xml,{quote_svg_favicon()}">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:ital,wght@1,700;1,800;1,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -222,19 +224,6 @@ def build_head():
 <script type="application/ld+json">{json.dumps(event_jsonld, indent=0)}</script>
 <script type="application/ld+json">{json.dumps(faq_jsonld, indent=0)}</script>
 """
-
-
-def quote_svg_favicon():
-    # hand-encoded (# -> %23) — this is inlined directly into a data: URI
-    svg = (
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">'
-        '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
-        '<stop offset="0%" stop-color="%232fae6a"/><stop offset="52%" stop-color="%23f5c518"/>'
-        '<stop offset="100%" stop-color="%23ef6a1f"/></linearGradient></defs>'
-        '<rect width="32" height="32" rx="8" fill="%230f1836"/>'
-        '<rect x="4" y="4" width="24" height="24" rx="6" fill="url(%23g)"/></svg>'
-    )
-    return svg
 
 
 # ---------------------------------------------------------------- header --
