@@ -1,14 +1,16 @@
 {
-  "_comment": "Single source of truth for the MadMac landing page. Edit this file to update the site for a future edition — see README.md.",
   "edition": {
-    "year": 2026,
+    "year": 2027,
     "raceName": "Midvaal MadMac",
     "date": "2026-10-04",
     "dateDisplay": "Sunday 4 October 2026",
     "organiser": "Meyerton Athletics Club (MAC)",
     "venueName": "Café du Cirque",
     "venueAddress": "Plot 116, Springbok Road, Daleside, Randvaal",
-    "coordinates": { "lat": -26.4877514, "lng": 28.061836 },
+    "coordinates": {
+      "lat": -26.4877514,
+      "lng": 28.061836
+    },
     "positioning": "Single Lap Comrades and Totalsports Two Oceans Marathon qualifier",
     "totalFieldSize": 2500,
     "totalPrizeMoney": 100000,
@@ -61,7 +63,7 @@
   },
   "course": {
     "measurementNote": "Course distances are computed from the official GPX exports. Elevation follows Strava's terrain model rather than a survey, so treat vertical figures as indicative.",
-    "measurementCertificateNumber": null,
+    "measurementCertificateNumber": "",
     "altitudeApprox": 1500,
     "r59CrossingNote": "The 11km, 22km and 42.2km all cross the R59 (Sybrand van Niekerk Freeway) at the Karee Road / Randvaal Road crossing.",
     "surfaceConfirmed": false
@@ -80,7 +82,11 @@
       "minAge": 20,
       "cutoffHours": 6.5,
       "cutoffDisplay": "6h30",
-      "fees": { "earlyBird": 350, "grandmaster": 270, "late": 370 },
+      "fees": {
+        "earlyBird": 350,
+        "grandmaster": 270,
+        "late": 370
+      },
       "freeShirtsFirst": 250,
       "profileSummary": "The first 20km rolls gently between 1 470m and 1 520m, with the low point around 16km. The only meaningful climb comes between 20km and 24km, gaining about 70m, steepest in the two kilometres to 24km. From 24km to 40km it's rolling at 1 510–1 550m, then it drops away over the final two kilometres into the finish.",
       "gpxFile": "midvaal-madmac-2026-42.2km.gpx",
@@ -100,7 +106,11 @@
       "minAge": 16,
       "cutoffHours": 4,
       "cutoffDisplay": "4h00",
-      "fees": { "earlyBird": 220, "grandmaster": 180, "late": 250 },
+      "fees": {
+        "earlyBird": 220,
+        "grandmaster": 180,
+        "late": 250
+      },
       "freeShirtsFirst": 100,
       "profileSummary": "Climbs about 66m in the first 4km, rolls at altitude through the middle, then descends from 20km to the finish — front-loaded rather than flat.",
       "gpxFile": "midvaal-madmac-2026-22km.gpx",
@@ -120,7 +130,11 @@
       "minAge": 14,
       "cutoffHours": 2,
       "cutoffDisplay": "2h00",
-      "fees": { "earlyBird": 180, "grandmaster": 140, "late": 200 },
+      "fees": {
+        "earlyBird": 180,
+        "grandmaster": 140,
+        "late": 200
+      },
       "freeShirtsFirst": 50,
       "profileSummary": "About 70–90m of ascent, one rise in the first half, descent home. Carries a 10km timing point.",
       "gpxFile": "midvaal-madmac-2026-11km.gpx",
@@ -140,7 +154,11 @@
       "minAge": 9,
       "cutoffHours": 2,
       "cutoffDisplay": "2h00",
-      "fees": { "earlyBird": 90, "grandmaster": 90, "late": 90 },
+      "fees": {
+        "earlyBird": 90,
+        "grandmaster": 90,
+        "late": 90
+      },
       "freeShirtsFirst": null,
       "profileSummary": "Effectively pancake flat — 13m of total vertical spread across the whole distance. Exactly what a first-timer or a parent with a nine-year-old wants to hear.",
       "gpxFile": "midvaal-madmac-2026-5km.gpx",
@@ -153,26 +171,128 @@
     "equalGenderStatement": "Men's and women's prize money is equal across every distance and every category.",
     "paymentNote": "Prizes paid electronically, by EFT within seven days, unless WADA testing results are pending.",
     "categories": [
-      { "category": "Open", "place": "1st", "42_2km": 12000, "22km": 4000, "11km": 1000 },
-      { "category": "Open", "place": "2nd", "42_2km": 6000, "22km": 3000, "11km": 750 },
-      { "category": "Open", "place": "3rd", "42_2km": 3000, "22km": 1500, "11km": 500 },
-      { "category": "Veteran 40+", "place": "1st", "42_2km": 3500, "22km": 2000, "11km": 500 },
-      { "category": "Veteran 40+", "place": "2nd", "42_2km": 2000, "22km": 1500, "11km": 300 },
-      { "category": "Veteran 40+", "place": "3rd", "42_2km": 1000, "22km": 800, "11km": 250 },
-      { "category": "Master 50+", "place": "1st", "42_2km": 1000, "22km": 500, "11km": 250 },
-      { "category": "Master 50+", "place": "2nd", "42_2km": 750, "22km": 250, "11km": null },
-      { "category": "Grandmaster 60+", "place": "1st", "42_2km": 1000, "22km": 350, "11km": 250 },
-      { "category": "Grandmaster 60+", "place": "2nd", "42_2km": 750, "22km": 250, "11km": null },
-      { "category": "Junior", "place": "1st / 2nd / 3rd", "42_2km": null, "22km": null, "11km": "500 / 350 / 250" }
+      {
+        "category": "Open",
+        "place": "1st",
+        "42_2km": "12000",
+        "22km": "4000",
+        "11km": "1000"
+      },
+      {
+        "category": "Open",
+        "place": "2nd",
+        "42_2km": "6000",
+        "22km": "3000",
+        "11km": "750"
+      },
+      {
+        "category": "Open",
+        "place": "3rd",
+        "42_2km": "3000",
+        "22km": "1500",
+        "11km": "500"
+      },
+      {
+        "category": "Veteran 40+",
+        "place": "1st",
+        "42_2km": "3500",
+        "22km": "2000",
+        "11km": "500"
+      },
+      {
+        "category": "Veteran 40+",
+        "place": "2nd",
+        "42_2km": "2000",
+        "22km": "1500",
+        "11km": "300"
+      },
+      {
+        "category": "Veteran 40+",
+        "place": "3rd",
+        "42_2km": "1000",
+        "22km": "800",
+        "11km": "250"
+      },
+      {
+        "category": "Master 50+",
+        "place": "1st",
+        "42_2km": "1000",
+        "22km": "500",
+        "11km": "250"
+      },
+      {
+        "category": "Master 50+",
+        "place": "2nd",
+        "42_2km": "750",
+        "22km": "250",
+        "11km": ""
+      },
+      {
+        "category": "Grandmaster 60+",
+        "place": "1st",
+        "42_2km": "1000",
+        "22km": "350",
+        "11km": "250"
+      },
+      {
+        "category": "Grandmaster 60+",
+        "place": "2nd",
+        "42_2km": "750",
+        "22km": "250",
+        "11km": ""
+      },
+      {
+        "category": "Junior",
+        "place": "1st / 2nd / 3rd",
+        "42_2km": "",
+        "22km": "",
+        "11km": "500 / 350 / 250"
+      }
     ]
   },
   "numberCollection": [
-    { "date": "2026-09-29", "dateDisplay": "29 Sept 2026", "time": "11:00–17:30", "venue": "Sportsmans Warehouse, Cresta" },
-    { "date": "2026-09-30", "dateDisplay": "30 Sept 2026", "time": "11:00–17:30", "venue": "Sportsmans Warehouse, East Rand Mall" },
-    { "date": "2026-10-01", "dateDisplay": "1 Oct 2026", "time": "11:00–17:30", "venue": "Sportsmans Warehouse, Fourways" },
-    { "date": "2026-10-02", "dateDisplay": "2 Oct 2026", "time": "11:00–17:30", "venue": "Sportsmans Warehouse, Vanderbijlpark" },
-    { "date": "2026-10-03", "dateDisplay": "3 Oct 2026", "time": "08:00–17:00", "venue": "Café du Cirque, Randvaal" },
-    { "date": "2026-10-04", "dateDisplay": "4 Oct 2026 (race day)", "time": "04:30–05:30", "venue": "Café du Cirque, Randvaal", "raceDay": true }
+    {
+      "date": "2026-09-29",
+      "dateDisplay": "29 Sept 2026",
+      "time": "11:00–17:30",
+      "venue": "Sportsmans Warehouse, Cresta",
+      "raceDay": false
+    },
+    {
+      "date": "2026-09-30",
+      "dateDisplay": "30 Sept 2026",
+      "time": "11:00–17:30",
+      "venue": "Sportsmans Warehouse, East Rand Mall",
+      "raceDay": false
+    },
+    {
+      "date": "2026-10-01",
+      "dateDisplay": "1 Oct 2026",
+      "time": "11:00–17:30",
+      "venue": "Sportsmans Warehouse, Fourways",
+      "raceDay": false
+    },
+    {
+      "date": "2026-10-02",
+      "dateDisplay": "2 Oct 2026",
+      "time": "11:00–17:30",
+      "venue": "Sportsmans Warehouse, Vanderbijlpark",
+      "raceDay": false
+    },
+    {
+      "date": "2026-10-03",
+      "dateDisplay": "3 Oct 2026",
+      "time": "08:00–17:00",
+      "venue": "Café du Cirque, Randvaal",
+      "raceDay": false
+    },
+    {
+      "date": "2026-10-04",
+      "dateDisplay": "4 Oct 2026 (race day)",
+      "time": "04:30–05:30",
+      "venue": "Café du Cirque, Randvaal",
+      "raceDay": true
+    }
   ],
   "perks": {
     "tshirt": "Rainbow gradient (green → yellow → orange) with MadMac branding front, sponsor wall back.",
@@ -197,29 +317,84 @@
     "ageCategoryNote": "Age categories determined as at date of competition; proof of age and ID required at prize giving.",
     "appeals": "Referee's decision final; appeals require a form and a R500 deposit, refunded if successful."
   },
-  "amenities": ["Toilets", "Food and drink", "Parking", "Medical", "Bag storage", "Hydration stations"],
+  "amenities": [
+    "Toilets",
+    "Food and drink",
+    "Parking",
+    "Medical",
+    "Bag storage",
+    "Hydration stations"
+  ],
   "testimonials": {
     "source": "Race Pass",
     "sourceUrl": "https://racepass.com/za/races/midvaal-madmac",
     "rating": 4.8,
     "reviewCount": 176,
     "quotes": [
-      { "name": "Simphiwe", "distance": "42.2km", "year": 2025, "quote": "Best race. It has stolen my heart — it's on my bucket list of races to run again." },
-      { "name": "Cara", "distance": "42.2km", "year": 2025, "quote": "Very well organised race." },
-      { "name": "Raeford", "distance": "10km", "year": 2025, "quote": "What an awesome race. Was a really enjoyable event." },
-      { "name": "Owen", "distance": "10km", "year": 2025, "quote": "Great race, good route." }
+      {
+        "name": "Simphiwe",
+        "distance": "42.2km",
+        "year": 2025,
+        "quote": "Best race. It has stolen my heart — it's on my bucket list of races to run again."
+      },
+      {
+        "name": "Cara",
+        "distance": "42.2km",
+        "year": 2025,
+        "quote": "Very well organised race."
+      },
+      {
+        "name": "Raeford",
+        "distance": "10km",
+        "year": 2025,
+        "quote": "What an awesome race. Was a really enjoyable event."
+      },
+      {
+        "name": "Owen",
+        "distance": "10km",
+        "year": 2025,
+        "quote": "Great race, good route."
+      }
     ]
   },
   "gallery": {
     "note": "Sourced from the club's own Facebook page (public post photos, 2025 edition).",
     "photos": [
-      { "file": "start-line-2025-a.jpg", "alt": "Runners at the MadMac start line in 2025, with Café du Cirque's sign and the club's clown mascot in the foreground", "caption": "Start line, 2025" },
-      { "file": "course-marshal-2025.jpg", "alt": "A course marshal in a blue wig and hi-vis vest at the 5km marker on a Randvaal road", "caption": "On course" },
-      { "file": "mc-2025.jpg", "alt": "The race MC in full clown costume with a red wig, holding a tablet and microphone", "caption": "Race MC" },
-      { "file": "start-line-2025-b.jpg", "alt": "A wide shot of the MadMac start-line field running past Café du Cirque", "caption": "Start line" },
-      { "file": "crazy-store-2025.jpg", "alt": "A Crazy Store volunteer in a rainbow wig celebrating at the finish area", "caption": "Crazy Store crew" },
-      { "file": "finisher-2025.jpg", "alt": "MadMac finishers running together, one wearing festive wigs, near the finish", "caption": "Finishers" },
-      { "file": "medals-2025.jpg", "alt": "A pile of MadMac finisher medals on blue and yellow ribbons", "caption": "Finisher medals" }
+      {
+        "file": "start-line-2025-a.jpg",
+        "alt": "Runners at the MadMac start line in 2025, with Café du Cirque's sign and the club's clown mascot in the foreground",
+        "caption": "Start line, 2025"
+      },
+      {
+        "file": "course-marshal-2025.jpg",
+        "alt": "A course marshal in a blue wig and hi-vis vest at the 5km marker on a Randvaal road",
+        "caption": "On course"
+      },
+      {
+        "file": "mc-2025.jpg",
+        "alt": "The race MC in full clown costume with a red wig, holding a tablet and microphone",
+        "caption": "Race MC"
+      },
+      {
+        "file": "start-line-2025-b.jpg",
+        "alt": "A wide shot of the MadMac start-line field running past Café du Cirque",
+        "caption": "Start line"
+      },
+      {
+        "file": "crazy-store-2025.jpg",
+        "alt": "A Crazy Store volunteer in a rainbow wig celebrating at the finish area",
+        "caption": "Crazy Store crew"
+      },
+      {
+        "file": "finisher-2025.jpg",
+        "alt": "MadMac finishers running together, one wearing festive wigs, near the finish",
+        "caption": "Finishers"
+      },
+      {
+        "file": "medals-2025.jpg",
+        "alt": "A pile of MadMac finisher medals on blue and yellow ribbons",
+        "caption": "Finisher medals"
+      }
     ]
   },
   "faq": [
@@ -259,51 +434,132 @@
   "sponsors": {
     "note": "logo is null where no file exists yet; url is null where none was supplied — those render without a link. 'Uber-Bolt' in early source material was a mishearing of Ver-Bolt, confirmed against their actual logo; Ver-Chem (a related company, same logo sheet) added alongside it, no URL supplied for it. Switch, AfriGuard, Oasis and dabeb-elram are the three flyer logos the brief flagged as illegible at source resolution, plus one more found alongside them.",
     "list": [
-      { "name": "Midvaal Local Municipality", "logo": "midvaal-municipality.jpg", "url": "https://www.midvaal.gov.za/" },
-      { "name": "Meyerton Athletics Club", "logo": "mac.jpeg", "url": null },
-      { "name": "MAF (Mission Aviation Fellowship)", "logo": "maf.jpeg", "url": "https://maf.org/" },
-      { "name": "Ver-Bolt", "logo": "ver-bolt.png", "url": "https://www.verbolt.co.za/" },
-      { "name": "Ver-Chem", "logo": "ver-chem.png", "url": null },
-      { "name": "designdex", "logo": "designdex.jpeg", "url": "https://www.designdex.co.za/" },
-      { "name": "Flexilube", "logo": "flexilube.png", "url": "https://www.flexilube.com/" },
-      { "name": "The Crazy Store", "logo": "crazy-store.png", "url": "https://www.crazystore.co.za/" },
-      { "name": "90-6", "logo": "90-6fm.png", "url": "https://www.906fmstereo.com/" },
-      { "name": "Mogu Mogu", "logo": "mogu-mogu.png", "url": "https://www.mogumogu.com/" },
-      { "name": "Platō Coffee", "logo": "plato-coffee.png", "url": "https://plato.coffee/" },
-      { "name": "TM Tyremart", "logo": "tm-tyremart.png", "url": "https://www.tyremart.co.za/" },
-      { "name": "HarvestFresh", "logo": "harvestfresh.png", "url": "https://harvestfresh.co.za/" },
-      { "name": "Lynca Meats", "logo": "lynca-meats.png", "url": "https://lyncameats.co.za/" },
-      { "name": "32Gi Sports Nutrition", "logo": "32gi.png", "url": "https://32gi.co.za/" },
-      { "name": "Tork Craft", "logo": "tork-craft.png", "url": "https://www.torkcraft.com/" },
-      { "name": "Switch Energy Drink", "logo": "switch.jpg", "url": "https://drinkswitch.co.za/" },
-      { "name": "AfriGuard", "logo": "afriguard.jpeg", "url": "https://afri-guard.co.za/" },
-      { "name": "Oasis Water", "logo": "oasis.png", "url": "https://www.oasiswater.co.za/" },
-      { "name": "dabeb-elram", "logo": "dabeb-elram.png", "url": "https://www.dabeb.co.za/" }
+      {
+        "name": "Midvaal Local Municipality",
+        "logo": "midvaal-municipality.jpg",
+        "url": "https://www.midvaal.gov.za/"
+      },
+      {
+        "name": "Meyerton Athletics Club",
+        "logo": "mac.jpeg",
+        "url": ""
+      },
+      {
+        "name": "MAF (Mission Aviation Fellowship)",
+        "logo": "maf.jpeg",
+        "url": "https://maf.org/"
+      },
+      {
+        "name": "Ver-Bolt",
+        "logo": "ver-bolt.png",
+        "url": "https://www.verbolt.co.za/"
+      },
+      {
+        "name": "Ver-Chem",
+        "logo": "ver-chem.png",
+        "url": ""
+      },
+      {
+        "name": "designdex",
+        "logo": "designdex.jpeg",
+        "url": "https://www.designdex.co.za/"
+      },
+      {
+        "name": "Flexilube",
+        "logo": "flexilube.png",
+        "url": "https://www.flexilube.com/"
+      },
+      {
+        "name": "The Crazy Store",
+        "logo": "crazy-store.png",
+        "url": "https://www.crazystore.co.za/"
+      },
+      {
+        "name": "90-6",
+        "logo": "90-6fm.png",
+        "url": "https://www.906fmstereo.com/"
+      },
+      {
+        "name": "Mogu Mogu",
+        "logo": "mogu-mogu.png",
+        "url": "https://www.mogumogu.com/"
+      },
+      {
+        "name": "Platō Coffee",
+        "logo": "plato-coffee.png",
+        "url": "https://plato.coffee/"
+      },
+      {
+        "name": "TM Tyremart",
+        "logo": "tm-tyremart.png",
+        "url": "https://www.tyremart.co.za/"
+      },
+      {
+        "name": "HarvestFresh",
+        "logo": "harvestfresh.png",
+        "url": "https://harvestfresh.co.za/"
+      },
+      {
+        "name": "Lynca Meats",
+        "logo": "lynca-meats.png",
+        "url": "https://lyncameats.co.za/"
+      },
+      {
+        "name": "32Gi Sports Nutrition",
+        "logo": "32gi.png",
+        "url": "https://32gi.co.za/"
+      },
+      {
+        "name": "Tork Craft",
+        "logo": "tork-craft.png",
+        "url": "https://www.torkcraft.com/"
+      },
+      {
+        "name": "Switch Energy Drink",
+        "logo": "switch.jpg",
+        "url": "https://drinkswitch.co.za/"
+      },
+      {
+        "name": "AfriGuard",
+        "logo": "afriguard.jpeg",
+        "url": "https://afri-guard.co.za/"
+      },
+      {
+        "name": "Oasis Water",
+        "logo": "oasis.png",
+        "url": "https://www.oasiswater.co.za/"
+      },
+      {
+        "name": "dabeb-elram",
+        "logo": "dabeb-elram.png",
+        "url": "https://www.dabeb.co.za/"
+      }
     ]
   },
   "contact": {
     "email": "midvaalmadmac@gmail.com",
-    "phone": null,
-    "whatsapp": null,
-    "instagram": null
+    "phone": "",
+    "whatsapp": "",
+    "instagram": ""
   },
   "analytics": {
     "provider": "none",
-    "ga4Id": null,
-    "plausibleDomain": null,
-    "metaPixelId": null
+    "ga4Id": "",
+    "plausibleDomain": "",
+    "metaPixelId": ""
   },
   "emailCapture": {
-    "endpointUrl": null,
+    "endpointUrl": "",
     "provider": "unconfigured",
     "fieldName": "email"
   },
   "placeholders": {
     "note": "Facts confirmed nowhere in the source material. The site omits these claims entirely rather than guessing — see README.md 'Still needed' section.",
-    "roadSurfaceSplit": null,
-    "temporaryLicenceFee2026": null,
-    "measurementCertificateNumber": null,
-    "elevenKm10kTimingPurpose": null,
-    "pacingBuses": null
-  }
+    "roadSurfaceSplit": "",
+    "temporaryLicenceFee2026": "",
+    "measurementCertificateNumber": "",
+    "elevenKm10kTimingPurpose": "",
+    "pacingBuses": ""
+  },
+  "_comment": "Single source of truth for the MadMac landing page. Edit this file to update the site for a future edition — see README.md."
 }
