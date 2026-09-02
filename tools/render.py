@@ -970,10 +970,54 @@ def build_practical():
 
 # ------------------------------------------------------------ email capture --
 
+def provider_hidden_fields(provider):
+    """Extra hidden inputs a specific provider's plain-POST embed needs
+    alongside the visible email field, straight out of that provider's own
+    embed snippet — there's no generic way to infer these, so each
+    provider that's actually been wired up gets its fields hardcoded here.
+    Only for providers confirmed to actually process a bare POST — see
+    build_email()'s docstring for why Brevo isn't one of them."""
+    return ""
+
+
 def build_email():
+    """Brevo (the live provider) does NOT reliably process a bare POST to
+    its form action, despite documenting a "Simple HTML" no-JS embed and
+    returning {"success":true} for one: confirmed by hand — three separate
+    plain POSTs (two real, one via curl, two different addresses) all got
+    the fake-success response and never created a contact or sent an
+    email, while submitting through Brevo's own hosted, JS-powered version
+    of the exact same form worked immediately. Almost certainly their
+    invisible spam/captcha check silently discards non-JS submissions
+    rather than rejecting them (so bots can't tell they failed).
+
+    So Brevo is embedded as an iframe of that hosted page instead of a
+    same-origin <form> POST like Formspree/Buttondown/Mailchimp — the only
+    reliable way to use it without loading Brevo's own JS SDK into this
+    page. The copy inside that iframe (heading, consent line, button
+    label) is edited on Brevo's side to match this page's voice; nothing
+    about it lives in this repo."""
     ec = CONFIG["emailCapture"]
-    configured = "true" if ec.get("endpointUrl") else "false"
+    provider = ec.get("provider")
     action = esc(ec.get("endpointUrl") or "#")
+    configured = "true" if ec.get("endpointUrl") else "false"
+
+    if provider == "brevo" and ec.get("endpointUrl"):
+        widget = f"""<div class="fb-feed-card email-iframe-card">
+        <iframe class="email-iframe" src="{action}" title="Email sign-up" loading="lazy"></iframe>
+      </div>"""
+    else:
+        widget = f"""<form id="email-form" class="email-form" method="post" action="{action}"
+        target="_blank" rel="noopener" data-configured="{configured}">
+        <div class="email-form-fields">
+          <label for="email-input" class="visually-hidden">Email address</label>
+          <input id="email-input" name="{esc(ec.get('fieldName') or 'email')}" type="email" required
+            class="email-input" placeholder="you@example.com" autocomplete="email">
+          <button type="submit" class="btn btn-primary">Notify me</button>
+        </div>
+        {provider_hidden_fields(provider)}
+        <p class="email-status" role="status" aria-live="polite"></p>
+      </form>"""
 
     return f"""<section class="email-section section-pad" id="stay-updated">
   <div class="container">
@@ -985,16 +1029,7 @@ def build_email():
         No spam, and never shared with anyone else.
       </p>
 
-      <form id="email-form" class="email-form" method="post" action="{action}"
-        target="_blank" rel="noopener" data-configured="{configured}">
-        <div class="email-form-fields">
-          <label for="email-input" class="visually-hidden">Email address</label>
-          <input id="email-input" name="{esc(ec.get('fieldName') or 'email')}" type="email" required
-            class="email-input" placeholder="you@example.com" autocomplete="email">
-          <button type="submit" class="btn btn-primary">Notify me</button>
-        </div>
-        <p class="email-status" role="status" aria-live="polite"></p>
-      </form>
+      {widget}
 
       <p class="email-consent">
         Your email is collected by Meyerton Athletics Club under POPIA solely to send you a

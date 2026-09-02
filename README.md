@@ -83,21 +83,40 @@ price — none of that required touching markup, which is the point of this stru
 
 ## Email capture — wiring a real provider
 
-`data/race-config.json` → `emailCapture.endpointUrl` is currently `null`. Until it's set, the form
-is fully built and styled but blocks submission with an honest on-page message instead of
-pretending a sign-up went anywhere.
+**Live now: Brevo.** `data/race-config.json` → `emailCapture` is set to Brevo's "MadMac 2026 Entry
+Reminder Signup" form (list: "MadMac 2026 Entry Reminders" under Contacts → Lists). Sign-ups get a
+single confirmation email, no double opt-in — matches the page's own "one email, no spam" promise.
+The form's own copy (heading/consent line/button label) was edited in Brevo to match this page's
+voice, and its Title/Text blocks were removed so it's just a compact field + button — none of that
+lives in this repo. To change anything about the flow (confirmation wording, double opt-in, the
+widget's own copy), edit the form in Brevo directly under Marketing → Forms.
 
-To go live, the form (`<form id="email-form" method="post" action="...">` in `index.html`, built
-from `build_email()` in `tools/render.py`) works with the plain embed contract of any of these —
-set `endpointUrl` to the value noted, re-render, and add any provider-specific hidden fields
-directly in `build_email()`:
+**Brevo is embedded differently from the other providers below — read this before "fixing" it.**
+Brevo documents a "Simple HTML" no-JS embed (a plain `<form method="post" action="...">`, same
+contract as Formspree/Buttondown/Mailchimp), but it does **not** actually work: confirmed by hand —
+three separate plain POSTs (two real submissions, one via `curl`, two different addresses) each got
+Brevo's endpoint returning `{"success":true}`, yet created no contact and sent no email, over 20+
+minutes. Submitting through Brevo's own hosted, JS-powered version of the exact same form worked
+immediately. Almost certainly their spam/captcha check silently discards non-JS submissions instead
+of rejecting them, so a scripted attacker can't tell it failed — which also means a real visitor's
+plain POST fails exactly the same way, silently. So `build_email()` embeds Brevo's hosted form URL
+in an `<iframe>` instead of building our own `<form>` for it — the only reliable option that doesn't
+mean loading Brevo's JS SDK into this page. Re-verify this the same way (submit for real, check the
+contact/list in Brevo) before ever switching Brevo back to a plain-POST `<form>`.
+
+The other three providers *do* work with a plain POST — the form (`<form id="email-form"
+method="post" action="...">` in `index.html`, the `else` branch of `build_email()` in
+`tools/render.py`) works with their embed contract directly: set
+`emailCapture.endpointUrl`/`provider`/`fieldName` to the values noted, re-render, and add any
+provider-specific hidden fields in `provider_hidden_fields()` (also in `tools/render.py`):
 
 - **Formspree** — `endpointUrl` = your form's endpoint, e.g. `https://formspree.io/f/xxxxxxx`.
   No extra hidden fields needed.
 - **Buttondown** — `endpointUrl` = `https://buttondown.com/api/emails/embed-subscribe/<username>`.
 - **Mailchimp** — `endpointUrl` = the embedded form's `action` URL from your audience's signup
   form settings. Mailchimp also requires a honeypot hidden input (name starts with `b_`, specific
-  to your audience/list IDs) — copy it from Mailchimp's own embed snippet into `build_email()`.
+  to your audience/list IDs) — copy it from Mailchimp's own embed snippet into
+  `provider_hidden_fields()`.
 
 The form posts with `target="_blank"` so the provider's own confirmation page opens in a new tab
 rather than navigating away from the landing page.
@@ -255,7 +274,6 @@ rather than guessed:
   work typographically.
 - Direct URL for the Vaalweekblad/Citizen qualifier-angle coverage referenced in the "Qualifying
   for Comrades 2027 and Two Oceans 2027" section (currently described, not linked)
-- Email capture endpoint URL (see above)
 - Analytics IDs (GA4/Plausible) and Meta Pixel ID
 - Organiser phone / WhatsApp number — email is wired (`midvaalmadmac@gmail.com`, found on the
   club's public Facebook "About" page) and Facebook is linked; phone/WhatsApp still render only if
