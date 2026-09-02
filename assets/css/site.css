@@ -742,6 +742,25 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
 .practical-note { padding: var(--space-4) var(--space-5); border-radius: var(--radius-m); border: 1px solid var(--border); font-size: 0.9rem; }
 .practical-note strong { display: block; color: var(--ink-100); margin-bottom: var(--space-1); font-size: 0.95rem; }
 
+/* ---------- facebook feed ---------- */
+.fb-feed-card {
+  margin-top: var(--space-6);
+  max-width: 560px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: var(--space-4);
+  overflow: hidden; /* clip the plugin iframe corners to the card radius */
+}
+.fb-feed-card .fb-page, .fb-feed-card iframe { max-width: 100%; }
+/* shown only until the SDK swaps it for the live plugin (see fb-xfbml-parse-ignore) */
+.fb-feed-card blockquote {
+  margin: 0; padding: var(--space-6);
+  background: var(--bg-sunken); border-radius: var(--radius-s);
+  color: var(--text-muted); font-size: 0.95rem; text-align: center;
+}
+.fb-feed-card blockquote a { color: var(--yellow); font-weight: 600; }
+
 /* ---------- email capture ---------- */
 .email-section {
   background: linear-gradient(135deg, rgba(47,174,106,0.14), rgba(239,106,31,0.1));

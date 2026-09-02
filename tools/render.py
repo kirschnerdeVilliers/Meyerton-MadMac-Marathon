@@ -1014,6 +1014,49 @@ def sponsor_content(sponsor):
     return esc(sponsor["name"])
 
 
+# ------------------------------------------------------------ facebook feed --
+
+def build_facebook_feed():
+    """Meta's official Page Plugin, not a custom feed reader — genuinely
+    live (Facebook's iframe fetches fresh posts per visit) and needs no
+    credentials or backend. Lazy-loaded by facebook-feed.js once this
+    section nears the viewport. The blockquote inside .fb-page is the
+    plugin's own documented fallback markup (kept out of XFBML parsing via
+    fb-xfbml-parse-ignore) — it's what a visitor sees if the SDK never
+    loads (blocked, offline, no JS)."""
+    fb = CONFIG["facebook"]
+    fb_url = esc(fb["pageUrl"])
+    fb_name = esc(fb.get("pageName") or "Midvaal MadMac on Facebook")
+
+    return f"""<section class="facebook-feed section-pad" id="follow">
+  <div class="container container--narrow">
+    <p class="eyebrow">Follow along</p>
+    <h2>Latest from Facebook</h2>
+    <p class="lede mt-6 max-narrow">
+      Route changes, training meetups and race-day photos land on the club's Facebook page first.
+    </p>
+    <div class="fb-feed-card">
+      <div id="fb-root"></div>
+      <div class="fb-page"
+        data-href="{fb_url}"
+        data-tabs="timeline"
+        data-width="500"
+        data-height="640"
+        data-small-header="false"
+        data-adapt-container-width="true"
+        data-hide-cover="false"
+        data-show-facepile="true">
+        <blockquote cite="{fb_url}" class="fb-xfbml-parse-ignore">
+          <a href="{fb_url}" target="_blank" rel="noopener">{fb_name}</a>
+        </blockquote>
+      </div>
+    </div>
+    <a class="btn btn-ghost btn-sm mt-6" href="{fb_url}" target="_blank" rel="noopener">Follow MadMac on Facebook</a>
+  </div>
+</section>
+"""
+
+
 def sponsor_tag(sponsor, css_class, inner):
     """Wraps sponsor_content in a link to their site when a URL is
     supplied, opening in a new tab so the marquee/footer never navigates a
@@ -1146,6 +1189,7 @@ def main():
         build_what_you_get(),
         build_practical(),
         build_faq(),
+        build_facebook_feed(),
         build_email(),
         "</main>",
         build_footer(),
@@ -1162,6 +1206,7 @@ def main():
 <script src="assets/js/route.js" defer></script>
 <script src="assets/js/carousel.js" defer></script>
 <script src="assets/js/motion.js" defer></script>
+<script src="assets/js/facebook-feed.js" defer></script>
 <script src="assets/js/email.js" defer></script>
 <script src="assets/js/analytics.js" defer></script>
 </body>
