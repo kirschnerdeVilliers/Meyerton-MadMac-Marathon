@@ -191,9 +191,15 @@ A couple of things worth knowing if you're touching the CMS config or its infras
 
 ## Domain
 
-`tools/render.py` has `SITE_URL = "https://midvaalmadmac.co.za"` as a **placeholder** — canonical
-URL, OG tags and JSON-LD all derive from it. Update it to the real production domain before launch
-and re-render.
+`midvaalmadmac.co.za` is the real, purchased production domain, wired up as a GitHub Pages custom
+domain: a root-level `CNAME` file in this repo, plus the custom domain set in the repo's
+Settings → Pages. `tools/render.py`'s `SITE_URL = "https://midvaalmadmac.co.za"` is what canonical
+URLs, OG tags and JSON-LD all derive from — if the domain ever changes, update both `SITE_URL` and
+the `CNAME` file together, then re-render.
+
+DNS lives with whoever manages the registrar, not in this repo — see the PR/commit that added the
+`CNAME` file for the exact records GitHub Pages needs (four `A` records at the apex, optionally a
+`www` `CNAME` to `kirschnerdevilliers.github.io`).
 
 ## Proof, FAQ and gallery content
 

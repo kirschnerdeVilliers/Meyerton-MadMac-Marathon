@@ -21,6 +21,7 @@ on:
       - "tools/**"
       - "assets/css/**"
       - "assets/js/**"
+      - "CNAME"
   workflow_dispatch: {}
 
 permissions:

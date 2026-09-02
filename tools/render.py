@@ -49,7 +49,7 @@ def normalize_blanks(obj):
 CONFIG = normalize_blanks(json.loads((ROOT / "data" / "race-config.json").read_text()))
 MOTIF = json.loads((ROOT / "assets" / "img" / "route-motif.json").read_text())
 
-SITE_URL = "https://midvaalmadmac.co.za"  # placeholder production domain — see README
+SITE_URL = "https://midvaalmadmac.co.za"  # real domain, wired via CNAME + GitHub Pages custom domain
 
 
 # ---------------------------------------------------------------- helpers --

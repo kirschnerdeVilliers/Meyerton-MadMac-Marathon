@@ -54,8 +54,10 @@ editors.
    source was cloned to `/tmp` during setup and may not have survived a reboot. If login breaks,
    check the GitHub OAuth App's Client ID (github.com/settings/developers) matches
    `GITHUB_CLIENT_ID` on that Worker; they're independent and nothing keeps them in sync.
-5. `SITE_URL` in `render.py` is still a placeholder domain (`https://midvaalmadmac.co.za`) —
-   canonical URL, OG tags and JSON-LD all derive from it. Update it once a real domain exists.
+5. `SITE_URL` in `render.py` is `https://midvaalmadmac.co.za` — the real, purchased domain, now
+   wired up as a GitHub Pages custom domain (root `CNAME` file + the repo's Pages setting). It's
+   what canonical URLs, OG tags and JSON-LD all derive from, so if the domain ever changes, update
+   this and the `CNAME` file together.
 
 ## What's still genuinely outstanding
 
