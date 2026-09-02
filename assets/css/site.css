@@ -752,6 +752,10 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
 .practical-note strong { display: block; color: var(--ink-100); margin-bottom: var(--space-1); font-size: 0.95rem; }
 
 /* ---------- facebook feed ---------- */
+.facebook-feed-inner { display: grid; gap: var(--space-7); align-items: center; }
+@media (min-width: 900px) {
+  .facebook-feed-inner { grid-template-columns: 1fr 1fr; }
+}
 .fb-feed-card {
   margin-top: var(--space-6);
   max-width: 560px;
@@ -761,6 +765,7 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
   padding: var(--space-4);
   overflow: hidden; /* clip the plugin iframe corners to the card radius */
 }
+@media (min-width: 900px) { .fb-feed-card { margin-top: 0; } }
 .fb-feed-card .fb-page, .fb-feed-card iframe { max-width: 100%; }
 /* shown only until the SDK swaps it for the live plugin (see fb-xfbml-parse-ignore) */
 .fb-feed-card blockquote {

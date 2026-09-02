@@ -1033,12 +1033,15 @@ def build_facebook_feed():
     fb_name = esc(fb.get("pageName") or "Midvaal MadMac on Facebook")
 
     return f"""<section class="facebook-feed section-pad" id="follow">
-  <div class="container container--narrow">
-    <p class="eyebrow">Follow along</p>
-    <h2>Latest from Facebook</h2>
-    <p class="lede mt-6 max-narrow">
-      Route changes, training meetups and race-day photos land on the club's Facebook page first.
-    </p>
+  <div class="container facebook-feed-inner">
+    <div class="facebook-feed-copy">
+      <p class="eyebrow">Follow along</p>
+      <h2>Latest from Facebook</h2>
+      <p class="lede mt-6">
+        Route changes, training meetups and race-day photos land on the club's Facebook page first.
+      </p>
+      <a class="btn btn-ghost btn-sm mt-6" href="{fb_url}" target="_blank" rel="noopener">Follow MadMac on Facebook</a>
+    </div>
     <div class="fb-feed-card">
       <div id="fb-root"></div>
       <div class="fb-page"
@@ -1055,7 +1058,6 @@ def build_facebook_feed():
         </blockquote>
       </div>
     </div>
-    <a class="btn btn-ghost btn-sm mt-6" href="{fb_url}" target="_blank" rel="noopener">Follow MadMac on Facebook</a>
   </div>
 </section>
 """
