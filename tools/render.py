@@ -55,10 +55,11 @@ SITE_URL = "https://midvaalmadmac.co.za"  # placeholder production domain — se
 # ---------------------------------------------------------------- helpers --
 
 def rand(n):
-    """R1,234 style currency, no cents."""
+    """R1 234 style currency, no cents. Uses a non-breaking space between
+    thousands groups so a number never wraps mid-digit at a line break."""
     if n is None:
         return "—"
-    return "R{:,.0f}".format(n).replace(",", " ")
+    return "R{:,.0f}".format(n).replace(",", " ")
 
 
 def esc(s):
@@ -628,7 +629,10 @@ def build_qualifying_prose():
     flagship = dist_by_id("42_2km")
 
     def sa_num(n):
-        return f"{n:,}".replace(",", " ")
+        # non-breaking space between thousands groups — a plain space here
+        # lets the browser wrap "49 000" into "49" / "000" mid-number,
+        # which happened in the qualifier-pool stat card.
+        return f"{n:,}".replace(",", " ")
 
     # (target int, prefix, suffix, label) — target/prefix/suffix drive the
     # count-up animation in motion.js; it always lands on the exact string

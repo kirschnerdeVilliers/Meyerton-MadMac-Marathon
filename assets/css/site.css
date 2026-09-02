@@ -141,14 +141,14 @@ h3 { font-size: clamp(1.3rem, 3vw, 1.7rem); }
      size would grow exactly where the available space shrinks. This way
      each eyebrow stays on one line by default everywhere on the site, and
      only wraps where its own column genuinely can't fit it. */
-  font-size: clamp(0.72rem, 2.6cqw, 0.95rem);
-  letter-spacing: 0.08em;
+  font-size: clamp(0.85rem, 3.4cqw, 1.3rem);
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--yellow);
 }
 .eyebrow::before {
   content: "";
-  width: 26px; height: 3px;
+  width: 32px; height: 4px;
   background: var(--gradient-shirt);
   border-radius: 2px;
   flex-shrink: 0;
