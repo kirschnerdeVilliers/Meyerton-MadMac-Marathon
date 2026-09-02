@@ -788,21 +788,21 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
 
 /* ---------- footer ---------- */
 /* ---------- sponsor marquee ---------- */
-.sponsor-marquee { padding-block: var(--space-6); border-top: 1px solid var(--border); }
+.sponsor-marquee { padding-block: var(--space-7); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg-sunken); }
 .marquee-label {
-  text-align: center; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-faint); margin-bottom: var(--space-4);
+  text-align: center; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-300); margin-bottom: var(--space-5);
 }
 .marquee-viewport {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
-.marquee-track { display: flex; width: max-content; animation: marquee-scroll 38s linear infinite; }
+.marquee-track { display: flex; width: max-content; animation: marquee-scroll 42s linear infinite; }
 .marquee-set { display: flex; align-items: center; flex-shrink: 0; }
 .marquee-item {
-  flex-shrink: 0; padding-inline: var(--space-6); font-size: 0.95rem; font-weight: 600;
-  color: var(--ink-300); white-space: nowrap; opacity: 0.75;
+  flex-shrink: 0; padding-inline: var(--space-6); font-size: 1.1rem; font-weight: 600;
+  color: var(--ink-300); white-space: nowrap; opacity: 0.85;
   border-right: 1px solid var(--border);
   display: flex; align-items: center;
   text-decoration: none;
@@ -810,13 +810,13 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
 }
 a.marquee-item:hover, a.marquee-item:focus-visible { opacity: 1; }
 a.marquee-item-logo:hover img, a.marquee-item-logo:focus-visible img { box-shadow: 0 0 0 2px var(--yellow); }
-.marquee-item-logo { padding-inline: var(--space-5); }
+.marquee-item-logo { padding-inline: var(--space-6); }
 .marquee-item-logo img {
-  height: 36px; width: auto; max-width: 130px;
+  height: 64px; width: auto; max-width: 190px;
   object-fit: contain;
   background: #fff;
   border-radius: var(--radius-s);
-  padding: 5px 9px;
+  padding: 9px 14px;
 }
 @keyframes marquee-scroll {
   from { transform: translateX(0); }

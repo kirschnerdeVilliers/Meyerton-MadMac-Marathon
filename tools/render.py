@@ -1077,7 +1077,7 @@ def build_footer():
       <div class="footer-col">
         <div class="footer-brand">
           <img class="brand-mark" src="assets/img/madmac-badge.jpg" alt="" width="40" height="40">
-          <strong style="font-family: var(--font-display); font-style: italic; color: var(--ink-0);">Midvaal MadMac</strong>
+          <strong style="font-family: var(--font-display); color: var(--ink-0);">Midvaal MadMac</strong>
         </div>
         <p style="font-size: 0.85rem;">Organised by {esc(CONFIG['edition']['organiser'])}.</p>
         <p class="footer-clown">Finishing at Café du Cirque — yes, that's the club mascot.</p>
@@ -1132,6 +1132,7 @@ def main():
         build_header(),
         '<main id="main">',
         build_hero(),
+        build_sponsor_marquee(),
         build_qualifier_panel(),
         divider(),
         build_why(),
@@ -1147,7 +1148,6 @@ def main():
         build_faq(),
         build_email(),
         "</main>",
-        build_sponsor_marquee(),
         build_footer(),
     ])
 
