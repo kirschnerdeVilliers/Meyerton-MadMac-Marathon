@@ -133,18 +133,21 @@ h3 { font-size: clamp(1.3rem, 3vw, 1.7rem); }
   gap: var(--space-2);
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
+  font-size: 0.95rem;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--yellow);
 }
 .eyebrow::before {
   content: "";
-  width: 22px; height: 3px;
+  width: 26px; height: 3px;
   background: var(--gradient-shirt);
   border-radius: 2px;
   flex-shrink: 0;
 }
+/* the hero date/location line reads as the page's dateline — bigger still */
+.hero .eyebrow { font-size: 1.15rem; }
+.hero .eyebrow::before { width: 30px; height: 4px; }
 
 p { color: var(--text-muted); max-width: 62ch; }
 p.lede { font-size: 1.15rem; color: var(--text); }
@@ -244,12 +247,12 @@ a.link:hover { color: var(--orange); }
   box-shadow: 0 0 0 1px var(--border-strong);
 }
 .brand .brand-word {
-  height: 26px;
+  height: 44px;
   width: auto;
   flex-shrink: 0;
   transition: height 0.25s ease;
 }
-.site-header.is-scrolled .brand .brand-word { height: 21px; }
+.site-header.is-scrolled .brand .brand-word { height: 34px; }
 @media (prefers-reduced-motion: reduce) { .brand .brand-word { transition: none; } }
 .header-cta { display: flex; align-items: center; gap: var(--space-3); }
 .header-cta .btn { display: none; }
