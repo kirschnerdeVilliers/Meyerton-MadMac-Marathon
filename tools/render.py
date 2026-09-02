@@ -328,10 +328,10 @@ def build_hero():
         <p class="hero-trust-label">Qualifies for Comrades &amp; Two Oceans 2027 &middot;
         organised by Meyerton Athletics Club &middot; presented with Midvaal Local Municipality</p>
         <div class="hero-trust-row">
-          <span class="trust-badge"><img src="assets/img/badges/comrades-qualifier.png" alt="Comrades Marathon official qualifier" loading="lazy"></span>
-          <span class="trust-badge"><img src="assets/img/badges/two-oceans.jpg" alt="Two Oceans Marathon" loading="lazy"></span>
-          <span class="trust-badge"><img src="assets/img/sponsors/mac.jpeg" alt="Meyerton Athletics Club" loading="lazy"></span>
-          <span class="trust-badge"><img src="assets/img/sponsors/midvaal-municipality.jpg" alt="Midvaal Local Municipality" loading="lazy"></span>
+          <a class="trust-badge" href="https://comrades.com/" target="_blank" rel="noopener"><img src="assets/img/badges/comrades-qualifier.png" alt="Comrades Marathon official qualifier" loading="lazy"></a>
+          <a class="trust-badge" href="https://www.twooceansmarathon.org.za/" target="_blank" rel="noopener"><img src="assets/img/badges/two-oceans.jpg" alt="Two Oceans Marathon" loading="lazy"></a>
+          <a class="trust-badge" href="https://www.facebook.com/midvaalmadmac/" target="_blank" rel="noopener"><img src="assets/img/sponsors/mac.jpeg" alt="Meyerton Athletics Club" loading="lazy"></a>
+          <a class="trust-badge" href="https://www.midvaal.gov.za/" target="_blank" rel="noopener"><img src="assets/img/sponsors/midvaal-municipality.jpg" alt="Midvaal Local Municipality" loading="lazy"></a>
         </div>
       </div>
     </div>

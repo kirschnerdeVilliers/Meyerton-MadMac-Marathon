@@ -408,7 +408,14 @@ a.link:hover { color: var(--orange); }
   height: 52px; padding: 0.4rem 0.7rem;
   background: var(--ink-0); border-radius: var(--radius-s);
   box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+.trust-badge:hover, .trust-badge:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.34);
+}
+@media (prefers-reduced-motion: reduce) { .trust-badge { transition: none; } .trust-badge:hover { transform: none; } }
 .trust-badge img { height: 100%; width: auto; max-width: 110px; object-fit: contain; }
 
 /* countdown */
