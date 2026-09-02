@@ -107,6 +107,7 @@ body {
   max-width: var(--container);
   margin-inline: auto;
   padding-inline: var(--space-5);
+  container-type: inline-size;
 }
 .container--narrow { max-width: var(--container-narrow); }
 
@@ -131,10 +132,17 @@ h3 { font-size: clamp(1.3rem, 3vw, 1.7rem); }
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
+  max-width: 100%;
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.13em;
+  /* sized off the width of the actual container it sits in (cqw), not the
+     viewport (vw) — the hero's copy column narrows again above the 900px
+     breakpoint when the two-column layout kicks in, so a viewport-based
+     size would grow exactly where the available space shrinks. This way
+     each eyebrow stays on one line by default everywhere on the site, and
+     only wraps where its own column genuinely can't fit it. */
+  font-size: clamp(0.72rem, 2.6cqw, 0.95rem);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--yellow);
 }
@@ -146,7 +154,8 @@ h3 { font-size: clamp(1.3rem, 3vw, 1.7rem); }
   flex-shrink: 0;
 }
 /* the hero date/location line reads as the page's dateline — bigger still */
-.hero .eyebrow { font-size: 1.15rem; }
+.hero-copy { container-type: inline-size; }
+.hero .eyebrow { font-size: clamp(0.8rem, 2.9cqw, 1.15rem); letter-spacing: 0.06em; }
 .hero .eyebrow::before { width: 30px; height: 4px; }
 
 p { color: var(--text-muted); max-width: 62ch; }

@@ -300,7 +300,7 @@ def build_hero():
     return f"""<section class="hero" id="top">
   <div class="route-motif" aria-hidden="true">{motif_svg("route-motif-line", animate=True)}</div>
   <div class="container hero-inner">
-    <div>
+    <div class="hero-copy">
       <p class="eyebrow">{ed["dateDisplay"]} &middot; Meyerton, Gauteng</p>
       <h1>Midvaal <span class="accent">MadMac</span></h1>
       <div class="hero-badges">
