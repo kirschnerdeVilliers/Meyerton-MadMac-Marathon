@@ -36,6 +36,9 @@ every visit.
 **If you edit `data/race-config.json`, re-run `tools/render.py` and commit the new `index.html`.**
 If the GPX files change (a re-measured course, a new distance), run `build-routes.py` first.
 
+`tools/render.py` writes **two** pages, not one: `index.html` (the race page) and `privacy.html`
+(the POPIA notice — see "Privacy / POPIA notice" below). Both come from the same run.
+
 ### What's genuinely dynamic client-side JS
 
 Everything else in `index.html` is real static markup, but a few things can only be done in the
@@ -119,12 +122,44 @@ add any provider-specific hidden fields in `provider_hidden_fields()` (also in `
   to your audience/list IDs) — copy it from Mailchimp's own embed snippet into
   `provider_hidden_fields()`.
 
-The form posts with `target="_blank"` so the provider's own confirmation page opens in a new tab
-rather than navigating away from the landing page.
+`email.js` upgrades the native POST into a `fetch()` call for every provider (not just Brevo), so
+the page shows a real inline success/error message instead of navigating away or opening a new
+tab; the form still has a genuine `method`/`action` too, so it keeps working as a plain POST with
+JS disabled.
 
 **POPIA note:** the form's consent line states Meyerton Athletics Club as the data holder and what
-the address is used for. If you swap providers, make sure the new provider's own privacy practices
-still match what that line promises.
+the address is used for, and links to `privacy.html` (see "Privacy / POPIA notice" below). If you
+swap providers, make sure the new provider's own privacy practices still match what that page
+promises — Brevo's own data-handling details are named explicitly in section 4 of the notice, so a
+provider swap likely means editing that section, not just the config.
+
+## Privacy / POPIA notice
+
+`privacy.html` is a second static page `tools/render.py` writes alongside `index.html`
+(`build_privacy_page()`, with its own lightweight `build_privacy_head()`/`build_privacy_header()` —
+the main page's header nav is `#section` anchors that only resolve on `index.html`, so this page
+gets a minimal header instead: brand mark + a link back). It's linked from the footer on every page
+and from the email-capture form's consent line.
+
+**It's scoped to what this site actually does, deliberately, not a generic boilerplate policy** —
+it names Brevo as the email processor, the Facebook Page Plugin embed, OpenStreetMap map tiles and
+Google Fonts as the actual third-party data touchpoints, because those are the real ones. If any of
+these change — a new analytics provider goes live (`data/race-config.json` → `analytics.provider` is
+`"none"` today), the Facebook embed is removed, Brevo is swapped for a different ESP — **update
+section 3/4 of `build_privacy_page()` to match**, don't leave the notice describing something the
+site no longer does.
+
+This isn't legal advice, and neither is this repo note — it was drafted to be accurate about this
+specific site's practices and to cover POPIA's Section 18 notification requirements at a reasonable
+level of care, but it hasn't been reviewed by a lawyer. Worth a professional review before treating
+it as final, especially given POPIA's Information Regulator can and does enforce.
+
+**Sharing this with Brevo (or any other campaign tool):** the on-site notice is the canonical
+version — link to `https://midvaalmadmac.co.za/privacy.html` from Brevo's sender/company profile
+and campaign footers rather than pasting the text into Brevo itself, so there's only one copy to
+keep current. Brevo (and most anti-spam regimes) also expects a real physical/postal address in
+every campaign footer — that's not something this repo can supply; set it once under Brevo's own
+Sender/Company settings.
 
 ## Analytics
 

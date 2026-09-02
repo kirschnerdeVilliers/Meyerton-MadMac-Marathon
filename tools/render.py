@@ -1059,7 +1059,8 @@ def build_email():
       <p class="email-consent">
         Your email is collected by Meyerton Athletics Club under POPIA solely to send you a
         reminder before entries close. It is not shared with sponsors or third parties, and you
-        can unsubscribe at any time. See our
+        can unsubscribe at any time. Read our
+        <a href="privacy.html">Privacy Policy</a>, or see our
         <a href="#footer">contact details</a> to opt out.
       </p>
     </div>
@@ -1211,9 +1212,191 @@ def build_footer():
     <div class="footer-bottom">
       <span>&copy; {CONFIG['edition']['year']} {esc(CONFIG['edition']['organiser'])}. All rights reserved.</span>
       <span>By entering you agree to the race rules above and Race Pass's terms of entry.</span>
+      <a href="privacy.html">Privacy Policy</a>
     </div>
   </div>
 </footer>
+"""
+
+
+# --------------------------------------------------------------- privacy --
+
+def build_privacy_head():
+    """Lightweight <head> for privacy.html — same fonts/favicons/stylesheet
+    as the main page, but its own title/description/canonical and no
+    SportsEvent/FAQPage structured data (that's index.html's, not this
+    page's, to claim)."""
+    title = "Privacy Policy — Midvaal MadMac"
+    description = (
+        "How Midvaal MadMac and Meyerton Athletics Club collect, use and protect your "
+        "personal information under South Africa's Protection of Personal Information Act (POPIA)."
+    )
+    canonical = f"{SITE_URL}/privacy.html"
+    return f"""<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(description)}">
+<link rel="canonical" href="{canonical}">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(description)}">
+<meta property="og:url" content="{canonical}">
+<meta property="og:locale" content="en_ZA">
+<meta property="og:site_name" content="Midvaal MadMac">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v={css_hash()}">
+"""
+
+
+def build_privacy_header():
+    """Minimal header for privacy.html — the full build_header() nav links
+    are #section anchors that only resolve on index.html; a legal/utility
+    page just needs the brand mark and a way back, not the section nav."""
+    return f"""<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-row">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="assets/img/madmac-badge.jpg" alt="" width="40" height="40">
+      <img class="brand-word" src="assets/img/madmac-wordmark.png" alt="Midvaal MadMac" width="650" height="220">
+    </a>
+    <a class="btn btn-ghost btn-sm" href="index.html">Back to the race page</a>
+  </div>
+</header>
+"""
+
+
+def build_privacy_page():
+    """POPIA notice for midvaalmadmac.co.za. Deliberately scoped to what
+    this site actually does — see README "Privacy / POPIA notice" for the
+    reasoning — rather than a generic boilerplate policy that claims
+    practices (analytics, cookies, etc.) the site doesn't actually have.
+    Update this alongside README's own notes whenever emailCapture,
+    analytics, or the Facebook embed change."""
+    contact_email = CONFIG["contact"].get("email") or "midvaalmadmac@gmail.com"
+    organiser = CONFIG["edition"]["organiser"]
+
+    return f"""<section class="section-pad">
+  <div class="container container--narrow privacy-page">
+    <p class="eyebrow">Privacy</p>
+    <h1>Privacy Policy</h1>
+    <p class="lede mt-6">
+      How Midvaal MadMac and {esc(organiser)} collect, use and protect your personal information,
+      in line with South Africa's Protection of Personal Information Act 4 of 2013 (POPIA).
+    </p>
+    <p style="font-size: 0.85rem; color: var(--text-faint);">Last updated: 2 September 2026</p>
+
+    <h2>1. Who we are</h2>
+    <p>
+      Midvaal MadMac is organised by {esc(organiser)}, based in Meyerton, Gauteng. For POPIA
+      purposes, {esc(organiser)} is the <strong>responsible party</strong> for the personal
+      information described in this notice. You can reach us at
+      <a class="link" href="mailto:{esc(contact_email)}">{esc(contact_email)}</a>.
+    </p>
+
+    <h2>2. What this notice covers</h2>
+    <p>
+      This notice covers <strong>midvaalmadmac.co.za</strong> only. Race entries themselves are
+      processed on <a class="link" href="{esc(CONFIG['entries']['entryUrl'])}" target="_blank" rel="noopener">Race Pass</a>,
+      a separate service with its own privacy policy — Race Pass, not {esc(organiser)}, is the
+      responsible party for the information you give them when you enter. Please check their site
+      directly for how they handle that information.
+    </p>
+
+    <h2>3. What we collect on this site, and why</h2>
+    <p>
+      The only personal information this site actively asks you for is your <strong>email
+      address</strong>, through the "We'll remind you before entries close" form. Giving it is
+      entirely voluntary — declining has no effect on your ability to browse the site or enter the
+      race via Race Pass.
+    </p>
+    <p>
+      We use it for exactly one purpose: to send you a reminder before online entries close. We
+      don't use it for anything else, and we don't sell, rent or share it with sponsors or any
+      other third party.
+    </p>
+
+    <h2>4. Who else touches your data, and where</h2>
+    <ul style="display: grid; gap: var(--space-3); padding-left: 1.2em; list-style: disc;">
+      <li>
+        <strong>Brevo</strong> (Sendinblue SAS), our email service provider, stores your email
+        address and sends the reminder on our behalf. Brevo is based in France and is itself
+        subject to the EU's GDPR. See
+        <a class="link" href="https://www.brevo.com/legal/privacypolicy/" target="_blank" rel="noopener">Brevo's own privacy policy</a>
+        for how they handle information as our processor.
+      </li>
+      <li>
+        If you scroll to the "Latest from Facebook" section, Meta loads that content directly from
+        its own servers and may set cookies or otherwise process data under
+        <a class="link" href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener">Facebook's Data Policy</a>.
+        We don't receive or store anything from that ourselves.
+      </li>
+      <li>
+        The route maps load tiles from OpenStreetMap, and this page's fonts load from Google
+        Fonts — both mean your browser talks directly to those services, which (like any web
+        request) logs your IP address on their end, independently of anything we store.
+      </li>
+      <li>
+        This site is hosted on GitHub Pages, with the custom domain and the email form's backend
+        running on Cloudflare — both process standard web-server logs (IP address, browser type,
+        pages requested) as ordinary hosting infrastructure.
+      </li>
+    </ul>
+
+    <h2>5. How long we keep it</h2>
+    <p>
+      We keep your email address on our Brevo list for as long as the current entry period is
+      open, plus a reasonable period afterward in case the event returns and we want to let past
+      sign-ups know. You can ask us to delete it at any time (see below), and every reminder email
+      includes an unsubscribe link that removes you immediately.
+    </p>
+
+    <h2>6. Your rights under POPIA</h2>
+    <p>You have the right to:</p>
+    <ul style="display: grid; gap: var(--space-2); padding-left: 1.2em; list-style: disc;">
+      <li>ask us what personal information we hold about you;</li>
+      <li>ask us to correct it if it's wrong;</li>
+      <li>ask us to delete it;</li>
+      <li>object to us processing it, including the one email we send; and</li>
+      <li>lodge a complaint with the Information Regulator if you believe we've handled your information unlawfully.</li>
+    </ul>
+    <p>
+      To exercise any of these, email
+      <a class="link" href="mailto:{esc(contact_email)}">{esc(contact_email)}</a>, or click
+      "unsubscribe" in any email we send you.
+    </p>
+
+    <h2>7. Children</h2>
+    <p>
+      This site and its email sign-up are intended for use by adults — for example, a parent or
+      club member signing up a family for the 5km. We don't knowingly collect personal information
+      directly from children through this form.
+    </p>
+
+    <h2>8. The Information Regulator</h2>
+    <p>
+      If you're unhappy with how we've handled your information or a complaint, you can contact
+      South Africa's Information Regulator:
+    </p>
+    <p>
+      JD House, 27 Stiemens Street, Braamfontein, Johannesburg, 2001<br>
+      <a class="link" href="https://inforegulator.org.za" target="_blank" rel="noopener">inforegulator.org.za</a>
+      — check their site for current complaint contact details, as these do change.
+    </p>
+
+    <h2>9. Changes to this notice</h2>
+    <p>
+      We'll update the date at the top of this page if anything here changes materially.
+    </p>
+  </div>
+</section>
 """
 
 
@@ -1274,6 +1457,26 @@ def main():
     out_path = ROOT / "index.html"
     out_path.write_text(html)
     print(f"wrote {out_path.relative_to(ROOT)} ({len(html):,} bytes)")
+
+    privacy_body = "\n".join([
+        build_privacy_header(),
+        '<main id="main">',
+        build_privacy_page(),
+        "</main>",
+        build_footer(),
+    ])
+    privacy_html = f"""<!doctype html>
+<html lang="en-ZA">
+<head>
+{build_privacy_head()}</head>
+<body>
+{privacy_body}
+{js_tags()}</body>
+</html>
+"""
+    privacy_path = ROOT / "privacy.html"
+    privacy_path.write_text(privacy_html)
+    print(f"wrote {privacy_path.relative_to(ROOT)} ({len(privacy_html):,} bytes)")
 
 
 if __name__ == "__main__":
