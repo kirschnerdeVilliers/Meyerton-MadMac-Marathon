@@ -549,9 +549,9 @@
     "metaPixelId": ""
   },
   "emailCapture": {
-    "endpointUrl": "https://daafd5fb.sibforms.com/serve/MUIFAOGmlOL2CR72sU04Me0iv76FsEmcIgFVNbilJd5QZuauWSzmdHMor6Pz4BWZ-I9fWh7OkVip2zAqYybAfHbpEMD8z1WTdMzNt5H7wiT1IONuIV9UrARRqWnOeYTmG3qS9ACdvvbHvKME2IlKNbBqZvJTe_orYXyRbTpQeUfMdVO_BmQ_qnHZ5DlyXMkIX_M7Tg1mq1_9KkVpew==",
+    "endpointUrl": "",
     "provider": "brevo",
-    "fieldName": "EMAIL"
+    "fieldName": "email"
   },
   "placeholders": {
     "note": "Facts confirmed nowhere in the source material. The site omits these claims entirely rather than guessing — see README.md 'Still needed' section.",

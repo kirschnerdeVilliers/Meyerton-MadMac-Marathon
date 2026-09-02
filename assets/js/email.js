@@ -1,7 +1,11 @@
 /* Progressive enhancement over a plain HTML form (method="post",
-   action=<provider endpoint>). Works with the normal embed contract of
-   Mailchimp, Buttondown or Formspree unmodified — see README for the
-   provider-specific hidden fields each one needs.
+   action=<endpoint>). Without JS the form still works as a real POST —
+   the endpoint (a small Cloudflare Worker, see workers/email-signup/)
+   accepts both a JSON body and plain form-urlencoded, precisely so this
+   fallback keeps functioning. With JS, submission is upgraded to a
+   fetch() call so the page can show a truthful success/error message
+   instead of just assuming the native POST worked — the Worker's own
+   response is what confirms Brevo actually accepted the signup.
 
    If no endpoint has been configured yet (race-config.json
    emailCapture.endpointUrl is null), the form's action is left as "#" and
@@ -23,20 +27,20 @@
     var form = document.getElementById("email-form");
     if (!form) return;
     var input = form.querySelector(".email-input");
+    var button = form.querySelector("button[type=submit]");
     var configured = form.getAttribute("data-configured") === "true";
 
     form.addEventListener("submit", function (evt) {
+      evt.preventDefault();
       var value = (input.value || "").trim();
 
       if (!EMAIL_RE.test(value)) {
-        evt.preventDefault();
         setStatus(form, "That doesn't look like a valid email address.", "error");
         input.focus();
         return;
       }
 
       if (!configured) {
-        evt.preventDefault();
         setStatus(
           form,
           "Sign-ups aren't connected yet — add an endpoint in data/race-config.json (see README).",
@@ -45,14 +49,37 @@
         return;
       }
 
-      // Endpoint is configured and the form is valid — let the native POST
-      // proceed (target="_blank" per the markup, so the provider's own
-      // confirmation opens in a new tab rather than navigating away from
-      // the page). Track the attempt and give immediate local feedback.
-      if (typeof window.madmacTrack === "function") {
-        window.madmacTrack("email_signup");
-      }
-      setStatus(form, "Thanks — check the tab that just opened to confirm.", "success");
+      if (button) button.disabled = true;
+      setStatus(form, "Sending…", "");
+
+      var payload = {};
+      payload[input.name || "email"] = value;
+      fetch(form.action, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            return { ok: res.ok && data.success, data: data };
+          });
+        })
+        .then(function (result) {
+          if (button) button.disabled = false;
+          if (result.ok) {
+            if (typeof window.madmacTrack === "function") {
+              window.madmacTrack("email_signup");
+            }
+            setStatus(form, "Thanks — you're on the list.", "success");
+            form.reset();
+          } else {
+            setStatus(form, "Couldn't save that — please try again.", "error");
+          }
+        })
+        .catch(function () {
+          if (button) button.disabled = false;
+          setStatus(form, "Couldn't reach the sign-up service — please try again.", "error");
+        });
     });
   }
 

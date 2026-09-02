@@ -83,32 +83,33 @@ price — none of that required touching markup, which is the point of this stru
 
 ## Email capture — wiring a real provider
 
-**Live now: Brevo.** `data/race-config.json` → `emailCapture` is set to Brevo's "MadMac 2026 Entry
-Reminder Signup" form (list: "MadMac 2026 Entry Reminders" under Contacts → Lists). Sign-ups get a
-single confirmation email, no double opt-in — matches the page's own "one email, no spam" promise.
-The form's own copy (heading/consent line/button label) was edited in Brevo to match this page's
-voice, and its Title/Text blocks were removed so it's just a compact field + button — none of that
-lives in this repo. To change anything about the flow (confirmation wording, double opt-in, the
-widget's own copy), edit the form in Brevo directly under Marketing → Forms.
+**Live now: Brevo, via a small proxy Worker — not a direct form POST.** `data/race-config.json` →
+`emailCapture.endpointUrl` points at `workers/email-signup/` (a Cloudflare Worker, deployed
+separately — see that directory's own README for deploy steps), not at Brevo directly. The site
+keeps its own styled `<form>` (`build_email()` in `tools/render.py`, enhanced by `assets/js/email.js`
+into a `fetch()` call so the page gets a truthful success/error message back); the Worker holds a
+Brevo API key as a secret and calls Brevo's real REST API (`POST /v3/contacts`) server-side to add
+the signup to the "MadMac 2026 Entry Reminders" list (list ID `3`, hardcoded in `worker.js`).
 
-**Brevo is embedded differently from the other providers below — read this before "fixing" it.**
-Brevo documents a "Simple HTML" no-JS embed (a plain `<form method="post" action="...">`, same
-contract as Formspree/Buttondown/Mailchimp), but it does **not** actually work: confirmed by hand —
-three separate plain POSTs (two real submissions, one via `curl`, two different addresses) each got
-Brevo's endpoint returning `{"success":true}`, yet created no contact and sent no email, over 20+
-minutes. Submitting through Brevo's own hosted, JS-powered version of the exact same form worked
-immediately. Almost certainly their spam/captcha check silently discards non-JS submissions instead
-of rejecting them, so a scripted attacker can't tell it failed — which also means a real visitor's
-plain POST fails exactly the same way, silently. So `build_email()` embeds Brevo's hosted form URL
-in an `<iframe>` instead of building our own `<form>` for it — the only reliable option that doesn't
-mean loading Brevo's JS SDK into this page. Re-verify this the same way (submit for real, check the
-contact/list in Brevo) before ever switching Brevo back to a plain-POST `<form>`.
+**Why not post to Brevo directly, like the other providers below — read this before "simplifying"
+it back to a direct `<form>`.** Brevo documents a "Simple HTML" no-JS embed (a plain `<form
+method="post" action="...">`, same contract as Formspree/Buttondown/Mailchimp), but it does **not**
+actually work: confirmed by hand — three separate plain POSTs (two real submissions, one via
+`curl`, two different addresses) each got Brevo's endpoint returning `{"success":true}`, yet
+created no contact and sent no email, over 20+ minutes. Submitting through Brevo's own hosted,
+JS-powered version of the exact same form worked immediately. Almost certainly their spam/captcha
+check silently discards non-JS submissions instead of rejecting them, so a scripted attacker can't
+tell it failed — which also means a real visitor's plain POST fails exactly the same way, silently.
+An iframe of Brevo's hosted form was tried next and did work, but looked visually bolted-on next to
+the page's own dark theme (Brevo's widget can't be restyled from outside its own editor). The
+Worker is what let the page keep its own exact look while still reliably reaching Brevo. Before
+ever changing this back to a direct `<form>` POST to Brevo, re-verify a submission actually creates
+a contact (Contacts → Lists in Brevo) — don't trust `{"success":true}` alone.
 
-The other three providers *do* work with a plain POST — the form (`<form id="email-form"
-method="post" action="...">` in `index.html`, the `else` branch of `build_email()` in
-`tools/render.py`) works with their embed contract directly: set
-`emailCapture.endpointUrl`/`provider`/`fieldName` to the values noted, re-render, and add any
-provider-specific hidden fields in `provider_hidden_fields()` (also in `tools/render.py`):
+The other three providers *do* work with a plain POST straight to them, no proxy needed — the same
+`<form id="email-form" method="post" action="...">` works with their embed contract directly if
+`emailCapture.endpointUrl`/`provider`/`fieldName` point at them instead: set those, re-render, and
+add any provider-specific hidden fields in `provider_hidden_fields()` (also in `tools/render.py`):
 
 - **Formspree** — `endpointUrl` = your form's endpoint, e.g. `https://formspree.io/f/xxxxxxx`.
   No extra hidden fields needed.
