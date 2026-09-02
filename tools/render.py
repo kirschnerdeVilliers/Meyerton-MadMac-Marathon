@@ -14,10 +14,20 @@ editing race-config.json and re-running this script.
     python3 tools/build-routes.py   # only if the GPX files changed
     python3 tools/render.py
 """
+import hashlib
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def css_hash():
+    """Short content hash of site.css, used as a cache-busting query string
+    on its <link> tag — otherwise a returning visitor's browser (or this
+    machine's local preview server, which sends no Cache-Control headers)
+    can keep serving a stale stylesheet after a style-only deploy."""
+    css = (ROOT / "assets" / "css" / "site.css").read_bytes()
+    return hashlib.md5(css).hexdigest()[:8]
 
 
 def normalize_blanks(obj):
@@ -45,10 +55,11 @@ SITE_URL = "https://midvaalmadmac.co.za"  # placeholder production domain — se
 # ---------------------------------------------------------------- helpers --
 
 def rand(n):
-    """R1,234 style currency, no cents."""
+    """R1 234 style currency, no cents. Uses a non-breaking space between
+    thousands groups so a number never wraps mid-digit at a line break."""
     if n is None:
         return "—"
-    return "R{:,.0f}".format(n).replace(",", " ")
+    return "R{:,.0f}".format(n).replace(",", " ")
 
 
 def esc(s):
@@ -236,8 +247,8 @@ def build_head():
 <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:ital,wght@1,700;1,800;1,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v={css_hash()}">
 
 <script type="application/ld+json">{json.dumps(event_jsonld, indent=0)}</script>
 <script type="application/ld+json">{json.dumps(faq_jsonld, indent=0)}</script>
@@ -264,7 +275,7 @@ def build_header():
   <div class="container header-row">
     <a class="brand" href="#top">
       <img class="brand-mark" src="assets/img/madmac-badge.jpg" alt="" width="40" height="40">
-      Midvaal MadMac
+      <img class="brand-word" src="assets/img/madmac-wordmark.png" alt="Midvaal MadMac" width="650" height="220">
     </a>
     <nav class="site-nav" aria-label="Section">{desktop_links}</nav>
     <div class="header-cta">
@@ -290,7 +301,7 @@ def build_hero():
     return f"""<section class="hero" id="top">
   <div class="route-motif" aria-hidden="true">{motif_svg("route-motif-line", animate=True)}</div>
   <div class="container hero-inner">
-    <div>
+    <div class="hero-copy">
       <p class="eyebrow">{ed["dateDisplay"]} &middot; Meyerton, Gauteng</p>
       <h1>Midvaal <span class="accent">MadMac</span></h1>
       <div class="hero-badges">
@@ -312,6 +323,17 @@ def build_hero():
       <div class="hero-actions">
         {cta("Enter now", "hero")}
         <a class="btn btn-ghost" href="#route">See the route</a>
+      </div>
+
+      <div class="hero-trust">
+        <p class="hero-trust-label">Qualifies for Comrades &amp; Two Oceans 2027 &middot;
+        organised by Meyerton Athletics Club &middot; presented with Midvaal Local Municipality</p>
+        <div class="hero-trust-row">
+          <a class="trust-badge" href="https://comrades.com/" target="_blank" rel="noopener"><img src="assets/img/badges/comrades-qualifier.png" alt="Comrades Marathon official qualifier" loading="lazy"></a>
+          <a class="trust-badge" href="https://www.twooceansmarathon.org.za/" target="_blank" rel="noopener"><img src="assets/img/badges/two-oceans.jpg" alt="Two Oceans Marathon" loading="lazy"></a>
+          <a class="trust-badge" href="https://www.facebook.com/midvaalmadmac/" target="_blank" rel="noopener"><img src="assets/img/sponsors/mac.jpeg" alt="Meyerton Athletics Club" loading="lazy"></a>
+          <a class="trust-badge" href="https://www.midvaal.gov.za/" target="_blank" rel="noopener"><img src="assets/img/sponsors/midvaal-municipality.jpg" alt="Midvaal Local Municipality" loading="lazy"></a>
+        </div>
       </div>
     </div>
 
@@ -433,7 +455,7 @@ def build_why():
     return f"""<section class="section-pad" id="why">
   <div class="container">
     <p class="eyebrow">Why run this one</p>
-    <h2>Four reasons, no adjectives</h2>
+    <h2>Four reasons</h2>
     <div class="reasons-grid" data-reveal>{cards}</div>
   </div>
 </section>
@@ -607,7 +629,10 @@ def build_qualifying_prose():
     flagship = dist_by_id("42_2km")
 
     def sa_num(n):
-        return f"{n:,}".replace(",", " ")
+        # non-breaking space between thousands groups — a plain space here
+        # lets the browser wrap "49 000" into "49" / "000" mid-number,
+        # which happened in the qualifier-pool stat card.
+        return f"{n:,}".replace(",", " ")
 
     # (target int, prefix, suffix, label) — target/prefix/suffix drive the
     # count-up animation in motion.js; it always lands on the exact string
@@ -993,6 +1018,51 @@ def sponsor_content(sponsor):
     return esc(sponsor["name"])
 
 
+# ------------------------------------------------------------ facebook feed --
+
+def build_facebook_feed():
+    """Meta's official Page Plugin, not a custom feed reader — genuinely
+    live (Facebook's iframe fetches fresh posts per visit) and needs no
+    credentials or backend. Lazy-loaded by facebook-feed.js once this
+    section nears the viewport. The blockquote inside .fb-page is the
+    plugin's own documented fallback markup (kept out of XFBML parsing via
+    fb-xfbml-parse-ignore) — it's what a visitor sees if the SDK never
+    loads (blocked, offline, no JS)."""
+    fb = CONFIG["facebook"]
+    fb_url = esc(fb["pageUrl"])
+    fb_name = esc(fb.get("pageName") or "Midvaal MadMac on Facebook")
+
+    return f"""<section class="facebook-feed section-pad" id="follow">
+  <div class="container facebook-feed-inner">
+    <div class="facebook-feed-copy">
+      <p class="eyebrow">Follow along</p>
+      <h2>Latest from Facebook</h2>
+      <p class="lede mt-6">
+        Route changes, training meetups and race-day photos land on the club's Facebook page first.
+      </p>
+      <a class="btn btn-ghost btn-sm mt-6" href="{fb_url}" target="_blank" rel="noopener">Follow MadMac on Facebook</a>
+    </div>
+    <div class="fb-feed-card">
+      <div id="fb-root"></div>
+      <div class="fb-page"
+        data-href="{fb_url}"
+        data-tabs="timeline"
+        data-width="500"
+        data-height="640"
+        data-small-header="false"
+        data-adapt-container-width="true"
+        data-hide-cover="false"
+        data-show-facepile="true">
+        <blockquote cite="{fb_url}" class="fb-xfbml-parse-ignore">
+          <a href="{fb_url}" target="_blank" rel="noopener">{fb_name}</a>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+"""
+
+
 def sponsor_tag(sponsor, css_class, inner):
     """Wraps sponsor_content in a link to their site when a URL is
     supplied, opening in a new tab so the marquee/footer never navigates a
@@ -1056,7 +1126,7 @@ def build_footer():
       <div class="footer-col">
         <div class="footer-brand">
           <img class="brand-mark" src="assets/img/madmac-badge.jpg" alt="" width="40" height="40">
-          <strong style="font-family: var(--font-display); font-style: italic; color: var(--ink-0);">Midvaal MadMac</strong>
+          <strong style="font-family: var(--font-display); color: var(--ink-0);">Midvaal MadMac</strong>
         </div>
         <p style="font-size: 0.85rem;">Organised by {esc(CONFIG['edition']['organiser'])}.</p>
         <p class="footer-clown">Finishing at Café du Cirque — yes, that's the club mascot.</p>
@@ -1111,6 +1181,7 @@ def main():
         build_header(),
         '<main id="main">',
         build_hero(),
+        build_sponsor_marquee(),
         build_qualifier_panel(),
         divider(),
         build_why(),
@@ -1124,9 +1195,9 @@ def main():
         build_what_you_get(),
         build_practical(),
         build_faq(),
+        build_facebook_feed(),
         build_email(),
         "</main>",
-        build_sponsor_marquee(),
         build_footer(),
     ])
 
@@ -1141,6 +1212,7 @@ def main():
 <script src="assets/js/route.js" defer></script>
 <script src="assets/js/carousel.js" defer></script>
 <script src="assets/js/motion.js" defer></script>
+<script src="assets/js/facebook-feed.js" defer></script>
 <script src="assets/js/email.js" defer></script>
 <script src="assets/js/analytics.js" defer></script>
 </body>

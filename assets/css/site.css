@@ -35,6 +35,10 @@ table { border-collapse: collapse; }
   --navy-700: #202e5c;
   --navy-600: #2b3d78;
 
+  /* exact navy sampled from the MadMac wordmark logo — the header bar is
+     colour-matched to it so the logo sits flush, not on a mismatched chip */
+  --brand-navy: #2b2955;
+
   /* ink */
   --ink-0: #ffffff;
   --ink-100: #eef1fb;
@@ -63,7 +67,10 @@ table { border-collapse: collapse; }
   --focus-ring: #ffd257;
 
   /* type */
-  --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  /* One font system-wide (Inter) — no secondary display face. Both tokens
+     point at the same stack so every existing var(--font-display) /
+     var(--font-body) reference keeps working without a rule-by-rule edit. */
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* spacing scale */
@@ -100,6 +107,7 @@ body {
   max-width: var(--container);
   margin-inline: auto;
   padding-inline: var(--space-5);
+  container-type: inline-size;
 }
 .container--narrow { max-width: var(--container-narrow); }
 
@@ -110,7 +118,7 @@ section { position: relative; }
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 800;
-  font-style: italic;
+
   letter-spacing: 0.01em;
   line-height: 0.98;
   text-transform: uppercase;
@@ -124,20 +132,31 @@ h3 { font-size: clamp(1.3rem, 3vw, 1.7rem); }
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
+  max-width: 100%;
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
+  /* sized off the width of the actual container it sits in (cqw), not the
+     viewport (vw) — the hero's copy column narrows again above the 900px
+     breakpoint when the two-column layout kicks in, so a viewport-based
+     size would grow exactly where the available space shrinks. This way
+     each eyebrow stays on one line by default everywhere on the site, and
+     only wraps where its own column genuinely can't fit it. */
+  font-size: clamp(0.85rem, 3.4cqw, 1.3rem);
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--yellow);
 }
 .eyebrow::before {
   content: "";
-  width: 22px; height: 3px;
+  width: 32px; height: 4px;
   background: var(--gradient-shirt);
   border-radius: 2px;
   flex-shrink: 0;
 }
+/* the hero date/location line reads as the page's dateline — bigger still */
+.hero-copy { container-type: inline-size; }
+.hero .eyebrow { font-size: clamp(0.8rem, 2.9cqw, 1.15rem); letter-spacing: 0.06em; }
+.hero .eyebrow::before { width: 30px; height: 4px; }
 
 p { color: var(--text-muted); max-width: 62ch; }
 p.lede { font-size: 1.15rem; color: var(--text); }
@@ -203,8 +222,7 @@ a.link:hover { color: var(--orange); }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(10, 17, 40, 0.86);
-  backdrop-filter: blur(10px);
+  background: var(--brand-navy);
   border-bottom: 1px solid var(--border);
 }
 .header-row {
@@ -226,12 +244,6 @@ a.link:hover { color: var(--orange); }
   align-items: center;
   gap: var(--space-2);
   text-decoration: none;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 800;
-  font-size: 1.35rem;
-  color: var(--ink-0);
-  letter-spacing: 0.01em;
   flex-shrink: 0;
 }
 .brand .brand-mark {
@@ -243,6 +255,14 @@ a.link:hover { color: var(--orange); }
   transform: scale(1.18);
   box-shadow: 0 0 0 1px var(--border-strong);
 }
+.brand .brand-word {
+  height: 44px;
+  width: auto;
+  flex-shrink: 0;
+  transition: height 0.25s ease;
+}
+.site-header.is-scrolled .brand .brand-word { height: 34px; }
+@media (prefers-reduced-motion: reduce) { .brand .brand-word { transition: none; } }
 .header-cta { display: flex; align-items: center; gap: var(--space-3); }
 .header-cta .btn { display: none; }
 @media (min-width: 560px) { .header-cta .btn { display: inline-flex; } }
@@ -280,7 +300,7 @@ a.link:hover { color: var(--orange); }
 .mobile-nav {
   display: flex; flex-direction: column;
   border-top: 1px solid var(--border);
-  background: var(--navy-950);
+  background: var(--brand-navy);
 }
 .mobile-nav[hidden] { display: none; }
 .mobile-nav-link {
@@ -385,6 +405,28 @@ a.link:hover { color: var(--orange); }
 .hero-facts .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--orange); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
 
+/* hero trust row — qualifier + organiser/municipality logos, the "pull factor" */
+.hero-trust { margin-top: var(--space-6); }
+.hero-trust-label {
+  font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--ink-300); max-width: 42ch; margin-bottom: var(--space-3);
+}
+.hero-trust-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.trust-badge {
+  display: flex; align-items: center; justify-content: center;
+  height: 52px; padding: 0.4rem 0.7rem;
+  background: var(--ink-0); border-radius: var(--radius-s);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.trust-badge:hover, .trust-badge:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.34);
+}
+@media (prefers-reduced-motion: reduce) { .trust-badge { transition: none; } .trust-badge:hover { transform: none; } }
+.trust-badge img { height: 100%; width: auto; max-width: 110px; object-fit: contain; }
+
 /* countdown */
 .countdown-card {
   background: var(--bg-raised);
@@ -409,7 +451,7 @@ a.link:hover { color: var(--orange); }
 .countdown-unit .num {
   font-family: var(--font-display);
   font-weight: 800;
-  font-style: italic;
+
   font-size: clamp(1.5rem, 5vw, 2.2rem);
   color: var(--ink-0);
   font-variant-numeric: tabular-nums;
@@ -474,7 +516,7 @@ a.link:hover { color: var(--orange); }
 }
 .reason-num {
   font-family: var(--font-display);
-  font-style: italic;
+
   font-weight: 800;
   font-size: 2rem;
   background: var(--gradient-shirt);
@@ -503,7 +545,7 @@ a.link:hover { color: var(--orange); }
   background: linear-gradient(165deg, rgba(239,106,31,0.14), var(--bg-raised) 60%);
 }
 .distance-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
-.distance-card-head .dist-label { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 2.1rem; color: var(--ink-0); }
+.distance-card-head .dist-label { font-family: var(--font-display); font-weight: 800; font-size: 2.1rem; color: var(--ink-0); }
 .distance-card .flag-tag {
   font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--navy-950); background: var(--gradient-shirt); padding: 0.25rem 0.6rem; border-radius: 999px;
@@ -521,7 +563,7 @@ a.link:hover { color: var(--orange); }
   .distance-table-wrap { display: block; overflow-x: auto; margin-top: var(--space-6); border-radius: var(--radius-m); border: 1px solid var(--border); }
   table.distance-table { width: 100%; min-width: 640px; border-collapse: collapse; background: var(--bg-raised); }
   table.distance-table th, table.distance-table td { padding: var(--space-4); text-align: left; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
-  table.distance-table thead th { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 1.3rem; color: var(--ink-0); background: var(--bg-sunken); }
+  table.distance-table thead th { font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; color: var(--ink-0); background: var(--bg-sunken); }
   table.distance-table th:first-child, table.distance-table td:first-child { color: var(--text-muted); font-weight: 600; }
   table.distance-table tbody tr:last-child td { border-bottom: none; }
   table.distance-table td.late { color: var(--orange); font-weight: 700; }
@@ -544,7 +586,7 @@ a.link:hover { color: var(--orange); }
   gap: var(--space-3);
 }
 .deadline-box .date {
-  font-family: var(--font-display); font-style: italic; font-weight: 800;
+  font-family: var(--font-display); font-weight: 800;
   font-size: 1.5rem; line-height: 1; color: var(--yellow);
   white-space: nowrap; flex-shrink: 0;
 }
@@ -590,7 +632,7 @@ a.link:hover { color: var(--orange); }
 
 .route-stats { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-m); padding: var(--space-5); }
 .route-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-5); }
-.route-stat .num { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 1.6rem; color: var(--ink-0); }
+.route-stat .num { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; color: var(--ink-0); }
 .route-stat .lbl { font-size: 0.75rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; }
 .elevation-profile { margin-top: var(--space-2); }
 .elevation-profile svg { width: 100%; height: auto; color: var(--ink-100); }
@@ -618,7 +660,7 @@ a.link:hover { color: var(--orange); }
 .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-top: var(--space-6); }
 @media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
 .stat-card { padding: var(--space-4); border-radius: var(--radius-m); border: 1px solid var(--border); background: var(--bg-raised); text-align: center; }
-.stat-num { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: clamp(1.5rem, 5vw, 2rem); background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
+.stat-num { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 5vw, 2rem); background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
 .stat-lbl { margin-top: var(--space-2); font-size: 0.76rem; color: var(--text-muted); line-height: 1.35; }
 
 /* ---------- prize money ---------- */
@@ -630,7 +672,7 @@ a.link:hover { color: var(--orange); }
   border: 1px solid var(--border-strong);
   display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; justify-content: space-between;
 }
-.prize-highlight .total { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 2.4rem; color: var(--ink-0); }
+.prize-highlight .total { font-family: var(--font-display); font-weight: 800; font-size: 2.4rem; color: var(--ink-0); }
 .prize-table-wrap { margin-top: var(--space-5); overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-m); }
 table.prize-table { width: 100%; min-width: 560px; background: var(--bg-raised); }
 table.prize-table th, table.prize-table td { padding: var(--space-3) var(--space-4); text-align: left; font-size: 0.88rem; border-bottom: 1px solid var(--border); }
@@ -709,6 +751,30 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
 .practical-note { padding: var(--space-4) var(--space-5); border-radius: var(--radius-m); border: 1px solid var(--border); font-size: 0.9rem; }
 .practical-note strong { display: block; color: var(--ink-100); margin-bottom: var(--space-1); font-size: 0.95rem; }
 
+/* ---------- facebook feed ---------- */
+.facebook-feed-inner { display: grid; gap: var(--space-7); align-items: center; }
+@media (min-width: 900px) {
+  .facebook-feed-inner { grid-template-columns: 1fr 1fr; }
+}
+.fb-feed-card {
+  margin-top: var(--space-6);
+  max-width: 560px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: var(--space-4);
+  overflow: hidden; /* clip the plugin iframe corners to the card radius */
+}
+@media (min-width: 900px) { .fb-feed-card { margin-top: 0; } }
+.fb-feed-card .fb-page, .fb-feed-card iframe { max-width: 100%; }
+/* shown only until the SDK swaps it for the live plugin (see fb-xfbml-parse-ignore) */
+.fb-feed-card blockquote {
+  margin: 0; padding: var(--space-6);
+  background: var(--bg-sunken); border-radius: var(--radius-s);
+  color: var(--text-muted); font-size: 0.95rem; text-align: center;
+}
+.fb-feed-card blockquote a { color: var(--yellow); font-weight: 600; }
+
 /* ---------- email capture ---------- */
 .email-section {
   background: linear-gradient(135deg, rgba(47,174,106,0.14), rgba(239,106,31,0.1));
@@ -755,21 +821,26 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
 
 /* ---------- footer ---------- */
 /* ---------- sponsor marquee ---------- */
-.sponsor-marquee { padding-block: var(--space-6); border-top: 1px solid var(--border); }
+.sponsor-marquee { padding-block: var(--space-7); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg-sunken); }
 .marquee-label {
-  text-align: center; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-faint); margin-bottom: var(--space-4);
+  text-align: center; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-300); margin-bottom: var(--space-5);
 }
 .marquee-viewport {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
-.marquee-track { display: flex; width: max-content; animation: marquee-scroll 38s linear infinite; }
+.marquee-track { display: flex; width: max-content; animation: marquee-scroll 42s linear infinite; }
+/* pause the scroll on hover/focus so a visitor can actually read or click
+   a logo instead of chasing it — :focus-within covers keyboard tabbing
+   into a linked logo the same way hover covers the mouse */
+.marquee-viewport:hover .marquee-track,
+.marquee-viewport:focus-within .marquee-track { animation-play-state: paused; }
 .marquee-set { display: flex; align-items: center; flex-shrink: 0; }
 .marquee-item {
-  flex-shrink: 0; padding-inline: var(--space-6); font-size: 0.95rem; font-weight: 600;
-  color: var(--ink-300); white-space: nowrap; opacity: 0.75;
+  flex-shrink: 0; padding-inline: var(--space-6); font-size: 1.1rem; font-weight: 600;
+  color: var(--ink-300); white-space: nowrap; opacity: 0.85;
   border-right: 1px solid var(--border);
   display: flex; align-items: center;
   text-decoration: none;
@@ -777,13 +848,13 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
 }
 a.marquee-item:hover, a.marquee-item:focus-visible { opacity: 1; }
 a.marquee-item-logo:hover img, a.marquee-item-logo:focus-visible img { box-shadow: 0 0 0 2px var(--yellow); }
-.marquee-item-logo { padding-inline: var(--space-5); }
+.marquee-item-logo { padding-inline: var(--space-6); }
 .marquee-item-logo img {
-  height: 36px; width: auto; max-width: 130px;
+  height: 64px; width: auto; max-width: 190px;
   object-fit: contain;
   background: #fff;
   border-radius: var(--radius-s);
-  padding: 5px 9px;
+  padding: 9px 14px;
 }
 @keyframes marquee-scroll {
   from { transform: translateX(0); }
