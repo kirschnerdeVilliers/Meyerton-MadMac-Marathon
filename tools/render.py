@@ -21,13 +21,43 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def asset_hash(relative_path):
+    """Short content hash of an asset file, used as a cache-busting query
+    string on its <link>/<script> tag — otherwise a returning visitor's
+    browser (or this machine's local preview server, which sends no
+    Cache-Control headers) can keep serving a stale file after a
+    style/script-only deploy. Bit this bit us for real: an old cached
+    email.js kept running after a rewrite, silently reintroducing the
+    exact bug the rewrite fixed — every JS file gets this now, not just
+    site.css."""
+    data = (ROOT / relative_path).read_bytes()
+    return hashlib.md5(data).hexdigest()[:8]
+
+
 def css_hash():
-    """Short content hash of site.css, used as a cache-busting query string
-    on its <link> tag — otherwise a returning visitor's browser (or this
-    machine's local preview server, which sends no Cache-Control headers)
-    can keep serving a stale stylesheet after a style-only deploy."""
-    css = (ROOT / "assets" / "css" / "site.css").read_bytes()
-    return hashlib.md5(css).hexdigest()[:8]
+    """Short content hash of site.css — see asset_hash()."""
+    return asset_hash("assets/css/site.css")
+
+
+JS_FILES = [
+    "nav.js",
+    "countdown.js",
+    "route.js",
+    "carousel.js",
+    "motion.js",
+    "facebook-feed.js",
+    "email.js",
+    "analytics.js",
+]
+
+
+def js_tags():
+    """<script> tags for every file in JS_FILES, each cache-busted via
+    asset_hash() — see its docstring for why this matters."""
+    return "\n".join(
+        f'<script src="assets/js/{name}?v={asset_hash("assets/js/" + name)}" defer></script>'
+        for name in JS_FILES
+    ) + "\n"
 
 
 def normalize_blanks(obj):
@@ -1237,15 +1267,7 @@ def main():
 {build_head()}</head>
 <body {body_attrs}>
 {body}
-<script src="assets/js/nav.js" defer></script>
-<script src="assets/js/countdown.js" defer></script>
-<script src="assets/js/route.js" defer></script>
-<script src="assets/js/carousel.js" defer></script>
-<script src="assets/js/motion.js" defer></script>
-<script src="assets/js/facebook-feed.js" defer></script>
-<script src="assets/js/email.js" defer></script>
-<script src="assets/js/analytics.js" defer></script>
-</body>
+{js_tags()}</body>
 </html>
 """
 

@@ -549,7 +549,7 @@
     "metaPixelId": ""
   },
   "emailCapture": {
-    "endpointUrl": "",
+    "endpointUrl": "https://madmac-email-signup.kirschner-devilliers.workers.dev",
     "provider": "brevo",
     "fieldName": "email"
   },
