@@ -35,6 +35,10 @@ table { border-collapse: collapse; }
   --navy-700: #202e5c;
   --navy-600: #2b3d78;
 
+  /* exact navy sampled from the MadMac wordmark logo — the header bar is
+     colour-matched to it so the logo sits flush, not on a mismatched chip */
+  --brand-navy: #2b2955;
+
   /* ink */
   --ink-0: #ffffff;
   --ink-100: #eef1fb;
@@ -63,7 +67,10 @@ table { border-collapse: collapse; }
   --focus-ring: #ffd257;
 
   /* type */
-  --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  /* One font system-wide (Inter) — no secondary display face. Both tokens
+     point at the same stack so every existing var(--font-display) /
+     var(--font-body) reference keeps working without a rule-by-rule edit. */
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* spacing scale */
@@ -110,7 +117,7 @@ section { position: relative; }
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 800;
-  font-style: italic;
+
   letter-spacing: 0.01em;
   line-height: 0.98;
   text-transform: uppercase;
@@ -203,8 +210,7 @@ a.link:hover { color: var(--orange); }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(10, 17, 40, 0.86);
-  backdrop-filter: blur(10px);
+  background: var(--brand-navy);
   border-bottom: 1px solid var(--border);
 }
 .header-row {
@@ -226,12 +232,6 @@ a.link:hover { color: var(--orange); }
   align-items: center;
   gap: var(--space-2);
   text-decoration: none;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 800;
-  font-size: 1.35rem;
-  color: var(--ink-0);
-  letter-spacing: 0.01em;
   flex-shrink: 0;
 }
 .brand .brand-mark {
@@ -243,6 +243,14 @@ a.link:hover { color: var(--orange); }
   transform: scale(1.18);
   box-shadow: 0 0 0 1px var(--border-strong);
 }
+.brand .brand-word {
+  height: 26px;
+  width: auto;
+  flex-shrink: 0;
+  transition: height 0.25s ease;
+}
+.site-header.is-scrolled .brand .brand-word { height: 21px; }
+@media (prefers-reduced-motion: reduce) { .brand .brand-word { transition: none; } }
 .header-cta { display: flex; align-items: center; gap: var(--space-3); }
 .header-cta .btn { display: none; }
 @media (min-width: 560px) { .header-cta .btn { display: inline-flex; } }
@@ -280,7 +288,7 @@ a.link:hover { color: var(--orange); }
 .mobile-nav {
   display: flex; flex-direction: column;
   border-top: 1px solid var(--border);
-  background: var(--navy-950);
+  background: var(--brand-navy);
 }
 .mobile-nav[hidden] { display: none; }
 .mobile-nav-link {
@@ -385,6 +393,21 @@ a.link:hover { color: var(--orange); }
 .hero-facts .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--orange); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
 
+/* hero trust row — qualifier + organiser/municipality logos, the "pull factor" */
+.hero-trust { margin-top: var(--space-6); }
+.hero-trust-label {
+  font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--ink-300); max-width: 42ch; margin-bottom: var(--space-3);
+}
+.hero-trust-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.trust-badge {
+  display: flex; align-items: center; justify-content: center;
+  height: 52px; padding: 0.4rem 0.7rem;
+  background: var(--ink-0); border-radius: var(--radius-s);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+}
+.trust-badge img { height: 100%; width: auto; max-width: 110px; object-fit: contain; }
+
 /* countdown */
 .countdown-card {
   background: var(--bg-raised);
@@ -409,7 +432,7 @@ a.link:hover { color: var(--orange); }
 .countdown-unit .num {
   font-family: var(--font-display);
   font-weight: 800;
-  font-style: italic;
+
   font-size: clamp(1.5rem, 5vw, 2.2rem);
   color: var(--ink-0);
   font-variant-numeric: tabular-nums;
@@ -474,7 +497,7 @@ a.link:hover { color: var(--orange); }
 }
 .reason-num {
   font-family: var(--font-display);
-  font-style: italic;
+
   font-weight: 800;
   font-size: 2rem;
   background: var(--gradient-shirt);
@@ -503,7 +526,7 @@ a.link:hover { color: var(--orange); }
   background: linear-gradient(165deg, rgba(239,106,31,0.14), var(--bg-raised) 60%);
 }
 .distance-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
-.distance-card-head .dist-label { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 2.1rem; color: var(--ink-0); }
+.distance-card-head .dist-label { font-family: var(--font-display); font-weight: 800; font-size: 2.1rem; color: var(--ink-0); }
 .distance-card .flag-tag {
   font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--navy-950); background: var(--gradient-shirt); padding: 0.25rem 0.6rem; border-radius: 999px;
@@ -521,7 +544,7 @@ a.link:hover { color: var(--orange); }
   .distance-table-wrap { display: block; overflow-x: auto; margin-top: var(--space-6); border-radius: var(--radius-m); border: 1px solid var(--border); }
   table.distance-table { width: 100%; min-width: 640px; border-collapse: collapse; background: var(--bg-raised); }
   table.distance-table th, table.distance-table td { padding: var(--space-4); text-align: left; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
-  table.distance-table thead th { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 1.3rem; color: var(--ink-0); background: var(--bg-sunken); }
+  table.distance-table thead th { font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; color: var(--ink-0); background: var(--bg-sunken); }
   table.distance-table th:first-child, table.distance-table td:first-child { color: var(--text-muted); font-weight: 600; }
   table.distance-table tbody tr:last-child td { border-bottom: none; }
   table.distance-table td.late { color: var(--orange); font-weight: 700; }
@@ -544,7 +567,7 @@ a.link:hover { color: var(--orange); }
   gap: var(--space-3);
 }
 .deadline-box .date {
-  font-family: var(--font-display); font-style: italic; font-weight: 800;
+  font-family: var(--font-display); font-weight: 800;
   font-size: 1.5rem; line-height: 1; color: var(--yellow);
   white-space: nowrap; flex-shrink: 0;
 }
@@ -590,7 +613,7 @@ a.link:hover { color: var(--orange); }
 
 .route-stats { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-m); padding: var(--space-5); }
 .route-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-5); }
-.route-stat .num { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 1.6rem; color: var(--ink-0); }
+.route-stat .num { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; color: var(--ink-0); }
 .route-stat .lbl { font-size: 0.75rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; }
 .elevation-profile { margin-top: var(--space-2); }
 .elevation-profile svg { width: 100%; height: auto; color: var(--ink-100); }
@@ -618,7 +641,7 @@ a.link:hover { color: var(--orange); }
 .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-top: var(--space-6); }
 @media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
 .stat-card { padding: var(--space-4); border-radius: var(--radius-m); border: 1px solid var(--border); background: var(--bg-raised); text-align: center; }
-.stat-num { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: clamp(1.5rem, 5vw, 2rem); background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
+.stat-num { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 5vw, 2rem); background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
 .stat-lbl { margin-top: var(--space-2); font-size: 0.76rem; color: var(--text-muted); line-height: 1.35; }
 
 /* ---------- prize money ---------- */
@@ -630,7 +653,7 @@ a.link:hover { color: var(--orange); }
   border: 1px solid var(--border-strong);
   display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; justify-content: space-between;
 }
-.prize-highlight .total { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 2.4rem; color: var(--ink-0); }
+.prize-highlight .total { font-family: var(--font-display); font-weight: 800; font-size: 2.4rem; color: var(--ink-0); }
 .prize-table-wrap { margin-top: var(--space-5); overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-m); }
 table.prize-table { width: 100%; min-width: 560px; background: var(--bg-raised); }
 table.prize-table th, table.prize-table td { padding: var(--space-3) var(--space-4); text-align: left; font-size: 0.88rem; border-bottom: 1px solid var(--border); }

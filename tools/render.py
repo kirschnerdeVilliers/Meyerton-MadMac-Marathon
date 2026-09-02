@@ -14,10 +14,20 @@ editing race-config.json and re-running this script.
     python3 tools/build-routes.py   # only if the GPX files changed
     python3 tools/render.py
 """
+import hashlib
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def css_hash():
+    """Short content hash of site.css, used as a cache-busting query string
+    on its <link> tag — otherwise a returning visitor's browser (or this
+    machine's local preview server, which sends no Cache-Control headers)
+    can keep serving a stale stylesheet after a style-only deploy."""
+    css = (ROOT / "assets" / "css" / "site.css").read_bytes()
+    return hashlib.md5(css).hexdigest()[:8]
 
 
 def normalize_blanks(obj):
@@ -236,8 +246,8 @@ def build_head():
 <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:ital,wght@1,700;1,800;1,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v={css_hash()}">
 
 <script type="application/ld+json">{json.dumps(event_jsonld, indent=0)}</script>
 <script type="application/ld+json">{json.dumps(faq_jsonld, indent=0)}</script>
@@ -264,7 +274,7 @@ def build_header():
   <div class="container header-row">
     <a class="brand" href="#top">
       <img class="brand-mark" src="assets/img/madmac-badge.jpg" alt="" width="40" height="40">
-      Midvaal MadMac
+      <img class="brand-word" src="assets/img/madmac-wordmark.png" alt="Midvaal MadMac" width="650" height="220">
     </a>
     <nav class="site-nav" aria-label="Section">{desktop_links}</nav>
     <div class="header-cta">
@@ -312,6 +322,17 @@ def build_hero():
       <div class="hero-actions">
         {cta("Enter now", "hero")}
         <a class="btn btn-ghost" href="#route">See the route</a>
+      </div>
+
+      <div class="hero-trust">
+        <p class="hero-trust-label">Qualifies for Comrades &amp; Two Oceans 2027 &middot;
+        organised by Meyerton Athletics Club &middot; presented with Midvaal Local Municipality</p>
+        <div class="hero-trust-row">
+          <span class="trust-badge"><img src="assets/img/badges/comrades-qualifier.png" alt="Comrades Marathon official qualifier" loading="lazy"></span>
+          <span class="trust-badge"><img src="assets/img/badges/two-oceans.jpg" alt="Two Oceans Marathon" loading="lazy"></span>
+          <span class="trust-badge"><img src="assets/img/sponsors/mac.jpeg" alt="Meyerton Athletics Club" loading="lazy"></span>
+          <span class="trust-badge"><img src="assets/img/sponsors/midvaal-municipality.jpg" alt="Midvaal Local Municipality" loading="lazy"></span>
+        </div>
       </div>
     </div>
 
@@ -433,7 +454,7 @@ def build_why():
     return f"""<section class="section-pad" id="why">
   <div class="container">
     <p class="eyebrow">Why run this one</p>
-    <h2>Four reasons, no adjectives</h2>
+    <h2>Four reasons</h2>
     <div class="reasons-grid" data-reveal>{cards}</div>
   </div>
 </section>
