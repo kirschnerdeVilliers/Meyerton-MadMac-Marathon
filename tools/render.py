@@ -340,10 +340,9 @@ def build_hero():
         <span class="badge">4 distances</span>
       </div>
       <p class="hero-sub lede">
-        A single-lap marathon through the Randvaal countryside south of Johannesburg —
-        genuinely flat, chip-timed, and positioned early in both the Comrades centenary and
-        Two Oceans 2027 qualifying windows. Four distances run from the same start line at
-        Café du Cirque, so a whole club or a whole family can enter one morning.
+        A genuinely flat, single-lap marathon south of Johannesburg, chip-timed and set
+        early in the Comrades centenary and Two Oceans 2027 qualifying windows. Four
+        distances, one start line at Café du Cirque.
       </p>
       <div class="hero-facts">
         <span><span class="dot"></span>{ed["dateDisplay"]}</span>
@@ -641,10 +640,6 @@ def build_route():
 
     <div class="route-tabs" role="tablist" aria-label="Select a distance to view its route">{tabs}</div>
     {''.join(panels)}
-
-    <div class="cta-strip">
-      {cta("Enter now", "after-route")}
-    </div>
   </div>
 </section>
 """
@@ -736,10 +731,6 @@ def build_qualifying_prose():
       August 2026, alongside other Vaal-region marathons offering early centenary qualifying
       opportunities.
     </p>
-
-    <div class="cta-strip">
-      {cta("Enter the 42.2km", "qualifying-prose", "42_2km")}
-    </div>
   </div>
 </section>
 """
@@ -1426,14 +1417,11 @@ def main():
         build_hero(),
         build_sponsor_marquee(),
         build_qualifier_panel(),
-        divider(),
         build_why(),
         build_distances(),
-        divider(),
         build_route(),
         build_qualifying_prose(),
         build_prizes(),
-        divider(),
         build_proof(),
         build_what_you_get(),
         build_practical(),
