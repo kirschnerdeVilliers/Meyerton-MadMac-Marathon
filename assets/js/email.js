@@ -70,7 +70,11 @@
             if (typeof window.madmacTrack === "function") {
               window.madmacTrack("email_signup");
             }
-            setStatus(form, "Thanks — you're on the list.", "success");
+            setStatus(
+              form,
+              form.getAttribute("data-success-message") || "Thanks — you're on the list.",
+              "success"
+            );
             form.reset();
           } else {
             setStatus(form, "Couldn't save that — please try again.", "error");

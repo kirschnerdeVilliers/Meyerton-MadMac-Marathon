@@ -214,8 +214,37 @@ a.link:hover { color: var(--orange); }
   border: 1.5px solid var(--border-strong);
 }
 .btn-ghost:hover { background: rgba(255,255,255,0.06); border-color: var(--ink-0); }
+/* The second primary action. It has to carry the same visual mass as
+   .btn-primary — identical padding, radius, weight and shadow depth — or
+   the pair reads as "the real button and a fallback", which is exactly
+   the hierarchy this site is trying not to communicate. Solid white
+   introduces no new colour: --ink-0 and --navy-950 are both already in
+   the palette, and it clears 18:1 against the navy ground. */
+.btn-secondary {
+  background: var(--ink-0);
+  color: var(--navy-950);
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.55);
+}
+.btn-secondary:hover { filter: brightness(0.94); box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.65); }
+/* Inert by design — see entries_closed_chip() in tools/render.py. */
+.btn[aria-disabled="true"] {
+  background: transparent;
+  color: var(--text-faint);
+  border: 1.5px solid var(--border);
+  box-shadow: none;
+  cursor: default;
+}
 .btn-sm { padding: 0.6rem 1.1rem; font-size: 0.9rem; }
 .btn-block { width: 100%; }
+
+/* ---------- entry phase ---------- */
+/* Both phases ship in the HTML; this picks one. render.py sets the initial
+   value on <html> at build time and countdown.js corrects it the instant
+   the close time passes — see "Entries open/closed" in README.md.
+   display:none rather than visibility/opacity so the inactive phase leaves
+   the accessibility tree and the tab order entirely. */
+html[data-entry-phase="open"] .phase-closed,
+html[data-entry-phase="closed"] .phase-open { display: none; }
 
 /* ---------- header ---------- */
 .site-header {
@@ -406,6 +435,16 @@ a.link:hover { color: var(--orange); }
 .hero-facts span { display: flex; align-items: center; gap: var(--space-2); }
 .hero-facts .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--orange); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+/* Below 520px the two buttons can't sit side by side, and letting them
+   wrap shrink-to-fit would stack a wide one above a narrow one — which
+   looks like a ranking. Equal full-width buttons stay equal. 520px is the
+   breakpoint .email-form-fields already uses. */
+@media (max-width: 519px) {
+  .hero-actions .btn { flex: 1 1 100%; }
+}
+/* "See the route" is navigation, not an action. As a third button it broke
+   the pair; as a text link under it, it stays available without competing. */
+.hero-actions-aside { margin-top: var(--space-3); font-size: 0.92rem; }
 
 /* hero trust row — qualifier + organiser/municipality logos, the "pull factor" */
 .hero-trust { margin-top: var(--space-6); }
@@ -439,6 +478,16 @@ a.link:hover { color: var(--orange); }
   z-index: 1;
 }
 .countdown-card .eyebrow { margin-bottom: var(--space-3); }
+/* Kept close to the open card's height on purpose: at >=900px both sit in
+   the right column of a grid with align-items:center, so a big height
+   difference visibly re-centres the hero copy when the phase flips live. */
+.countdown-card--closed { display: grid; gap: var(--space-4); }
+.countdown-closed-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+  line-height: 1.15;
+  color: var(--ink-0);
+}
 .countdown-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -784,10 +833,21 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
+/* Given real card presence now that it's a primary action rather than a
+   footer afterthought. Deliberately restrained: the section earns its
+   status from its position on the page, its nav link and the CTAs pointing
+   at it, not from shouting. */
 .email-card {
   max-width: 640px;
   margin-inline: auto;
   text-align: center;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-l);
+  padding: var(--space-7) var(--space-5);
+}
+@media (min-width: 720px) {
+  .email-card { padding: var(--space-8) var(--space-7); }
 }
 .email-form {
   display: flex;
@@ -901,6 +961,24 @@ a.sponsor-chip-logo:hover img, a.sponsor-chip-logo:focus-visible img { box-shado
 /* ---------- CTA repeat strip ---------- */
 .cta-strip { text-align: center; margin-top: var(--space-7); }
 .cta-strip p { margin-inline: auto; }
+/* A child, not .cta-strip itself: .cta-strip p exists, and making the
+   strip a flex container would turn that paragraph into a flex item. */
+.cta-strip-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+}
+@media (max-width: 519px) {
+  .cta-strip-actions .btn { flex: 1 1 100%; }
+}
+.footer-muted { color: var(--text-faint); }
+.cta-strip-heading {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink-0);
+  margin-bottom: var(--space-4);
+}
 
 /* ---------- utility ---------- */
 .visually-hidden {

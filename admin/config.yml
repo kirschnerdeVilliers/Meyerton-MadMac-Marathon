@@ -63,6 +63,8 @@ collections:
               - { label: "Late-fee start date/time (ISO)", name: "lateFeeStartDate", widget: string, hint: "Format: 2026-08-31T23:59:59+02:00 — must include the +02:00 offset" }
               - { label: "Late-fee start, as displayed", name: "lateFeeStartDisplay", widget: string }
               - { label: "Manual entry note", name: "manualEntryNote", widget: text }
+              - { label: "Countdown note", name: "countdownNote", widget: text, hint: "The small print under the countdown clock on the hero. Mention the current fee situation here." }
+              - { label: "Heading shown after entries close", name: "closedHeading", widget: string, hint: "The site switches to this by itself once the online close date passes — you don't need to change anything on the day." }
 
           - label: "Facebook"
             name: "facebook"
@@ -309,6 +311,33 @@ collections:
               - { label: "Phone", name: "phone", widget: string, required: false }
               - { label: "WhatsApp number", name: "whatsapp", widget: string, required: false }
               - { label: "Instagram URL", name: "instagram", widget: string, required: false }
+
+          # The site has two equally important actions: enter this year's
+          # race, and join the mailing list for next year's. This group is
+          # the whole of the second one's wording. It sits with the other
+          # content groups, not in the collapsed technical ones below, on
+          # purpose — it is marketing copy, not plumbing.
+          - label: "Mailing list (2027 updates)"
+            name: "mailingList"
+            widget: object
+            fields:
+              - { label: "Menu link label", name: "navLabel", widget: string, hint: "Shown in the top menu. Keep it short — there are six links up there." }
+              - { label: "Eyebrow (small line above the heading)", name: "eyebrow", widget: string }
+              - { label: "Heading", name: "heading", widget: string }
+              - { label: "Body copy — while online entries are open", name: "body", widget: text }
+              - { label: "Body copy — after online entries close", name: "bodyClosed", widget: text, hint: "The site switches to this automatically once entries close, and the sign-up moves to the front of the page. Nobody has to change anything on the day." }
+              - { label: "Sign-up button label", name: "buttonLabel", widget: string }
+              - { label: "Message shown after someone signs up", name: "successMessage", widget: string }
+              - { label: "Mid-page prompt heading", name: "ctaHeading", widget: string, hint: "The short line above the sign-up button where it repeats further down the page." }
+              - { label: "Hero / mid-page button label", name: "ctaButtonLabel", widget: string, hint: "The second button in the hero, and the matching one further down." }
+              - label: "POPIA consent paragraph"
+                name: "consent"
+                widget: text
+                hint: >-
+                  LEGAL WORDING. This is the promise the club makes about what it will email
+                  people, and it is what their consent covers. Do not broaden it (to sponsor
+                  mail, for example) without checking with the club first — and if you change
+                  it at all, the Privacy Policy page has to be changed to match.
 
           - label: "Analytics (technical)"
             name: "analytics"

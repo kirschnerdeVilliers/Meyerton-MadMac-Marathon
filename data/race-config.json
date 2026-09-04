@@ -23,7 +23,9 @@
     "onlineCloseDisplay": "22 September 2026 at 21:00",
     "lateFeeStartDate": "2026-08-31T23:59:59+02:00",
     "lateFeeStartDisplay": "after 31 August 2026",
-    "manualEntryNote": "Manual entries available at collection points only (not on race day), subject to availability. No entries on race day."
+    "manualEntryNote": "Manual entries available at collection points only (not on race day), subject to availability. No entries on race day.",
+    "countdownNote": "Late entry fees now apply on the 42.2km, 22km and 11km. The 5km stays at R90.",
+    "closedHeading": "Online entries have closed"
   },
   "facebook": {
     "pageUrl": "https://www.facebook.com/midvaalmadmac/",
@@ -547,6 +549,18 @@
     "ga4Id": "",
     "plausibleDomain": "",
     "metaPixelId": ""
+  },
+  "mailingList": {
+    "navLabel": "2027 updates",
+    "eyebrow": "Racing MadMac in 2027?",
+    "heading": "Get next year's MadMac news first",
+    "body": "Entry dates, prices and route news for the 2027 Midvaal MadMac — plus a reminder before this year's online entries close on 22 September 2026. A few emails a year from the club, no spam.",
+    "bodyClosed": "Online entries for 2026 have closed. Join the list and we'll email you the moment 2027 entries open, with dates, prices and route news straight from the club.",
+    "buttonLabel": "Keep me posted",
+    "successMessage": "Thanks — you're on the list.",
+    "ctaHeading": "Not entering this year?",
+    "ctaButtonLabel": "Get 2027 updates",
+    "consent": "Your email address is collected by Meyerton Athletics Club under POPIA and added to our race mailing list. We use it to send you Midvaal MadMac race news — a reminder before online entries close, and news about the next edition when entries open. We keep you on the list until you unsubscribe, we never share it with sponsors or any other third party, and every email includes a one-click unsubscribe link."
   },
   "emailCapture": {
     "endpointUrl": "https://madmac-email-signup.kirschner-devilliers.workers.dev",

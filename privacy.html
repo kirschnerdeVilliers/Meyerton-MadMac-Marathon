@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-ZA">
+<html lang="en-ZA" data-entry-phase="open">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=7fe00df8">
+<link rel="stylesheet" href="assets/css/site.css?v=256507c5">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -44,7 +44,7 @@
       How Midvaal MadMac and Meyerton Athletics Club (MAC) collect, use and protect your personal information,
       in line with South Africa's Protection of Personal Information Act 4 of 2013 (POPIA).
     </p>
-    <p style="font-size: 0.85rem; color: var(--text-faint);">Last updated: 2 September 2026</p>
+    <p style="font-size: 0.85rem; color: var(--text-faint);">Last updated: 4 September 2026</p>
 
     <h2>1. Who we are</h2>
     <p>
@@ -66,14 +66,22 @@
     <h2>3. What we collect on this site, and why</h2>
     <p>
       The only personal information this site actively asks you for is your <strong>email
-      address</strong>, through the "We'll remind you before entries close" form. Giving it is
-      entirely voluntary — declining has no effect on your ability to browse the site or enter the
-      race via Race Pass.
+      address</strong>, through the <a class="link" href="index.html#stay-updated">race mailing
+      list</a> sign-up. Giving it is entirely voluntary — declining has no effect on your ability
+      to browse the site or enter the race via Race Pass.
     </p>
     <p>
-      We use it for exactly one purpose: to send you a reminder before online entries close. We
-      don't use it for anything else, and we don't sell, rent or share it with sponsors or any
-      other third party.
+      We use it to send you Midvaal MadMac race news, and nothing else: a reminder before online
+      entries close, and news about the next edition — entry dates, prices and route changes —
+      when entries open. That is a handful of emails a year, not a regular newsletter. We don't
+      sell, rent or share your address with sponsors or any other third party, and we don't use it
+      to advertise anything other than this race.
+    </p>
+    <p>
+      If you signed up before September 2026, when the form promised only a single reminder before
+      that year's entries closed, that narrower promise is the one that applies to you. We will
+      ask you separately before sending you anything beyond it, and you can unsubscribe at any
+      time either way.
     </p>
 
     <h2>4. Who else touches your data, and where</h2>
@@ -105,10 +113,11 @@
 
     <h2>5. How long we keep it</h2>
     <p>
-      We keep your email address on our Brevo list for as long as the current entry period is
-      open, plus a reasonable period afterward in case the event returns and we want to let past
-      sign-ups know. You can ask us to delete it at any time (see below), and every reminder email
-      includes an unsubscribe link that removes you immediately.
+      We keep your email address on our Brevo list until you unsubscribe or ask us to remove it.
+      Because the list now carries news about the following year's race, that means it runs from
+      one edition to the next rather than ending when entries close. You can ask us to delete it
+      at any time (see below), and every email we send includes a one-click unsubscribe link that
+      removes you immediately.
     </p>
 
     <h2>6. Your rights under POPIA</h2>
@@ -170,8 +179,11 @@
       <div class="footer-col">
         <h4>Results &amp; entries</h4>
         <ul>
-          <li><a href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener">Enter on Race Pass</a></li>
+          <li><div class="phase-open"><a href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener">Enter on Race Pass</a></div><div class="phase-closed"><span class="footer-muted">Online entries closed</span></div></li>
           <li><a href="https://www.finishtime.co.za" target="_blank" rel="noopener">Past results (finishtime.co.za)</a></li>
+          <!-- index.html# prefix, not a bare #: this footer renders on
+               privacy.html too, where a bare fragment goes nowhere. -->
+          <li><a href="index.html#stay-updated" data-list-cta="footer">Get 2027 updates</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -189,12 +201,12 @@
 </footer>
 
 <script src="assets/js/nav.js?v=efcd55b1" defer></script>
-<script src="assets/js/countdown.js?v=acd47770" defer></script>
+<script src="assets/js/countdown.js?v=76db7bd6" defer></script>
 <script src="assets/js/route.js?v=beb5cebe" defer></script>
 <script src="assets/js/carousel.js?v=b373ee3e" defer></script>
 <script src="assets/js/motion.js?v=0d131ab4" defer></script>
 <script src="assets/js/facebook-feed.js?v=5bd14ed7" defer></script>
-<script src="assets/js/email.js?v=1a3b515d" defer></script>
-<script src="assets/js/analytics.js?v=1cca10cc" defer></script>
+<script src="assets/js/email.js?v=1cb8c37c" defer></script>
+<script src="assets/js/analytics.js?v=c563cac5" defer></script>
 </body>
 </html>

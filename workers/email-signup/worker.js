@@ -20,7 +20,14 @@ const ALLOWED_ORIGINS = [
   "http://localhost:4612",
 ];
 
-const LIST_ID = 3; // Brevo list "MadMac 2026 Entry Reminders"
+// Brevo list 3, originally created as "MadMac 2026 Entry Reminders". From
+// September 2026 the site's form is an ongoing race mailing list rather
+// than a one-off reminder, and it keeps writing to this same list — so the
+// contacts in it were gathered under TWO different promises. OPTIN_SCOPE
+// below is what tells them apart: any contact WITHOUT it signed up under
+// the old reminder-only wording and has not consented to next-year
+// marketing. Segment on that before sending a 2027 campaign.
+const LIST_ID = 3;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function corsHeaders(origin) {
@@ -79,7 +86,21 @@ export default {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
-      body: JSON.stringify({ email, listIds: [LIST_ID], updateEnabled: true }),
+      // These three attributes must already exist in Brevo (Contacts ->
+      // Settings -> Contact attributes) or Brevo answers 400 and every
+      // signup fails with a generic error. updateEnabled:true means a
+      // returning address gets them written too, which is right — they
+      // have just re-consented under the current wording.
+      body: JSON.stringify({
+        email,
+        listIds: [LIST_ID],
+        updateEnabled: true,
+        attributes: {
+          OPTIN_SCOPE: "race-news",
+          OPTIN_DATE: new Date().toISOString().slice(0, 10),
+          OPTIN_SOURCE: "midvaalmadmac.co.za",
+        },
+      }),
     });
 
     // 201 = new contact created; 204 = existing contact updated (already

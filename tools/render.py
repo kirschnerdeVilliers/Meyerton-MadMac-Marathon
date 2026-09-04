@@ -16,6 +16,8 @@ editing race-config.json and re-running this script.
 """
 import hashlib
 import json
+import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -82,6 +84,44 @@ MOTIF = json.loads((ROOT / "assets" / "img" / "route-motif.json").read_text())
 SITE_URL = "https://midvaalmadmac.co.za"  # real domain, wired via CNAME + GitHub Pages custom domain
 
 
+# ------------------------------------------------------------ entry phase --
+
+# The site has two primary actions — enter this year's race, and join the
+# mailing list for next year's — and which of the two leads depends on
+# whether online entries are still open. That makes this the ONE place
+# where the build stops being a pure function of race-config.json.
+#
+# Everything else in this file is clock-free on purpose (see the README:
+# re-running render.py must reproduce the committed HTML exactly), so the
+# clock is deliberately confined to two lines of output: the
+# data-entry-phase attribute on <html>, and the JSON-LD offers block. If a
+# re-render ever shows more than that moving, phase state has leaked
+# somewhere it shouldn't have.
+#
+# The build-time value is only a default. Both phases are always present
+# in the HTML and CSS picks one, so countdown.js can flip the live page the
+# instant the close time passes without a rebuild — which is what actually
+# serves real visitors. See "Entries open/closed" in the README.
+
+
+def build_now():
+    """Wall clock for the entries-open/closed flip.
+
+    Honours SOURCE_DATE_EPOCH so a build can be made reproducible on
+    demand — and so the post-close phase can be previewed at any time
+    without waiting for the real date or editing the config."""
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    if epoch:
+        return datetime.fromtimestamp(int(epoch), tz=timezone.utc)
+    return datetime.now(timezone.utc)
+
+
+NOW = build_now()
+ENTRIES_OPEN = NOW < datetime.fromisoformat(CONFIG["entries"]["onlineCloseDate"])
+BEFORE_LATE_FEES = NOW < datetime.fromisoformat(CONFIG["entries"]["lateFeeStartDate"])
+ENTRY_PHASE = "open" if ENTRIES_OPEN else "closed"
+
+
 # ---------------------------------------------------------------- helpers --
 
 def rand(n):
@@ -129,11 +169,101 @@ def elevation_svg_for(dist_id):
 
 
 def cta(label, position, distance=None, classes="btn btn-primary"):
+    """Action one: enter this year's race. The only emitter of data-cta —
+    see list_cta() for why the mailing list deliberately does not use it."""
     dist_attr = f' data-cta-distance="{esc(distance)}"' if distance else ""
     return (
         f'<a class="{classes}" href="{esc(CONFIG["entries"]["entryUrl"])}" '
         f'target="_blank" rel="noopener" data-cta="{esc(position)}"{dist_attr}>{esc(label)}</a>'
     )
+
+
+def list_cta(label, position, classes="btn btn-secondary"):
+    """Action two: join the mailing list for next year.
+
+    Emits data-list-cta, NOT data-cta. analytics.js binds entry_click to
+    every [data-cta] on the page, so reusing that attribute here would
+    quietly fold mailing-list clicks into the club's entry-click numbers
+    and make them incomparable with previous years — at exactly the moment
+    the club most wants to compare them. analytics.js has a parallel
+    binding that fires list_click for these instead."""
+    return (
+        f'<a class="{classes}" href="#stay-updated" '
+        f'data-list-cta="{esc(position)}">{esc(label)}</a>'
+    )
+
+
+def entries_closed_chip(classes="btn btn-block btn-sm"):
+    """Inert stand-in where a per-distance entry button used to be. Not an
+    <a>: there is nothing left to link to per-distance once online entries
+    close, and four identical "manual entry options" buttons down the card
+    row would be noise. The one such link lives at the end of the section."""
+    return f'<span class="{classes}" aria-disabled="true">Entries closed</span>'
+
+
+def closed_entry_note(classes="btn btn-ghost"):
+    """Stands in for an entry CTA once online entries have closed.
+
+    Deliberately never links to Race Pass: sending someone to a closed
+    entry page is worse than not offering the link at all. Points instead
+    at #practical, where the manual-entry collection points live — which
+    is the only way left to enter at that point."""
+    return f'<a class="{classes}" href="#practical">Manual entry options</a>'
+
+
+def phase_block(open_html, closed_html):
+    """Emits both entry phases; CSS shows whichever matches
+    data-entry-phase on <html>. Rendering both is what lets countdown.js
+    flip the page live at the close time without a rebuild.
+
+    Only ever wrap COPY in this. Anything with an id (the email form, the
+    countdown target) must render exactly once — two elements sharing an
+    id is an invalid document and a live bug."""
+    return (
+        f'<div class="phase-open">{open_html}</div>'
+        f'<div class="phase-closed">{closed_html}</div>'
+    )
+
+
+# The mailing-list copy lives in race-config.json so club volunteers can
+# edit it through the CMS, but these fallbacks stay here as a floor. The
+# CMS writes a cleared field as "" (normalize_blanks turns that into None),
+# so without them one accidental keystroke could ship an empty heading —
+# or, far worse, an empty POPIA consent notice.
+ML_FALLBACKS = {
+    "navLabel": "2027 updates",
+    "eyebrow": "Racing MadMac in 2027?",
+    "heading": "Get next year's MadMac news first",
+    "body": (
+        "Entry dates, prices and route news for the 2027 Midvaal MadMac — plus a reminder "
+        "before this year's online entries close. A few emails a year from the club, no spam."
+    ),
+    "bodyClosed": (
+        "Online entries for this year have closed. Join the list and we'll email you the "
+        "moment 2027 entries open, with dates, prices and route news straight from the club."
+    ),
+    "buttonLabel": "Keep me posted",
+    "successMessage": "Thanks — you're on the list.",
+    "ctaHeading": "Not entering this year?",
+    "ctaButtonLabel": "Get 2027 updates",
+    "consent": (
+        "Your email address is collected by Meyerton Athletics Club under POPIA and added to "
+        "our race mailing list. We use it to send you Midvaal MadMac race news — a reminder "
+        "before online entries close, and news about the next edition when entries open. We "
+        "keep you on the list until you unsubscribe, we never share it with sponsors or any "
+        "other third party, and every email includes a one-click unsubscribe link."
+    ),
+}
+
+
+def ml(key):
+    """mailingList copy from the config, falling back to ML_FALLBACKS.
+
+    Never read CONFIG["mailingList"][...] directly. The .get() on the key
+    itself also means the build degrades to English rather than crashing
+    if the whole block is ever dropped — which the CMS will do to any
+    field that isn't declared in admin/config.yml."""
+    return (CONFIG.get("mailingList") or {}).get(key) or ML_FALLBACKS[key]
 
 
 def motif_svg(extra_class="", stroke_width="2", animate=False):
@@ -164,7 +294,7 @@ def build_head():
     description = (
         "Midvaal MadMac, 4 October 2026: a single-lap Comrades and Totalsports Two Oceans "
         "Marathon qualifier in Meyerton, Gauteng. 42.2km, 22km, 11km and 5km, R100 000 total "
-        "prize money. Online entries close 22 September 2026."
+        "prize money."
     )
     canonical = f"{SITE_URL}/"
     og_image = f"{SITE_URL}/assets/img/og-madmac-2026.png"
@@ -201,14 +331,29 @@ def build_head():
         },
         "image": [og_image],
         "url": entries["entryUrl"],
+        # Priced off the fee tier that is actually purchasable right now,
+        # not always earlyBird — that tier expires at lateFeeStartDate, and
+        # quoting a price nobody can pay is a false claim in structured
+        # data. Availability is LimitedAvailability rather than SoldOut once
+        # online entries close, because manualEntryNote says manual entries
+        # continue at the collection points.
         "offers": [
             {
                 "@type": "Offer",
-                "name": f"{d['label']} entry — early bird",
-                "price": d["fees"]["earlyBird"],
+                "name": (
+                    f"{d['label']} entry — early bird" if BEFORE_LATE_FEES
+                    else f"{d['label']} entry"
+                ),
+                "price": d["fees"]["earlyBird"] if BEFORE_LATE_FEES else d["fees"]["late"],
                 "priceCurrency": "ZAR",
-                "availability": "https://schema.org/InStock",
-                "validThrough": f"{CONFIG['entries']['lateFeeStartDate'][:10]}",
+                "availability": (
+                    "https://schema.org/InStock" if ENTRIES_OPEN
+                    else "https://schema.org/LimitedAvailability"
+                ),
+                "validThrough": (
+                    CONFIG["entries"]["lateFeeStartDate"][:10] if BEFORE_LATE_FEES
+                    else CONFIG["entries"]["onlineCloseDate"][:10]
+                ),
                 "url": entries["entryUrl"],
             }
             for d in CONFIG["distances"]
@@ -293,6 +438,9 @@ NAV_LINKS = [
     ("#route", "Route"),
     ("#prizes", "Prizes"),
     ("#faq", "FAQ"),
+    # The mailing list is a primary action, not a footer afterthought, so
+    # it gets a nav link like every other destination that matters.
+    ("#stay-updated", ml("navLabel")),
 ]
 
 
@@ -309,7 +457,10 @@ def build_header():
     </a>
     <nav class="site-nav" aria-label="Section">{desktop_links}</nav>
     <div class="header-cta">
-      {cta("Enter now", "header")}
+      {phase_block(
+          cta("Enter now", "header"),
+          list_cta("Get 2027 updates", "header-closed", "btn btn-primary"),
+      )}
       <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-nav">
         <span class="visually-hidden">Menu</span>
         <span class="nav-toggle-bars" aria-hidden="true"></span>
@@ -349,10 +500,14 @@ def build_hero():
         <span><span class="dot"></span>{ed["venueName"]}, Daleside</span>
         <span><span class="dot"></span>42.2 &middot; 22 &middot; 11 &middot; 5&nbsp;km</span>
       </div>
-      <div class="hero-actions">
-        {cta("Enter now", "hero")}
-        <a class="btn btn-ghost" href="#route">See the route</a>
-      </div>
+      {phase_block(
+          f'<div class="hero-actions">{cta("Enter now", "hero")}'
+          f'{list_cta(ml("ctaButtonLabel"), "hero")}</div>',
+          f'<div class="hero-actions">'
+          f'{list_cta(ml("ctaButtonLabel"), "hero", "btn btn-primary")}'
+          f'{closed_entry_note()}</div>',
+      )}
+      <p class="hero-actions-aside"><a class="link" href="#route">See the route &rarr;</a></p>
 
       <div class="hero-trust">
         <p class="hero-trust-label">Qualifies for Comrades &amp; Two Oceans 2027 &middot;
@@ -366,21 +521,32 @@ def build_hero():
       </div>
     </div>
 
-    <div class="countdown-card">
+    {phase_block(
+        f'''<div class="countdown-card">
       <p class="eyebrow">Online entries close</p>
       <div class="countdown-grid" data-countdown-target="{entries['onlineCloseDate']}">
         <div class="countdown-unit"><span class="num" data-unit="days">00</span><span class="lbl">Days</span></div>
         <div class="countdown-unit"><span class="num" data-unit="hours">00</span><span class="lbl">Hours</span></div>
         <div class="countdown-unit"><span class="num" data-unit="minutes">00</span><span class="lbl">Mins</span></div>
         <div class="countdown-unit"><span class="num" data-unit="seconds">00</span><span class="lbl">Secs</span></div>
-        <p class="visually-hidden" data-closed-note hidden>Online entries have closed.</p>
       </div>
       <p class="countdown-note">
         Online entries close <strong>{entries['onlineCloseDisplay']}</strong>.
-        Early bird pricing ends {entries['lateFeeStartDisplay']} — late fees apply from
-        1&nbsp;September until close.
+        {esc(entries.get('countdownNote') or '')}
       </p>
-    </div>
+    </div>''',
+        f'''<div class="countdown-card countdown-card--closed">
+      <p class="eyebrow">Entries</p>
+      <p class="countdown-closed-heading">{esc(entries.get('closedHeading') or 'Online entries have closed')}</p>
+      <p class="countdown-note">{esc(entries['manualEntryNote'])}</p>
+      {list_cta(ml("ctaButtonLabel"), "countdown-closed", "btn btn-primary btn-block")}
+    </div>''',
+    )}
+    <!-- Lives outside the phase blocks so it survives the swap: a visitor
+         on the page at the moment entries close sees the whole hero change
+         silently, and a screen-reader user would otherwise get nothing.
+         countdown.js un-hides this in the same tick as the flip. -->
+    <p class="visually-hidden" role="status" data-closed-note hidden>Online entries have now closed.</p>
   </div>
 </section>
 """
@@ -438,7 +604,10 @@ def build_qualifier_panel():
     </div>
 
     <div class="cta-strip">
-      {cta("Enter the 42.2km", "qualifier-panel", "42_2km")}
+      {phase_block(
+          cta("Enter the 42.2km", "qualifier-panel", "42_2km"),
+          closed_entry_note(),
+      )}
     </div>
   </div>
 </section>
@@ -520,7 +689,10 @@ def build_distances():
         <span>Cut-off {d['cutoffDisplay']}</span>
       </div>
       <p style="margin-top: 0.75rem; font-size: 0.82rem; color: var(--text-faint);">{shirts}</p>
-      {cta("Enter now", "distance-card", d['id'], "btn btn-primary btn-block btn-sm")}
+      {phase_block(
+          cta("Enter now", "distance-card", d['id'], "btn btn-primary btn-block btn-sm"),
+          entries_closed_chip(),
+      )}
     </div>""")
 
     thead_cols = "".join(
@@ -576,7 +748,12 @@ def build_distances():
     {table}
 
     <div class="cta-strip">
-      {cta("Enter now", "after-pricing")}
+      {phase_block(
+          f'<div class="cta-strip-actions">{cta("Enter now", "after-pricing")}'
+          f'{list_cta(ml("ctaButtonLabel"), "after-pricing")}</div>',
+          f'<div class="cta-strip-actions">'
+          f'{list_cta(ml("ctaButtonLabel"), "after-pricing", "btn btn-primary")}</div>',
+      )}
     </div>
   </div>
 </section>
@@ -862,6 +1039,17 @@ def build_faq():
     <p class="eyebrow">FAQ</p>
     <h2>Questions people actually ask</h2>
     <div class="faq-list mt-6" data-reveal>{items}</div>
+
+    <div class="cta-strip">
+      <p class="cta-strip-heading">{esc(ml("ctaHeading"))}</p>
+      {phase_block(
+          f'<div class="cta-strip-actions">{cta("Enter now", "faq")}'
+          f'{list_cta(ml("ctaButtonLabel"), "faq")}</div>',
+          f'<div class="cta-strip-actions">'
+          f'{list_cta(ml("ctaButtonLabel"), "faq", "btn btn-primary")}'
+          f'{closed_entry_note()}</div>',
+      )}
+    </div>
   </div>
 </section>
 """
@@ -923,6 +1111,9 @@ def build_what_you_get():
 # ---------------------------------------------------------------- practical --
 
 def build_practical():
+    # The closed-phase strip at the end of this section is mailing-list
+    # only: the manual-entry collection-point table is directly above it,
+    # so a "manual entry options" button pointing back at it would be noise.
     collection = CONFIG["numberCollection"]
     rules = CONFIG["raceRules"]
     course = CONFIG["course"]
@@ -984,6 +1175,15 @@ def build_practical():
       published closer to race day. The course sits at roughly {course['altitudeApprox']}m —
       worth knowing if you're travelling up from the coast.
     </p>
+
+    <div class="cta-strip">
+      {phase_block(
+          f'<div class="cta-strip-actions">{cta("Enter now", "practical")}'
+          f'{list_cta(ml("ctaButtonLabel"), "practical")}</div>',
+          f'<div class="cta-strip-actions">'
+          f'{list_cta(ml("ctaButtonLabel"), "practical", "btn btn-primary")}</div>',
+      )}
+    </div>
   </div>
 </section>
 """
@@ -1028,29 +1228,27 @@ def build_email():
 
     return f"""<section class="email-section section-pad" id="stay-updated">
   <div class="container">
-    <div class="email-card">
-      <p class="eyebrow" style="justify-content: center;">Not ready to enter yet?</p>
-      <h2>We'll remind you before entries close</h2>
-      <p class="mx-auto mt-6" style="text-align: center;">
-        One email, before online entries close on {CONFIG['entries']['onlineCloseDisplay']}.
-        No spam, and never shared with anyone else.
-      </p>
+    <div class="email-card" data-reveal>
+      <p class="eyebrow" style="justify-content: center;">{esc(ml("eyebrow"))}</p>
+      <h2>{esc(ml("heading"))}</h2>
+      {phase_block(
+          f'<p class="mx-auto mt-6" style="text-align: center;">{esc(ml("body"))}</p>',
+          f'<p class="mx-auto mt-6" style="text-align: center;">{esc(ml("bodyClosed"))}</p>',
+      )}
 
       <form id="email-form" class="email-form" method="post" action="{action}"
-        data-configured="{configured}">
+        data-configured="{configured}" data-success-message="{esc(ml("successMessage"))}">
         <div class="email-form-fields">
           <label for="email-input" class="visually-hidden">Email address</label>
           <input id="email-input" name="{esc(ec.get('fieldName') or 'email')}" type="email" required
             class="email-input" placeholder="you@example.com" autocomplete="email">
-          <button type="submit" class="btn btn-primary">Notify me</button>
+          <button type="submit" class="btn btn-primary">{esc(ml("buttonLabel"))}</button>
         </div>
         <p class="email-status" role="status" aria-live="polite"></p>
       </form>
 
       <p class="email-consent">
-        Your email is collected by Meyerton Athletics Club under POPIA solely to send you a
-        reminder before entries close. It is not shared with sponsors or third parties, and you
-        can unsubscribe at any time. Read our
+        {esc(ml("consent"))} Read our
         <a href="privacy.html">Privacy Policy</a>, or see our
         <a href="#footer">contact details</a> to opt out.
       </p>
@@ -1172,6 +1370,12 @@ def build_footer():
 
     sponsor_chips = "".join(sponsor_chip(s) for s in sponsors)
 
+    entry_link = phase_block(
+        '<a href="%s" target="_blank" rel="noopener">Enter on Race Pass</a>'
+        % esc(CONFIG["entries"]["entryUrl"]),
+        '<span class="footer-muted">Online entries closed</span>',
+    )
+
     return f"""<footer class="site-footer" id="footer">
   <div class="container">
     <div class="footer-grid">
@@ -1190,8 +1394,11 @@ def build_footer():
       <div class="footer-col">
         <h4>Results &amp; entries</h4>
         <ul>
-          <li><a href="{esc(CONFIG['entries']['entryUrl'])}" target="_blank" rel="noopener">Enter on Race Pass</a></li>
+          <li>{entry_link}</li>
           <li><a href="https://{esc(CONFIG['resultsUrl'].replace('https://','').replace('http://',''))}" target="_blank" rel="noopener">Past results (finishtime.co.za)</a></li>
+          <!-- index.html# prefix, not a bare #: this footer renders on
+               privacy.html too, where a bare fragment goes nowhere. -->
+          <li><a href="index.html#stay-updated" data-list-cta="footer">{esc(ml("ctaButtonLabel"))}</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1282,7 +1489,7 @@ def build_privacy_page():
       How Midvaal MadMac and {esc(organiser)} collect, use and protect your personal information,
       in line with South Africa's Protection of Personal Information Act 4 of 2013 (POPIA).
     </p>
-    <p style="font-size: 0.85rem; color: var(--text-faint);">Last updated: 2 September 2026</p>
+    <p style="font-size: 0.85rem; color: var(--text-faint);">Last updated: 4 September 2026</p>
 
     <h2>1. Who we are</h2>
     <p>
@@ -1304,14 +1511,22 @@ def build_privacy_page():
     <h2>3. What we collect on this site, and why</h2>
     <p>
       The only personal information this site actively asks you for is your <strong>email
-      address</strong>, through the "We'll remind you before entries close" form. Giving it is
-      entirely voluntary — declining has no effect on your ability to browse the site or enter the
-      race via Race Pass.
+      address</strong>, through the <a class="link" href="index.html#stay-updated">race mailing
+      list</a> sign-up. Giving it is entirely voluntary — declining has no effect on your ability
+      to browse the site or enter the race via Race Pass.
     </p>
     <p>
-      We use it for exactly one purpose: to send you a reminder before online entries close. We
-      don't use it for anything else, and we don't sell, rent or share it with sponsors or any
-      other third party.
+      We use it to send you Midvaal MadMac race news, and nothing else: a reminder before online
+      entries close, and news about the next edition — entry dates, prices and route changes —
+      when entries open. That is a handful of emails a year, not a regular newsletter. We don't
+      sell, rent or share your address with sponsors or any other third party, and we don't use it
+      to advertise anything other than this race.
+    </p>
+    <p>
+      If you signed up before September 2026, when the form promised only a single reminder before
+      that year's entries closed, that narrower promise is the one that applies to you. We will
+      ask you separately before sending you anything beyond it, and you can unsubscribe at any
+      time either way.
     </p>
 
     <h2>4. Who else touches your data, and where</h2>
@@ -1343,10 +1558,11 @@ def build_privacy_page():
 
     <h2>5. How long we keep it</h2>
     <p>
-      We keep your email address on our Brevo list for as long as the current entry period is
-      open, plus a reasonable period afterward in case the event returns and we want to let past
-      sign-ups know. You can ask us to delete it at any time (see below), and every reminder email
-      includes an unsubscribe link that removes you immediately.
+      We keep your email address on our Brevo list until you unsubscribe or ask us to remove it.
+      Because the list now carries news about the following year's race, that means it runs from
+      one edition to the next rather than ending when entries close. You can ask us to delete it
+      at any time (see below), and every email we send includes a one-click unsubscribe link that
+      removes you immediately.
     </p>
 
     <h2>6. Your rights under POPIA</h2>
@@ -1426,14 +1642,16 @@ def main():
         build_what_you_get(),
         build_practical(),
         build_faq(),
-        build_facebook_feed(),
+        # #stay-updated is a primary action now, so it comes before the
+        # Facebook embed — that's ambient social proof and belongs last.
         build_email(),
+        build_facebook_feed(),
         "</main>",
         build_footer(),
     ])
 
     html = f"""<!doctype html>
-<html lang="en-ZA">
+<html lang="en-ZA" data-entry-phase="{ENTRY_PHASE}">
 <head>
 {build_head()}</head>
 <body {body_attrs}>
@@ -1454,7 +1672,7 @@ def main():
         build_footer(),
     ])
     privacy_html = f"""<!doctype html>
-<html lang="en-ZA">
+<html lang="en-ZA" data-entry-phase="{ENTRY_PHASE}">
 <head>
 {build_privacy_head()}</head>
 <body>

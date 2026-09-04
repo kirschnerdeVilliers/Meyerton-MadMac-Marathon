@@ -47,12 +47,24 @@
   }
 
   function wireCtaTracking() {
+    // The site has two primary actions and they get two separate series.
+    // entry_click must keep meaning exactly what it meant in previous
+    // years, so mailing-list clicks are deliberately NOT folded into it —
+    // see list_cta() in tools/render.py. list_click is the mailing list's
+    // top-of-funnel event; email_signup (fired by email.js) is its
+    // conversion, mirroring entry_click -> Race Pass.
     document.querySelectorAll("[data-cta]").forEach(function (link) {
       link.addEventListener("click", function () {
         track("entry_click", {
           position: link.getAttribute("data-cta"),
           distance: link.getAttribute("data-cta-distance") || "all",
         });
+      });
+    });
+
+    document.querySelectorAll("[data-list-cta]").forEach(function (link) {
+      link.addEventListener("click", function () {
+        track("list_click", { position: link.getAttribute("data-list-cta") });
       });
     });
   }

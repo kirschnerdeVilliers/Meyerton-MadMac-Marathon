@@ -22,6 +22,17 @@ on:
       - "assets/css/**"
       - "assets/js/**"
       - "CNAME"
+  # Nightly, just after the 21:00 SAST online-entries close. The site
+  # renders BOTH the entries-open and entries-closed states into the HTML
+  # and countdown.js flips between them live in the browser, so this is
+  # only a backstop — it fixes the build-time default for crawlers and the
+  # few visitors without JavaScript. Don't remove the JS on the strength of
+  # this: GitHub's scheduled runs are queued rather than guaranteed
+  # (routinely 5-20 minutes late) and GitHub disables them entirely after
+  # 60 days of repository inactivity.
+  schedule:
+    - cron: "10 19 * * *" # 19:10 UTC = 21:10 SAST
+
   workflow_dispatch: {}
 
 permissions:

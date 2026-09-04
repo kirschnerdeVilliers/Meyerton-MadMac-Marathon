@@ -39,6 +39,46 @@ If the GPX files change (a re-measured course, a new distance), run `build-route
 `tools/render.py` writes **two** pages, not one: `index.html` (the race page) and `privacy.html`
 (the POPIA notice — see "Privacy / POPIA notice" below). Both come from the same run.
 
+## Two primary actions, and the entries open/closed flip
+
+The site asks visitors to do one of two things, and treats them as equally important:
+
+1. **Enter this year's race** — the Race Pass links (`cta()` in `tools/render.py`).
+2. **Join the mailing list for next year** — the `#stay-updated` sign-up (`list_cta()`).
+
+Which of the two *leads* depends on whether online entries are still open. Once they close, the
+mailing list takes over as the primary action and the entry buttons become a pointer to the
+manual-entry collection points — nobody has to edit anything on the day.
+
+**How the flip works, and why it's built this way.** Everything else in `render.py` is clock-free
+on purpose, so a re-render reproduces the committed HTML exactly. The flip is the one exception,
+and it's deliberately confined:
+
+- **At build time**, `render.py` writes `data-entry-phase="open"` or `"closed"` onto `<html>`,
+  derived from `entries.onlineCloseDate`. It reaches only **two** places in the output: that
+  attribute, and the JSON-LD `offers` block. **If a re-render ever moves more than those, phase
+  state has leaked somewhere it shouldn't have** — treat that as a bug.
+- **Both phases are always in the HTML.** `phase_block()` renders each phase-dependent block
+  twice, wrapped in `.phase-open` / `.phase-closed`, and CSS shows whichever matches.
+- **`assets/js/countdown.js` sets the attribute in the browser** the instant the close time
+  passes. This is the mechanism that actually serves real visitors — the build-time value is stale
+  the moment it deploys.
+- **A nightly GitHub Actions run** (`schedule:` in `build-deploy.yml`) rebuilds so the static
+  default is right for crawlers and the few visitors without JavaScript. It is a *backstop*, not
+  the mechanism: GitHub's scheduled runs are queued rather than guaranteed, and GitHub disables
+  them after 60 days of repo inactivity. Don't delete the JS on the strength of the cron.
+
+**To preview the closed phase without waiting for the date**, set `SOURCE_DATE_EPOCH` — which also
+exists to make any build reproducible:
+
+```bash
+SOURCE_DATE_EPOCH=$(date -j -f "%Y-%m-%d" "2026-09-30" +%s) python3 tools/render.py
+python3 tools/render.py   # back to the real clock
+```
+
+Expect one two-line diff, unprompted, on the first push after entries close each year. That is the
+feature working.
+
 ### What's genuinely dynamic client-side JS
 
 Everything else in `index.html` is real static markup, but a few things can only be done in the
@@ -63,7 +103,7 @@ browser:
   Both no-op under `prefers-reduced-motion`, and the "hidden" starting state for reveal is only
   ever applied by this script, never in static CSS, so content is fully visible with JS off.
 
-Section nav links in the header (`NAV_LINKS` in `tools/render.py`) point at five section ids —
+Section nav links in the header (`NAV_LINKS` in `tools/render.py`) point at six section ids —
 add, remove or reorder entries there if the page's section structure changes; the mobile menu is
 generated from the same list. The sponsor marquee at the foot of the page (`build_sponsor_marquee`
 in `tools/render.py`) reads from the same `sponsors.list` in `race-config.json` as the footer, so
@@ -92,7 +132,17 @@ separately — see that directory's own README for deploy steps), not at Brevo d
 keeps its own styled `<form>` (`build_email()` in `tools/render.py`, enhanced by `assets/js/email.js`
 into a `fetch()` call so the page gets a truthful success/error message back); the Worker holds a
 Brevo API key as a secret and calls Brevo's real REST API (`POST /v3/contacts`) server-side to add
-the signup to the "MadMac 2026 Entry Reminders" list (list ID `3`, hardcoded in `worker.js`).
+the signup to Brevo list ID `3` (hardcoded in `worker.js`).
+
+**The list holds contacts gathered under two different promises — this matters before any
+campaign.** It was created as "MadMac 2026 Entry Reminders", when the form promised exactly one
+email before that year's entries closed. From September 2026 the form is an ongoing race mailing
+list (see "Two primary actions" above) and writes to the same list. New signups carry an
+`OPTIN_SCOPE` contact attribute; **contacts without it consented only to the old single reminder**
+and should be excluded from next-year marketing until they've been asked again. The three
+attributes (`OPTIN_SCOPE`, `OPTIN_DATE`, `OPTIN_SOURCE`) must exist in Brevo under Contacts →
+Settings → Contact attributes before deploying the Worker, or Brevo returns 400 and every signup
+fails.
 
 **Why not post to Brevo directly, like the other providers below — read this before "simplifying"
 it back to a direct `<form>`.** Brevo documents a "Simple HTML" no-JS embed (a plain `<form
