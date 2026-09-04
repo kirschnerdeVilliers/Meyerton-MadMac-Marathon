@@ -231,7 +231,6 @@ def phase_block(open_html, closed_html):
 # so without them one accidental keystroke could ship an empty heading —
 # or, far worse, an empty POPIA consent notice.
 ML_FALLBACKS = {
-    "navLabel": "Mailing list",
     "eyebrow": "Mailing list",
     "heading": "Stay in touch with MadMac",
     "body": (
@@ -440,9 +439,9 @@ NAV_LINKS = [
     ("#route", "Route"),
     ("#prizes", "Prizes"),
     ("#faq", "FAQ"),
-    # The mailing list is a primary action, not a footer afterthought, so
-    # it gets a nav link like every other destination that matters.
-    ("#stay-updated", ml("navLabel")),
+    # No mailing-list entry here on purpose: the header's own "Stay in
+    # touch" button already goes to #stay-updated, and a nav link beside it
+    # pointing at the same anchor was redundant.
 ]
 
 

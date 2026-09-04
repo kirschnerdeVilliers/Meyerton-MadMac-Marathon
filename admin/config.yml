@@ -321,7 +321,6 @@ collections:
             name: "mailingList"
             widget: object
             fields:
-              - { label: "Menu link label", name: "navLabel", widget: string, hint: "Shown in the top menu. Keep it short — there are six links up there." }
               - { label: "Eyebrow (small line above the heading)", name: "eyebrow", widget: string }
               - { label: "Heading", name: "heading", widget: string }
               - { label: "Body copy — while online entries are open", name: "body", widget: text }
