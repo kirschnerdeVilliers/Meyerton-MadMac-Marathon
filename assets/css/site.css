@@ -292,12 +292,19 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 }
 .site-header.is-scrolled .brand .brand-word { height: 34px; }
 @media (prefers-reduced-motion: reduce) { .brand .brand-word { transition: none; } }
-.header-cta { display: flex; align-items: center; gap: var(--space-3); }
+.header-cta { display: flex; align-items: center; gap: var(--space-2); }
 .header-cta .btn { display: none; }
 @media (min-width: 560px) { .header-cta .btn { display: inline-flex; } }
 
 /* ---------- section nav ---------- */
-.site-nav { display: none; align-items: center; gap: var(--space-5); flex: 1; justify-content: center; }
+/* Fluid gap, not a fixed one: the header now carries two buttons, and at
+   exactly 900px (where this nav appears) six links in a 1.5rem gap fill
+   their slot with zero pixels to spare. This buys ~48px back at the
+   breakpoint and relaxes to the original spacing on wide screens. */
+.site-nav {
+  display: none; align-items: center; flex: 1; justify-content: center;
+  gap: clamp(0.85rem, 1.55vw, var(--space-5));
+}
 .site-nav a {
   font-size: 0.88rem; font-weight: 600; color: var(--ink-300); text-decoration: none;
   white-space: nowrap; transition: color 0.15s ease;

@@ -460,8 +460,9 @@ def build_header():
     <nav class="site-nav" aria-label="Section">{desktop_links}</nav>
     <div class="header-cta">
       {phase_block(
-          cta("Enter now", "header"),
-          list_cta(ml("ctaButtonLabel"), "header-closed", "btn btn-primary"),
+          cta("Enter now", "header", classes="btn btn-primary btn-sm")
+          + list_cta(ml("ctaButtonLabel"), "header", "btn btn-secondary btn-sm"),
+          list_cta(ml("ctaButtonLabel"), "header-closed", "btn btn-primary btn-sm"),
       )}
       <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-nav">
         <span class="visually-hidden">Menu</span>
