@@ -244,7 +244,8 @@ ML_FALLBACKS = {
     ),
     "buttonLabel": "Keep me posted",
     "successMessage": "Thanks — you're on the list.",
-    "ctaHeading": "Not entering this year?",
+    "ctaHeading": "Enter this year, or hear about next year first.",
+    "ctaHeadingClosed": "Entries for this year have closed.",
     "ctaButtonLabel": "Get 2027 updates",
     "consent": (
         "Your email address is collected by Meyerton Athletics Club under POPIA and added to "
@@ -1041,7 +1042,10 @@ def build_faq():
     <div class="faq-list mt-6" data-reveal>{items}</div>
 
     <div class="cta-strip">
-      <p class="cta-strip-heading">{esc(ml("ctaHeading"))}</p>
+      {phase_block(
+          f'<p class="cta-strip-heading">{esc(ml("ctaHeading"))}</p>',
+          f'<p class="cta-strip-heading">{esc(ml("ctaHeadingClosed"))}</p>',
+      )}
       {phase_block(
           f'<div class="cta-strip-actions">{cta("Enter now", "faq")}'
           f'{list_cta(ml("ctaButtonLabel"), "faq")}</div>',

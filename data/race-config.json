@@ -558,7 +558,8 @@
     "bodyClosed": "Online entries for 2026 have closed. Join the list and we'll email you the moment 2027 entries open, with dates, prices and route news straight from the club.",
     "buttonLabel": "Keep me posted",
     "successMessage": "Thanks — you're on the list.",
-    "ctaHeading": "Not entering this year?",
+    "ctaHeading": "Enter this year, or hear about next year first.",
+    "ctaHeadingClosed": "Entries for this year have closed.",
     "ctaButtonLabel": "Get 2027 updates",
     "consent": "Your email address is collected by Meyerton Athletics Club under POPIA and added to our race mailing list. We use it to send you Midvaal MadMac race news — a reminder before online entries close, and news about the next edition when entries open. We keep you on the list until you unsubscribe, we never share it with sponsors or any other third party, and every email includes a one-click unsubscribe link."
   },

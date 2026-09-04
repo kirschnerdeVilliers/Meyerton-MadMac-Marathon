@@ -328,7 +328,8 @@ collections:
               - { label: "Body copy — after online entries close", name: "bodyClosed", widget: text, hint: "The site switches to this automatically once entries close, and the sign-up moves to the front of the page. Nobody has to change anything on the day." }
               - { label: "Sign-up button label", name: "buttonLabel", widget: string }
               - { label: "Message shown after someone signs up", name: "successMessage", widget: string }
-              - { label: "Mid-page prompt heading", name: "ctaHeading", widget: string, hint: "The short line above the sign-up button where it repeats further down the page." }
+              - { label: "Mid-page prompt heading", name: "ctaHeading", widget: string, hint: "The short line above the pair of buttons after the FAQ. It sits above BOTH buttons, so it needs to make sense for someone entering this year as well as someone waiting for next year." }
+              - { label: "Mid-page prompt heading — after entries close", name: "ctaHeadingClosed", widget: string }
               - { label: "Hero / mid-page button label", name: "ctaButtonLabel", widget: string, hint: "The second button in the hero, and the matching one further down." }
               - label: "POPIA consent paragraph"
                 name: "consent"
