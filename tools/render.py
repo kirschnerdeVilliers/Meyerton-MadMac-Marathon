@@ -231,22 +231,23 @@ def phase_block(open_html, closed_html):
 # so without them one accidental keystroke could ship an empty heading —
 # or, far worse, an empty POPIA consent notice.
 ML_FALLBACKS = {
-    "navLabel": "2027 updates",
-    "eyebrow": "Racing MadMac in 2027?",
-    "heading": "Get next year's MadMac news first",
+    "navLabel": "Mailing list",
+    "eyebrow": "Mailing list",
+    "heading": "Stay in touch with MadMac",
     "body": (
-        "Entry dates, prices and route news for the 2027 Midvaal MadMac — plus a reminder "
-        "before this year's online entries close. A few emails a year from the club, no spam."
+        "The club sends entry dates, prices and route news for the next Midvaal MadMac, plus "
+        "a reminder before this year's online entries close on 22 September 2026. A few "
+        "emails a year."
     ),
     "bodyClosed": (
-        "Online entries for this year have closed. Join the list and we'll email you the "
-        "moment 2027 entries open, with dates, prices and route news straight from the club."
+        "Online entries for 2026 have closed. Join the mailing list and the club will email "
+        "you when 2027 entries open, with dates, prices and route news."
     ),
-    "buttonLabel": "Keep me posted",
-    "successMessage": "Thanks — you're on the list.",
-    "ctaHeading": "Enter this year, or hear about next year first.",
-    "ctaHeadingClosed": "Entries for this year have closed.",
-    "ctaButtonLabel": "Get 2027 updates",
+    "buttonLabel": "Sign up",
+    "successMessage": "Thanks — you're on the mailing list.",
+    "ctaHeading": "Enter this year, or join the mailing list for next year.",
+    "ctaHeadingClosed": "Online entries for this year have closed.",
+    "ctaButtonLabel": "Stay in touch",
     "consent": (
         "Your email address is collected by Meyerton Athletics Club under POPIA and added to "
         "our race mailing list. We use it to send you Midvaal MadMac race news — a reminder "
@@ -460,7 +461,7 @@ def build_header():
     <div class="header-cta">
       {phase_block(
           cta("Enter now", "header"),
-          list_cta("Get 2027 updates", "header-closed", "btn btn-primary"),
+          list_cta(ml("ctaButtonLabel"), "header-closed", "btn btn-primary"),
       )}
       <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-nav">
         <span class="visually-hidden">Menu</span>
