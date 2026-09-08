@@ -1515,10 +1515,16 @@ def build_privacy_page():
 
     <h2>3. What we collect on this site, and why</h2>
     <p>
-      The only personal information this site actively asks you for is your <strong>email
+      The only personal information this site actively <em>asks</em> you for is your <strong>email
       address</strong>, through the <a class="link" href="index.html#stay-updated">race mailing
       list</a> sign-up. Giving it is entirely voluntary — declining has no effect on your ability
       to browse the site or enter the race via Race Pass.
+    </p>
+    <p>
+      Alongside the address itself we record <strong>the date you signed up, that it came from
+      this website, and which version of the wording above you agreed to</strong>. That last one
+      matters: it is how we keep the promise in the paragraph below, and without it we could not
+      tell who had agreed to what.
     </p>
     <p>
       We use it to send you Midvaal MadMac race news, and nothing else: a reminder before online
@@ -1538,7 +1544,7 @@ def build_privacy_page():
     <ul style="display: grid; gap: var(--space-3); padding-left: 1.2em; list-style: disc;">
       <li>
         <strong>Brevo</strong> (Sendinblue SAS), our email service provider, stores your email
-        address and sends the reminder on our behalf. Brevo is based in France and is itself
+        address and sends our race emails on our behalf. Brevo is based in France and is itself
         subject to the EU's GDPR. See
         <a class="link" href="https://www.brevo.com/legal/privacypolicy/" target="_blank" rel="noopener">Brevo's own privacy policy</a>
         for how they handle information as our processor.
@@ -1569,6 +1575,13 @@ def build_privacy_page():
       at any time (see below), and every email we send includes a one-click unsubscribe link that
       removes you immediately.
     </p>
+    <p>
+      “Until you unsubscribe” is not the same as forever. POPIA does not let us hold
+      an address longer than we actually need it, so we review the list once a year after the race
+      and remove anyone who has not opened anything from us in <strong>three years</strong>. If you
+      have quietly lost interest, you do not have to do anything — we will take you off
+      ourselves.
+    </p>
 
     <h2>6. Your rights under POPIA</h2>
     <p>You have the right to:</p>
@@ -1576,7 +1589,8 @@ def build_privacy_page():
       <li>ask us what personal information we hold about you;</li>
       <li>ask us to correct it if it's wrong;</li>
       <li>ask us to delete it;</li>
-      <li>object to us processing it, including the one email we send; and</li>
+      <li>object to us using it for direct marketing at any time — that means every
+        email on this list, and we have to stop when you say so;</li>
       <li>lodge a complaint with the Information Regulator if you believe we've handled your information unlawfully.</li>
     </ul>
     <p>
