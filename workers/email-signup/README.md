@@ -7,6 +7,26 @@ contact). See the main repo's `README.md` → "Email capture" for the full story
 API directly is Brevo's actual supported way to create a contact server-side, and it lets the site
 keep its own styled `<form>` instead of embedding Brevo's hosted widget.
 
+## Before you deploy: create three Brevo contact attributes
+
+**Do this first.** The Worker writes `OPTIN_SCOPE`, `OPTIN_DATE` and `OPTIN_SOURCE`
+on every contact. Brevo rejects attributes it does not already know about, so if
+these do not exist the API answers `400` and **every sign-up on the site fails**
+with a generic error.
+
+In Brevo: **Contacts → Settings → Contact attributes → Add an attribute**
+
+| Attribute      | Type |
+| -------------- | ---- |
+| `OPTIN_SCOPE`  | Text |
+| `OPTIN_DATE`   | Text |
+| `OPTIN_SOURCE` | Text |
+
+`OPTIN_SCOPE` is what separates the two consent groups on list 3. Contacts
+without it signed up under the old "one reminder before entries close" wording
+and have **not** consented to next-year marketing — segment on it before sending
+any 2027 campaign. See the privacy notice, which promises exactly this.
+
 ## Deploy (run these yourself — the API key is a secret, never handled by Claude)
 
 From this directory:

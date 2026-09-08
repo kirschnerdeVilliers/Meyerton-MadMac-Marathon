@@ -1494,7 +1494,7 @@ def build_privacy_page():
       How Midvaal MadMac and {esc(organiser)} collect, use and protect your personal information,
       in line with South Africa's Protection of Personal Information Act 4 of 2013 (POPIA).
     </p>
-    <p style="font-size: 0.85rem; color: var(--text-faint);">Last updated: 4 September 2026</p>
+    <p style="font-size: 0.85rem; color: var(--text-faint);">Last updated: 8 September 2026</p>
 
     <h2>1. Who we are</h2>
     <p>
