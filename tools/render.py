@@ -1293,7 +1293,7 @@ def build_facebook_feed():
     if wa_url:
         wa_label = esc(wa.get("label") or "Follow our WhatsApp channel")
         wa_btn = (
-            f'<a class="btn btn-ghost btn-sm mt-6" href="{esc(wa_url)}"'
+            f'<a class="btn btn-ghost btn-sm" href="{esc(wa_url)}"'
             f' target="_blank" rel="noopener">{wa_label}</a>'
         )
 
