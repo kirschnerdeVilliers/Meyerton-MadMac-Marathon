@@ -1368,6 +1368,13 @@ def build_footer():
     contact_items.append(f'<li><a href="{esc(fb["pageUrl"])}" target="_blank" rel="noopener">Facebook</a></li>')
     if contact.get("instagram"):
         contact_items.append(f'<li><a href="{esc(contact["instagram"])}" target="_blank" rel="noopener">Instagram</a></li>')
+    # Also in .footer-bottom with the copyright, but that is 12.8px fine print
+    # nobody scans. POPIA rights are exercised by emailing the address directly
+    # above this, so the notice belongs in the same column as it — at the same
+    # size and colour as every other link people actually click.
+    # Self-links on privacy.html itself, same as the .footer-bottom one already
+    # does — harmless, and cheaper than branching the footer per page.
+    contact_items.append('<li><a href="privacy.html">Privacy Policy</a></li>')
 
     def sponsor_chip(sponsor):
         css_class = "sponsor-chip sponsor-chip-logo" if sponsor.get("logo") else "sponsor-chip"

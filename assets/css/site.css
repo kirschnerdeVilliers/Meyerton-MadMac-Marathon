@@ -963,6 +963,11 @@ a.sponsor-chip:hover, a.sponsor-chip:focus-visible { border-color: var(--yellow)
 a.sponsor-chip-logo:hover img, a.sponsor-chip-logo:focus-visible img { box-shadow: 0 0 0 2px var(--yellow); }
 .footer-bottom { margin-top: var(--space-8); padding-top: var(--space-5); border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: var(--space-3); justify-content: space-between; font-size: 0.8rem; color: var(--text-faint); }
 .footer-bottom a { color: var(--text-faint); }
+/* There was no hover rule here at all, so the fine-print privacy link gave
+   no feedback that it was live. It keeps its underline (never removed, which
+   is what distinguishes it from the copyright text sitting in the same
+   colour beside it) and now brightens on hover like every other link. */
+.footer-bottom a:hover { color: var(--ink-0); }
 
 /* ---------- CTA repeat strip ---------- */
 .cta-strip { text-align: center; margin-top: var(--space-7); }
