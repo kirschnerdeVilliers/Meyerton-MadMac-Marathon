@@ -73,6 +73,14 @@ collections:
               - { label: "Page URL", name: "pageUrl", widget: string }
               - { label: "Page name", name: "pageName", widget: string }
 
+          - label: "WhatsApp channel"
+            name: "whatsappChannel"
+            widget: object
+            required: false
+            fields:
+              - { label: "Channel link", name: "url", widget: string, required: false, hint: "The invite link from WhatsApp (Channel > share). Leave blank to hide the button everywhere." }
+              - { label: "Button wording", name: "label", widget: string, required: false, hint: "Shown on the button in the Follow along section." }
+
           - { label: "Results website URL", name: "resultsUrl", widget: string }
 
           - label: "Qualifying — Comrades & Two Oceans"

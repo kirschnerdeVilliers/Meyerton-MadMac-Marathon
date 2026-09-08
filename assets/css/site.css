@@ -969,6 +969,10 @@ a.sponsor-chip-logo:hover img, a.sponsor-chip-logo:focus-visible img { box-shado
    colour beside it) and now brightens on hover like every other link. */
 .footer-bottom a:hover { color: var(--ink-0); }
 
+/* Two follow buttons now, not one: wrap so they stack on a phone rather
+   than overflowing the copy column. */
+.follow-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
 /* ---------- CTA repeat strip ---------- */
 .cta-strip { text-align: center; margin-top: var(--space-7); }
 .cta-strip p { margin-inline: auto; }

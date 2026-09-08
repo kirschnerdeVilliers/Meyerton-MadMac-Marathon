@@ -1287,6 +1287,16 @@ def build_facebook_feed():
     fb_url = esc(fb["pageUrl"])
     fb_name = esc(fb.get("pageName") or "Midvaal MadMac on Facebook")
 
+    wa = CONFIG.get("whatsappChannel") or {}
+    wa_url = wa.get("url")
+    wa_btn = ""
+    if wa_url:
+        wa_label = esc(wa.get("label") or "Follow our WhatsApp channel")
+        wa_btn = (
+            f'<a class="btn btn-ghost btn-sm mt-6" href="{esc(wa_url)}"'
+            f' target="_blank" rel="noopener">{wa_label}</a>'
+        )
+
     return f"""<section class="facebook-feed section-pad" id="follow">
   <div class="container facebook-feed-inner">
     <div class="facebook-feed-copy">
@@ -1295,7 +1305,10 @@ def build_facebook_feed():
       <p class="lede mt-6">
         Route changes, training meetups and race-day photos land on the club's Facebook page first.
       </p>
-      <a class="btn btn-ghost btn-sm mt-6" href="{fb_url}" target="_blank" rel="noopener">Follow MadMac on Facebook</a>
+      <div class="follow-actions mt-6">
+        <a class="btn btn-ghost btn-sm" href="{fb_url}" target="_blank" rel="noopener">Follow MadMac on Facebook</a>
+        {wa_btn}
+      </div>
     </div>
     <div class="fb-feed-card">
       <div id="fb-root"></div>
@@ -1372,6 +1385,11 @@ def build_footer():
     # nobody scans. POPIA rights are exercised by emailing the address directly
     # above this, so the notice belongs in the same column as it — at the same
     # size and colour as every other link people actually click.
+    _wa = (CONFIG.get("whatsappChannel") or {}).get("url")
+    if _wa:
+        contact_items.append(
+            f'<li><a href="{esc(_wa)}" target="_blank" rel="noopener">WhatsApp channel</a></li>'
+        )
     # Self-links on privacy.html itself, same as the .footer-bottom one already
     # does — harmless, and cheaper than branching the footer per page.
     contact_items.append('<li><a href="privacy.html">Privacy Policy</a></li>')

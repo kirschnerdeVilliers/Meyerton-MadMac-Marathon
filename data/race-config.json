@@ -575,5 +575,9 @@
     "elevenKm10kTimingPurpose": "",
     "pacingBuses": ""
   },
-  "_comment": "Single source of truth for the MadMac landing page. Edit this file to update the site for a future edition — see README.md."
+  "_comment": "Single source of truth for the MadMac landing page. Edit this file to update the site for a future edition — see README.md.",
+  "whatsappChannel": {
+    "url": "https://whatsapp.com/channel/0029VbB6mMUKAwEiDwQhpE2Q",
+    "label": "Follow our WhatsApp channel"
+  }
 }
