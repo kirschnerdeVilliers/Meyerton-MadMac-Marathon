@@ -580,5 +580,15 @@
   "whatsappChannel": {
     "url": "https://whatsapp.com/channel/0029VbB6mMUKAwEiDwQhpE2Q",
     "label": "Follow our WhatsApp channel"
+  },
+  "terms": {
+    "_comment": "Entry terms. Every null below is a real club policy decision that nobody has recorded yet — NOT a field to leave blank. While any of them is null, terms.html renders as a visibly-marked draft, is noindex, and is not linked from the footer. Fill them all in and it goes live automatically. See build_terms_page() in tools/render.py.",
+    "lastUpdated": null,
+    "refunds": null,
+    "transfers": null,
+    "cancellation": null,
+    "minimumAges": null,
+    "indemnity": null,
+    "imageConsent": null
   }
 }

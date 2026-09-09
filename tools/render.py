@@ -1487,6 +1487,10 @@ def build_footer():
     # Self-links on privacy.html itself, same as the .footer-bottom one already
     # does — harmless, and cheaper than branching the footer per page.
     contact_items.append('<li><a href="privacy.html">Privacy Policy</a></li>')
+    # Only once it is a real terms page — see TERMS_READY. Linking a draft
+    # from every page on the site is how a draft becomes load-bearing.
+    if TERMS_READY:
+        contact_items.append('<li><a href="terms.html">Entry Terms</a></li>')
 
     def sponsor_chip(sponsor):
         css_class = "sponsor-chip sponsor-chip-logo" if sponsor.get("logo") else "sponsor-chip"
@@ -1871,6 +1875,8 @@ Sitemap: {SITE_URL}/sitemap.xml
 SITEMAP_PAGES = [
     ("/", "1.0", "weekly"),
     ("/privacy.html", "0.3", "yearly"),
+    # terms.html is appended by build_sitemap_xml() only once it is no
+    # longer a draft — see TERMS_READY.
 ]
 
 
@@ -1882,8 +1888,11 @@ def build_sitemap_xml():
     a build-date lastmod would make this file change on every nightly
     cron rebuild, which both breaks that invariant and tells Google the
     pages changed on days they did not."""
+    pages = list(SITEMAP_PAGES)
+    if TERMS_READY:
+        pages.append(("/terms.html", "0.3", "yearly"))
     entries = []
-    for path, priority, freq in SITEMAP_PAGES:
+    for path, priority, freq in pages:
         entries.append(
             "  <url>\n"
             f"    <loc>{SITE_URL}{path}</loc>\n"
@@ -1919,6 +1928,192 @@ def build_mobile_cta_bar():
     )}
   </div>
 </div>
+"""
+
+
+# ---------------------------------------------------------------- terms --
+
+# Every one of these is a policy the club has to decide, not copy someone
+# can write. Refunds, transfers, what happens if the race is cancelled,
+# minimum ages, the indemnity wording and photo consent all have legal and
+# insurance consequences, and a plausible-sounding invented version is
+# worse than an obvious blank — it reads as binding to an entrant and is
+# not defensible to anyone else.
+TERMS_REQUIRED = [
+    ("refunds", "Refunds",
+     "Whether entry fees are refundable, and under what circumstances. Most South "
+     "African road races say entry fees are non-refundable; the club needs to say so "
+     "explicitly, or say what the exception is."),
+    ("transfers", "Transfers and substitutions",
+     "Whether an entry can be moved to another runner or another distance, by when, "
+     "and at what cost. Race Pass may already impose its own rules here — check them "
+     "first so the two do not contradict each other."),
+    ("cancellation", "Cancellation, postponement and abandonment",
+     "What happens to entries if the race is called off or stopped part-way — weather, "
+     "a municipal permit withdrawal, a safety incident. This is the clause that gets "
+     "read when it matters and the one most often missing."),
+    ("minimumAges", "Minimum ages per distance",
+     "ASA rules set minimum ages by distance, and they change. Confirm the current "
+     "figures with ASA or AVT rather than copying last year's flyer."),
+    ("indemnity", "Indemnity and assumption of risk",
+     "The wording entrants agree to when they enter. This should come from the club's "
+     "insurer or ASA's standard indemnity, not be drafted here."),
+    ("imageConsent", "Photography and images",
+     "Photographs of runners are already published on this site's gallery page. Under "
+     "POPIA that is processing of personal information and needs a stated basis, plus "
+     "a route for someone to ask for a photo of themselves to be taken down."),
+]
+
+
+def terms_gaps():
+    """Which required terms are still unanswered."""
+    terms = CONFIG.get("terms") or {}
+    return [(key, title, why) for key, title, why in TERMS_REQUIRED if not terms.get(key)]
+
+
+TERMS_READY = not terms_gaps()
+
+
+def build_terms_head():
+    """noindex while the page is a draft. A half-written terms page that
+    Google has indexed is a liability, not a placeholder."""
+    title = "Entry Terms and Conditions — Midvaal MadMac"
+    description = (
+        "Entry terms for the Midvaal MadMac road race: entries, refunds, race rules, "
+        "indemnity and images."
+    )
+    canonical = f"{SITE_URL}/terms.html"
+    robots = "index, follow" if TERMS_READY else "noindex, nofollow"
+    return f"""<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(description)}">
+<link rel="canonical" href="{canonical}">
+<meta name="robots" content="{robots}">
+<meta name="theme-color" content="{BRAND_NAVY}">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v={css_hash()}">
+"""
+
+
+def terms_section(key, title, body):
+    """One settled clause, or a visible hole where one should be.
+
+    A missing clause is rendered LOUDLY rather than omitted. Omitting it
+    would make the page look finished, and a terms page that looks
+    finished is one nobody goes back to fill in."""
+    terms = CONFIG.get("terms") or {}
+    value = terms.get(key)
+    if value:
+        return f"<h2>{esc(title)}</h2>\n<p>{esc(value)}</p>"
+    return (
+        f"<h2>{esc(title)}</h2>\n"
+        f'<div class="terms-gap">'
+        f"<p><strong>The club still has to decide this.</strong></p>"
+        f"<p>{esc(body)}</p>"
+        f"</div>"
+    )
+
+
+def build_terms_page():
+    """Entry terms, assembled from what the config actually knows.
+
+    The settled sections below are drawn from raceRules and entries, which
+    are already published facts elsewhere on the site — restating them
+    here is safe. Everything in TERMS_REQUIRED is not, and renders as a
+    marked gap until a human fills it in."""
+    rules = CONFIG["raceRules"]
+    entries = CONFIG["entries"]
+    organiser = CONFIG["edition"]["organiser"]
+    contact_email = CONFIG["contact"].get("email") or "midvaalmadmac@gmail.com"
+    updated = (CONFIG.get("terms") or {}).get("lastUpdated")
+
+    gaps = terms_gaps()
+    if gaps:
+        banner = (
+            '<div class="terms-draft-banner">'
+            "<p><strong>Draft — not approved, not published.</strong></p>"
+            f"<p>{len(gaps)} of {len(TERMS_REQUIRED)} required clauses are still blank. "
+            "While that is true this page is marked noindex and is not linked from the "
+            "site footer. Fill in every entry under <code>terms</code> in "
+            "<code>race-config.json</code> (or at <code>/admin/</code>) and it publishes "
+            "itself.</p>"
+            "</div>"
+        )
+    else:
+        banner = ""
+
+    updated_line = (
+        f'<p style="font-size: 0.85rem; color: var(--text-faint);">Last updated: {esc(updated)}</p>'
+        if updated else ""
+    )
+
+    settled = "\n\n".join([
+        terms_section("refunds", "1. Entry fees and refunds", TERMS_REQUIRED[0][2]),
+        terms_section("transfers", "2. Transfers and substitutions", TERMS_REQUIRED[1][2]),
+        terms_section("cancellation", "3. If the race is cancelled or postponed", TERMS_REQUIRED[2][2]),
+        terms_section("minimumAges", "4. Minimum ages", TERMS_REQUIRED[3][2]),
+        terms_section("indemnity", "5. Your health, and your own risk", TERMS_REQUIRED[4][2]),
+        terms_section("imageConsent", "6. Photography and images", TERMS_REQUIRED[5][2]),
+    ])
+
+    return f"""<section class="section-pad">
+  <div class="container container--narrow privacy-page">
+    <p class="eyebrow">Entry terms</p>
+    <h1>Entry Terms and Conditions</h1>
+    {banner}
+    <p class="lede mt-6">
+      These terms apply to entering and running the Midvaal MadMac, organised by
+      {esc(organiser)}. Online entries are taken through Race Pass, whose own terms apply to
+      the payment and the entry transaction itself — these terms cover the race.
+    </p>
+    {updated_line}
+
+    {settled}
+
+    <h2>7. Entering</h2>
+    <p>
+      Online entries close on {esc(entries['onlineCloseDisplay'])}.
+      {esc(entries['manualEntryNote'])}
+    </p>
+
+    <h2>8. Licences and race numbers</h2>
+    <p>{esc(rules['licenceNote'])}</p>
+
+    <h2>9. Rules of the race</h2>
+    <p>
+      {esc(rules['governingBodies'])} {esc(rules['prohibited'])}
+    </p>
+    <p>{esc(rules['timing'])} Distance boards: {esc(rules['distanceBoards'].lower())}
+      Waterpoints: {esc(rules['waterpoints'].lower())}</p>
+
+    <h2>10. Age categories and prizes</h2>
+    <p>{esc(rules['ageCategoryNote'])}</p>
+
+    <h2>11. Appeals</h2>
+    <p>{esc(rules['appeals'])}</p>
+
+    <h2>12. Your personal information</h2>
+    <p>
+      How the club handles your personal information — including your results, which are
+      published on {esc(rules['resultsPublishedOn'])} — is set out in our
+      <a class="link" href="privacy.html">Privacy Policy</a>.
+    </p>
+
+    <h2>13. Changes to these terms</h2>
+    <p>
+      We'll update the date at the top of this page if anything here changes materially.
+      Questions about any of it go to
+      <a class="link" href="mailto:{esc(contact_email)}">{esc(contact_email)}</a>.
+    </p>
+  </div>
+</section>
 """
 
 
@@ -2019,6 +2214,27 @@ def main():
     notfound_path = ROOT / "404.html"
     notfound_path.write_text(absolutise(notfound_html))
     print(f"wrote {notfound_path.relative_to(ROOT)} ({notfound_path.stat().st_size:,} bytes)")
+
+    terms_body = "\n".join([
+        build_privacy_header(),
+        '<main id="main">',
+        build_terms_page(),
+        "</main>",
+        build_footer(),
+    ])
+    terms_html = f"""<!doctype html>
+<html lang="en-ZA" data-entry-phase="{ENTRY_PHASE}">
+<head>
+{build_terms_head()}</head>
+<body>
+{terms_body}
+{js_tags()}</body>
+</html>
+"""
+    terms_path = ROOT / "terms.html"
+    terms_path.write_text(terms_html)
+    state = "READY" if TERMS_READY else f"DRAFT — {len(terms_gaps())} clause(s) still blank"
+    print(f"wrote {terms_path.relative_to(ROOT)} ({len(terms_html):,} bytes) [{state}]")
 
     for name, contents in (
         ("robots.txt", build_robots_txt()),
