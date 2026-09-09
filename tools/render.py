@@ -162,6 +162,23 @@ def img_filename(v):
     return Path(v).name
 
 
+def short_date(iso):
+    """"1 Oct" from an ISO date or datetime in race-config.json.
+
+    Exists because the two deadline pills above the distance cards were
+    hardcoded strings. When the online close moved to 1 October the config
+    and every derived sentence updated, and the pill went on saying
+    "22 Sep" — a date that IS real elsewhere on this page (the Comrades
+    ballot), which is exactly why nobody spotted it. Anything showing a
+    date now computes it."""
+    return date.fromisoformat(iso[:10]).strftime("%-d %b")
+
+
+def close_time():
+    """"21:00" from entries.onlineCloseDate, for the same reason."""
+    return datetime.fromisoformat(CONFIG["entries"]["onlineCloseDate"]).strftime("%H:%M")
+
+
 def dist_by_id(dist_id):
     return next(d for d in CONFIG["distances"] if d["id"] == dist_id)
 
@@ -742,14 +759,14 @@ def build_distances():
 
     <div class="deadline-strip">
       <div class="deadline-box">
-        <span class="date">31 Aug</span>
+        <span class="date">{short_date(CONFIG["entries"]["lateFeeStartDate"])}</span>
         <p>Early bird pricing ends. Late fees apply on every distance except the 5km, which
         stays flat at R90.</p>
       </div>
       <div class="deadline-box">
-        <span class="date">22 Sep</span>
-        <p>Online entries close at 21:00. After that, manual entries only, at collection points,
-        subject to availability. None on race day.</p>
+        <span class="date">{short_date(CONFIG["entries"]["onlineCloseDate"])}</span>
+        <p>Online entries close at {close_time()}. After that, manual entries only, at collection
+        points, subject to availability. None on race day.</p>
       </div>
     </div>
 
