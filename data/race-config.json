@@ -434,7 +434,7 @@
     }
   ],
   "sponsors": {
-    "note": "logo is null where no file exists yet; url is null where none was supplied — those render without a link. 'Uber-Bolt' in early source material was a mishearing of Ver-Bolt, confirmed against their actual logo; Ver-Chem (a related company, same logo sheet) added alongside it, no URL supplied for it. Switch, AfriGuard, Oasis and dabeb-elram are the three flyer logos the brief flagged as illegible at source resolution, plus one more found alongside them.",
+    "note": "logo is null where no file exists yet; url is null where none was supplied — those render without a link. 'Uber-Bolt' in early source material was a mishearing of Ver-Bolt, confirmed against their actual logo; Ver-Chem (a related company, same logo sheet) added alongside it, no URL supplied for it. Switch, AfriGuard and dabeb-elram came off the flyer and were flagged as illegible at source resolution. Oasis Water was removed in September 2026. The Wild Africa Experiences logo is white and red on a black background, unlike the other logos, which are mostly dark-on-white — see .marquee-item-logo img, which puts every logo on a white chip.",
     "list": [
       {
         "name": "Midvaal Local Municipality",
@@ -527,14 +527,14 @@
         "url": "https://afri-guard.co.za/"
       },
       {
-        "name": "Oasis Water",
-        "logo": "oasis.png",
-        "url": "https://www.oasiswater.co.za/"
-      },
-      {
         "name": "dabeb-elram",
         "logo": "dabeb-elram.png",
         "url": "https://www.dabeb.co.za/"
+      },
+      {
+        "name": "Wild Africa Experiences",
+        "logo": "wae-logo.jpg",
+        "url": "https://www.wildafricaexperiences.co.za/"
       }
     ]
   },
