@@ -10,7 +10,11 @@
    If no endpoint has been configured yet (race-config.json
    emailCapture.endpointUrl is null), the form's action is left as "#" and
    this script blocks submission with an honest status message instead of
-   pretending the sign-up went anywhere. */
+   pretending the sign-up went anywhere.
+
+   Spam handling is split between here and the Worker, and the Worker is
+   the half that counts — everything below is a hint it can act on, not a
+   gate. A bot posting straight at the endpoint never runs this file. */
 (function () {
   "use strict";
 
@@ -29,6 +33,15 @@
     var input = form.querySelector(".email-input");
     var button = form.querySelector("button[type=submit]");
     var configured = form.getAttribute("data-configured") === "true";
+    var elapsedField = form.querySelector("input[name=_elapsed]");
+
+    /* Milliseconds between the form becoming ready and the visitor
+       submitting it. A person needs seconds to read the consent line and
+       type an address; a bot posts immediately. The Worker treats a
+       suspiciously fast submission as spam — but only when this field is
+       actually present and numeric, so the no-JS path (where it stays
+       empty) still goes through. */
+    var readyAt = Date.now();
 
     form.addEventListener("submit", function (evt) {
       evt.preventDefault();
@@ -54,6 +67,17 @@
 
       var payload = {};
       payload[input.name || "email"] = value;
+      payload._elapsed = String(Date.now() - readyAt);
+      if (elapsedField) elapsedField.value = payload._elapsed;
+
+      var honeypot = form.querySelector("input[name=company]");
+      if (honeypot) payload.company = honeypot.value || "";
+
+      /* Present only once emailCapture.turnstileSiteKey is set — see
+         turnstile_markup() in tools/render.py. */
+      var turnstile = form.querySelector("[name=cf-turnstile-response]");
+      if (turnstile) payload["cf-turnstile-response"] = turnstile.value || "";
+
       fetch(form.action, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

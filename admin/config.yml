@@ -365,6 +365,10 @@ collections:
               - { label: "Form endpoint URL", name: "endpointUrl", widget: string, required: false }
               - { label: "Provider name", name: "provider", widget: string }
               - { label: "Form field name", name: "fieldName", widget: string }
+              # Declared so the CMS does not strip it on save — an undeclared
+              # key is dropped from race-config.json entirely. Public key only;
+              # the matching secret lives on the Worker, never here.
+              - { label: "Turnstile site key (anti-spam — leave blank unless set up)", name: "turnstileSiteKey", widget: string, required: false }
 
           - label: "Unconfirmed facts (technical — leave blank until confirmed)"
             name: "placeholders"
