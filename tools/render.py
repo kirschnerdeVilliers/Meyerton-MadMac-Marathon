@@ -49,6 +49,7 @@ JS_FILES = [
     "motion.js",
     "facebook-feed.js",
     "email.js",
+    "sticky-cta.js",
     "analytics.js",
 ]
 
@@ -82,6 +83,11 @@ CONFIG = normalize_blanks(json.loads((ROOT / "data" / "race-config.json").read_t
 MOTIF = json.loads((ROOT / "assets" / "img" / "route-motif.json").read_text())
 
 SITE_URL = "https://midvaalmadmac.co.za"  # real domain, wired via CNAME + GitHub Pages custom domain
+
+# Must stay in step with --brand-navy in assets/css/site.css. Used for
+# <meta name="theme-color">, which colours the browser chrome on Android
+# and the iOS status bar area when the site is saved to a home screen.
+BRAND_NAVY = "#2b2955"
 
 
 # ------------------------------------------------------------ entry phase --
@@ -402,6 +408,7 @@ def build_head():
 <meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{canonical}">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="{BRAND_NAVY}">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
@@ -819,6 +826,15 @@ def build_route():
 
     <div class="route-tabs" role="tablist" aria-label="Select a distance to view its route">{tabs}</div>
     {''.join(panels)}
+
+    <div class="cta-strip">
+      {phase_block(
+          f'<div class="cta-strip-actions">{cta("Enter now", "after-route")}'
+          f'{list_cta(ml("ctaButtonLabel"), "after-route")}</div>',
+          f'<div class="cta-strip-actions">'
+          f'{list_cta(ml("ctaButtonLabel"), "after-route", "btn btn-primary")}</div>',
+      )}
+    </div>
   </div>
 </section>
 """
@@ -1002,6 +1018,15 @@ def build_prizes():
       </table>
     </div>
     <p class="prize-footnote">* {prize['paymentNote']}</p>
+
+    <div class="cta-strip">
+      {phase_block(
+          f'<div class="cta-strip-actions">{cta("Enter now", "after-prizes")}'
+          f'{list_cta(ml("ctaButtonLabel"), "after-prizes")}</div>',
+          f'<div class="cta-strip-actions">'
+          f'{list_cta(ml("ctaButtonLabel"), "after-prizes", "btn btn-primary")}</div>',
+      )}
+    </div>
   </div>
 </section>
 """
@@ -1495,13 +1520,21 @@ def build_privacy_head():
 <meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{canonical}">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="{BRAND_NAVY}">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{canonical}">
+<meta property="og:image" content="{SITE_URL}/assets/img/og-madmac-2026.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_ZA">
 <meta property="og:site_name" content="Midvaal MadMac">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{esc(title)}">
+<meta name="twitter:description" content="{esc(description)}">
+<meta name="twitter:image" content="{SITE_URL}/assets/img/og-madmac-2026.png">
 
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
@@ -1680,6 +1713,175 @@ def build_privacy_page():
 """
 
 
+# ---------------------------------------------------------------- 404/seo --
+
+def absolutise(html):
+    """Rewrite root-relative-by-convention URLs toabsolute paths.
+
+    Only used for 404.html. GitHub Pages serves that one file for ANY
+    missing path, and the browser keeps the URL the visitor typed — so on
+    /2025/results/foo a relative "assets/js/nav.js" resolves to
+    /2025/results/assets/js/nav.js and the page arrives unstyled, with no
+    scripts and broken sponsor logos. A <base href="/"> would fix the
+    assets but break every in-page "#fragment" link (they would resolve
+    against the base and navigate away instead of scrolling), so the
+    rewrite is done explicitly here instead."""
+    html = html.replace('src="assets/', 'src="/assets/')
+    html = html.replace('href="assets/', 'href="/assets/')
+    html = html.replace('href="privacy.html', 'href="/privacy.html')
+    html = html.replace('href="index.html#', 'href="/#')
+    html = html.replace('href="index.html"', 'href="/"')
+    return html
+
+
+def build_404_head():
+    """<head> for 404.html.
+
+    noindex is the whole point: a 404 that Google indexes is worse than no
+    custom 404 at all. No canonical either — there is no canonical URL for
+    a page that does not exist. Absolute asset paths (leading /) because
+    GitHub Pages serves this file for ANY missing path, including deep
+    ones like /foo/bar/baz, where a relative "assets/..." would resolve to
+    /foo/bar/assets/... and the page would render unstyled."""
+    title = "Page not found — Midvaal MadMac"
+    return f"""<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(title)}</title>
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="{BRAND_NAVY}">
+
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css?v={css_hash()}">
+"""
+
+
+def build_404_header():
+    """Same minimal header as privacy.html, but with absolute hrefs — see
+    build_404_head() for why relative paths break on a deep missing URL."""
+    return f"""<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-row">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/assets/img/madmac-badge.jpg" alt="" width="40" height="40">
+      <img class="brand-word" src="/assets/img/madmac-wordmark.png" alt="Midvaal MadMac" width="650" height="220">
+    </a>
+    <a class="btn btn-ghost btn-sm" href="/">Back to the race page</a>
+  </div>
+</header>
+"""
+
+
+def build_404_page():
+    """The useful part of a 404 is not the apology, it is the shortcuts.
+
+    Someone landing here followed a stale link — most likely from an old
+    Facebook post or a printed flyer — so the page offers the three things
+    that link was probably pointing at (entry, route, practical details)
+    rather than just a "go home" button."""
+    entry_url = esc(CONFIG["entries"]["entryUrl"])
+    return f"""<section class="section-pad">
+  <div class="container container--narrow privacy-page">
+    <p class="eyebrow">Error 404</p>
+    <h1>That page isn't here</h1>
+    <p class="lede mt-6">
+      The link you followed is out of date or has a typo in it. The race page below has
+      everything — dates, distances, prices, the route and how to enter.
+    </p>
+
+    <div class="cta-strip mt-6">
+      <div class="cta-strip-actions">
+        <a class="btn btn-primary" href="/">Go to the race page</a>
+        <a class="btn btn-secondary" href="{entry_url}" target="_blank" rel="noopener">Enter on Race Pass</a>
+      </div>
+    </div>
+
+    <h2>Or jump straight to</h2>
+    <ul>
+      <li><a class="link" href="/#distances">Distances, prices and entry</a></li>
+      <li><a class="link" href="/#route">The route and elevation profiles</a></li>
+      <li><a class="link" href="/#practical">Race-day practical details</a></li>
+      <li><a class="link" href="/#faq">Frequently asked questions</a></li>
+      <li><a class="link" href="/privacy.html">Privacy Policy</a></li>
+    </ul>
+  </div>
+</section>
+"""
+
+
+def build_robots_txt():
+    """Allow everything that matters, keep the CMS out of the index.
+
+    /admin/ is the Sveltia CMS. It is a real, login-gated page, but there
+    is no reason for it to appear in search results for the race, and a
+    club volunteer finding it via Google rather than via the README is not
+    a route anyone intends."""
+    return f"""User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: {SITE_URL}/sitemap.xml
+"""
+
+
+SITEMAP_PAGES = [
+    ("/", "1.0", "weekly"),
+    ("/privacy.html", "0.3", "yearly"),
+]
+
+
+def build_sitemap_xml():
+    """Two URLs, so this is about completeness rather than discovery.
+
+    Deliberately no <lastmod>. render.py is clock-free by design (see
+    "Two primary actions, and the entries open/closed flip" in README) —
+    a build-date lastmod would make this file change on every nightly
+    cron rebuild, which both breaks that invariant and tells Google the
+    pages changed on days they did not."""
+    entries = []
+    for path, priority, freq in SITEMAP_PAGES:
+        entries.append(
+            "  <url>\n"
+            f"    <loc>{SITE_URL}{path}</loc>\n"
+            f"    <changefreq>{freq}</changefreq>\n"
+            f"    <priority>{priority}</priority>\n"
+            "  </url>"
+        )
+    body = "\n".join(entries)
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{body}\n"
+        "</urlset>\n"
+    )
+
+
+def build_mobile_cta_bar():
+    """Bottom-fixed duplicate of the two primary actions, mobile only.
+
+    Rendered once, after the footer, so it is last in the tab order — it
+    is a convenience copy of controls that already appear in the document
+    above, and should not jump a keyboard user past the page content.
+    sticky-cta.js decides when it is visible; CSS confines it to <900px.
+    Emits its own analytics positions so the club can see whether the bar
+    actually earns its place."""
+    return f"""<div class="mobile-cta-bar" aria-hidden="true">
+  <div class="mobile-cta-bar-inner">
+    {phase_block(
+        f'<div class="cta-strip-actions">{cta("Enter now", "sticky-mobile", None, "btn btn-primary btn-sm")}'
+        f'{list_cta(ml("ctaButtonLabel"), "sticky-mobile", "btn btn-secondary btn-sm")}</div>',
+        f'<div class="cta-strip-actions">'
+        f'{list_cta(ml("ctaButtonLabel"), "sticky-mobile", "btn btn-primary btn-sm")}</div>',
+    )}
+  </div>
+</div>
+"""
+
+
 # --------------------------------------------------------------- assembly --
 
 def divider():
@@ -1721,6 +1923,7 @@ def main():
         build_facebook_feed(),
         "</main>",
         build_footer(),
+        build_mobile_cta_bar(),
     ])
 
     html = f"""<!doctype html>
@@ -1756,6 +1959,34 @@ def main():
     privacy_path = ROOT / "privacy.html"
     privacy_path.write_text(privacy_html)
     print(f"wrote {privacy_path.relative_to(ROOT)} ({len(privacy_html):,} bytes)")
+
+    notfound_body = "\n".join([
+        build_404_header(),
+        '<main id="main">',
+        build_404_page(),
+        "</main>",
+        build_footer(),
+    ])
+    notfound_html = f"""<!doctype html>
+<html lang="en-ZA" data-entry-phase="{ENTRY_PHASE}">
+<head>
+{build_404_head()}</head>
+<body>
+{notfound_body}
+{js_tags()}</body>
+</html>
+"""
+    notfound_path = ROOT / "404.html"
+    notfound_path.write_text(absolutise(notfound_html))
+    print(f"wrote {notfound_path.relative_to(ROOT)} ({notfound_path.stat().st_size:,} bytes)")
+
+    for name, contents in (
+        ("robots.txt", build_robots_txt()),
+        ("sitemap.xml", build_sitemap_xml()),
+    ):
+        path = ROOT / name
+        path.write_text(contents)
+        print(f"wrote {path.relative_to(ROOT)} ({len(contents):,} bytes)")
 
 
 if __name__ == "__main__":

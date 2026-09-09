@@ -1043,3 +1043,48 @@ a.sponsor-chip-logo:hover img, a.sponsor-chip-logo:focus-visible img { box-shado
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ---------- sticky mobile CTA bar ---------- */
+/* Desktop carries both primary actions in the sticky header. Below 900px
+   that header is just a hamburger, so this bar carries them instead —
+   see assets/js/sticky-cta.js for when it is revealed. Above 900px it is
+   display:none and never costs anything. */
+.mobile-cta-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  display: none;
+  /* Plain colour first: a browser without color-mix() would otherwise get
+     a transparent bar with page content scrolling visibly under it. */
+  background: var(--navy-950);
+  background: color-mix(in srgb, var(--navy-950) 92%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border-strong);
+  /* Clears the iOS home indicator / Android gesture bar. */
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+  transform: translateY(110%);
+  transition: transform 0.22s ease;
+}
+@media (max-width: 899px) {
+  .mobile-cta-bar { display: block; }
+  .mobile-cta-bar.is-visible { transform: translateY(0); }
+  /* The bar floats over the page, so the last thing on it — the footer's
+     final line — would otherwise sit permanently underneath the bar and
+     be unreadable. */
+  body { padding-bottom: 92px; }
+}
+.mobile-cta-bar .cta-strip-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin: 0;
+}
+/* btn-sm keeps the bar shallow, but 34px is under the 44px touch-target
+   floor — and this is the primary action for anyone on a phone. Height is
+   raised back to 44 without widening the bar. */
+.mobile-cta-bar .btn { flex: 1 1 0; min-width: 0; min-height: 44px; }
+@media (prefers-reduced-motion: reduce) {
+  .mobile-cta-bar { transition: none; }
+}
