@@ -370,6 +370,23 @@ collections:
               # the matching secret lives on the Worker, never here.
               - { label: "Turnstile site key (anti-spam — leave blank unless set up)", name: "turnstileSiteKey", widget: string, required: false }
 
+          # Entry terms. Every field here is a policy decision, and terms.html
+          # stays an unlisted, noindex draft until all six are filled in — so a
+          # half-finished terms page cannot reach the public by accident.
+          - label: "Entry terms and conditions"
+            name: "terms"
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Internal note", name: "_comment", widget: text, required: false }
+              - { label: "Last updated (e.g. 9 September 2026)", name: "lastUpdated", widget: string, required: false }
+              - { label: "Refunds — are entry fees refundable, and when?", name: "refunds", widget: text, required: false }
+              - { label: "Transfers — can an entry move to another runner or distance?", name: "transfers", widget: text, required: false }
+              - { label: "Cancellation — what happens to entries if the race is called off?", name: "cancellation", widget: text, required: false }
+              - { label: "Minimum ages per distance (confirm current ASA rules)", name: "minimumAges", widget: text, required: false }
+              - { label: "Indemnity — use the club insurer's or ASA's wording, not your own", name: "indemnity", widget: text, required: false }
+              - { label: "Photography — basis for publishing runner photos, and how to request removal", name: "imageConsent", widget: text, required: false }
+
           - label: "Unconfirmed facts (technical — leave blank until confirmed)"
             name: "placeholders"
             widget: object

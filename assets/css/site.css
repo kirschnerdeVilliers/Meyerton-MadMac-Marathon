@@ -1088,3 +1088,34 @@ a.sponsor-chip-logo:hover img, a.sponsor-chip-logo:focus-visible img { box-shado
 @media (prefers-reduced-motion: reduce) {
   .mobile-cta-bar { transition: none; }
 }
+
+/* ---------- terms.html draft state ---------- */
+/* Deliberately loud. These only render while clauses are unanswered, and
+   the failure mode they guard against is a terms page that looks finished
+   and quietly ships with invented policy in it. */
+.terms-draft-banner {
+  margin-top: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border: 2px solid var(--orange);
+  border-radius: var(--radius-m);
+  background: rgba(239, 106, 31, 0.10);
+}
+.terms-draft-banner p { margin-top: var(--space-2); }
+.terms-draft-banner p:first-child { margin-top: 0; color: var(--orange); }
+.terms-draft-banner code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: rgba(238, 241, 251, 0.10);
+}
+.terms-gap {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border-left: 3px solid var(--orange);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  background: var(--bg-raised);
+}
+.terms-gap p { margin-top: var(--space-2); }
+.terms-gap p:first-child { margin-top: 0; }
+.terms-gap strong { color: var(--orange); }
