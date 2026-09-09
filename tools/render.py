@@ -1250,6 +1250,42 @@ def build_practical():
 
 # ------------------------------------------------------------ email capture --
 
+def honeypot_field():
+    """A field no human ever sees, which most form bots fill in anyway.
+
+    Not display:none — the cheaper scrapers skip those on purpose. It is
+    off-screen via .visually-hidden, out of the tab order, out of the
+    accessibility tree, and marked autocomplete="off" so no browser or
+    password manager ever helpfully fills it for a real visitor. The
+    Worker rejects any submission that arrives with it non-empty.
+
+    Named "company" rather than something like "hp_field" for the same
+    reason: a bot picking fields by name should find it plausible."""
+    return """        <div class="visually-hidden" aria-hidden="true">
+          <label for="email-company">Company</label>
+          <input id="email-company" name="company" type="text" tabindex="-1" autocomplete="off">
+        </div>"""
+
+
+def turnstile_markup():
+    """Cloudflare Turnstile widget — rendered only once a site key exists.
+
+    Inert by default, exactly like the analytics block: emailCapture
+    .turnstileSiteKey is null in race-config.json, so nothing is emitted
+    and nothing is loaded. Set the key there (and TURNSTILE_SECRET on the
+    Worker) and the whole path lights up — see workers/email-signup/
+    README.md. The site key is public by design; the secret is not and
+    never appears here."""
+    key = (CONFIG.get("emailCapture") or {}).get("turnstileSiteKey")
+    if not key:
+        return ""
+    return (
+        f'<div class="cf-turnstile" data-sitekey="{esc(key)}" data-theme="dark" '
+        f'data-response-field-name="cf-turnstile-response"></div>\n'
+        '        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>'
+    )
+
+
 def provider_hidden_fields(provider):
     """Extra hidden inputs a specific provider's plain-POST embed needs
     alongside the visible email field, straight out of that provider's own
@@ -1284,6 +1320,7 @@ def build_email():
     ec = CONFIG["emailCapture"]
     action = esc(ec.get("endpointUrl") or "#")
     configured = "true" if ec.get("endpointUrl") else "false"
+    turnstile_widget = turnstile_markup()
 
     return f"""<section class="email-section section-pad" id="stay-updated">
   <div class="container">
@@ -1303,6 +1340,9 @@ def build_email():
             class="email-input" placeholder="you@example.com" autocomplete="email">
           <button type="submit" class="btn btn-primary">{esc(ml("buttonLabel"))}</button>
         </div>
+{honeypot_field()}
+        <input type="hidden" name="_elapsed" value="">
+        {turnstile_widget}
         <p class="email-status" role="status" aria-live="polite"></p>
       </form>
 

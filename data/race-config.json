@@ -565,7 +565,8 @@
   "emailCapture": {
     "endpointUrl": "https://madmac-email-signup.kirschner-devilliers.workers.dev",
     "provider": "brevo",
-    "fieldName": "email"
+    "fieldName": "email",
+    "turnstileSiteKey": null
   },
   "placeholders": {
     "note": "Facts confirmed nowhere in the source material. The site omits these claims entirely rather than guessing — see README.md 'Still needed' section.",

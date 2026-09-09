@@ -11,6 +11,30 @@
  *
  * The Brevo API key is a secret — set with `wrangler secret put
  * BREVO_API_KEY`, never committed here and never hardcoded.
+ *
+ * Abuse handling. This endpoint is public by necessity — its URL is in
+ * the page source, because the visitor's browser has to post to it — and
+ * CORS does not protect it: an Access-Control-Allow-Origin header governs
+ * what a browser will let a page READ back, not whether this Worker
+ * processes the request. Anything posting from outside a browser ignores
+ * it entirely. So there are four independent checks below, cheapest
+ * first, and each one rejects before the Brevo call rather than after:
+ *
+ *   1. honeypot   — a field no human sees; non-empty means a bot
+ *   2. timing     — submitted implausibly fast after page load
+ *   3. rate limit — per-IP, when the binding is configured
+ *   4. Turnstile  — real challenge, when TURNSTILE_SECRET is set
+ *
+ * 3 and 4 are optional and inert until configured, so this file deploys
+ * and behaves correctly with neither of them present. 1 and 2 are always
+ * on and cost nothing. See README.md in this directory to switch the
+ * other two on.
+ *
+ * All four fail CLOSED but SILENT: a rejected request gets the same
+ * {"success":true} shape a real signup gets. Telling a bot which check
+ * caught it is free tuning information for whoever is running it, and
+ * the only cost of lying is that a human who somehow trips a check does
+ * not learn why — which is the right trade for a race mailing list.
  */
 
 const ALLOWED_ORIGINS = [
@@ -30,6 +54,12 @@ const ALLOWED_ORIGINS = [
 const LIST_ID = 3;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Fastest a real person plausibly submits: they have to read the consent
+// paragraph above the field and type an address. Deliberately generous —
+// this is meant to catch instant machine posts, not hurried humans, and a
+// false positive here silently loses a real signup.
+const MIN_ELAPSED_MS = 2500;
+
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
@@ -47,6 +77,43 @@ function json(body, status, origin) {
   });
 }
 
+// A rejection that looks exactly like a success. See the "fail CLOSED but
+// SILENT" note at the top of this file for why.
+function silentlyDiscard(origin) {
+  return json({ success: true }, 200, origin);
+}
+
+async function turnstilePassed(env, token, ip) {
+  if (!env.TURNSTILE_SECRET) return true; // not configured — check skipped
+  if (!token) return false;
+  const form = new FormData();
+  form.append("secret", env.TURNSTILE_SECRET);
+  form.append("response", token);
+  if (ip) form.append("remoteip", ip);
+  try {
+    const res = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      { method: "POST", body: form }
+    );
+    const data = await res.json();
+    return data.success === true;
+  } catch {
+    // Turnstile itself being unreachable must not take the signup form
+    // down with it — the other three checks still apply.
+    return true;
+  }
+}
+
+async function withinRateLimit(env, ip) {
+  if (!env.RATE_LIMITER || !ip) return true; // binding not configured
+  try {
+    const { success } = await env.RATE_LIMITER.limit({ key: ip });
+    return success;
+  } catch {
+    return true;
+  }
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -62,22 +129,50 @@ export default {
     // form-urlencoded POST (the no-JS fallback — the site's <form> still
     // has a real method/action so it keeps working with JS disabled).
     let email;
+    let honeypot = "";
+    let elapsed = null;
+    let turnstileToken = "";
     try {
       const contentType = request.headers.get("Content-Type") || "";
+      let get;
       if (contentType.includes("application/json")) {
         const body = await request.json();
-        email = (body.email || "").trim();
+        get = (k) => body[k];
       } else {
         const form = await request.formData();
-        email = (form.get("email") || "").trim();
+        get = (k) => form.get(k);
+      }
+      email = (get("email") || "").trim();
+      honeypot = (get("company") || "").trim();
+      turnstileToken = (get("cf-turnstile-response") || "").trim();
+      const raw = get("_elapsed");
+      // Absent or non-numeric means the no-JS path, which cannot stamp a
+      // time. That is a legitimate submission and skips the timing check.
+      if (raw !== null && raw !== undefined && String(raw).trim() !== "") {
+        const n = Number(raw);
+        if (Number.isFinite(n)) elapsed = n;
       }
     } catch {
       return json({ success: false, error: "bad_request" }, 400, origin);
     }
 
+    // 1. Honeypot. No human fills a field they cannot see.
+    if (honeypot !== "") return silentlyDiscard(origin);
+
+    // 2. Timing.
+    if (elapsed !== null && elapsed < MIN_ELAPSED_MS) return silentlyDiscard(origin);
+
     if (!EMAIL_RE.test(email)) {
       return json({ success: false, error: "invalid_email" }, 400, origin);
     }
+
+    const ip = request.headers.get("CF-Connecting-IP") || "";
+
+    // 3. Per-IP rate limit, when the binding is configured.
+    if (!(await withinRateLimit(env, ip))) return silentlyDiscard(origin);
+
+    // 4. Turnstile, when the secret is configured.
+    if (!(await turnstilePassed(env, turnstileToken, ip))) return silentlyDiscard(origin);
 
     const brevoRes = await fetch("https://api.brevo.com/v3/contacts", {
       method: "POST",
