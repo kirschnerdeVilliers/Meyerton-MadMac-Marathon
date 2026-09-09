@@ -81,7 +81,11 @@ collections:
               - { label: "Channel link", name: "url", widget: string, required: false, hint: "The invite link from WhatsApp (Channel > share). Leave blank to hide the button everywhere." }
               - { label: "Button wording", name: "label", widget: string, required: false, hint: "Shown on the button in the Follow along section." }
 
-          - { label: "Results website URL", name: "resultsUrl", widget: string }
+          # These two are edited together. After each race, point the URL at that
+          # year's results page on finishtime.co.za and bump the year to match —
+          # a stale year here advertises the wrong results in the site footer.
+          - { label: "Results page URL (deep link to a specific year's results)", name: "resultsUrl", widget: string }
+          - { label: "Which year those results are for", name: "resultsYear", widget: number, value_type: int, required: false }
 
           - label: "Qualifying — Comrades & Two Oceans"
             name: "qualifiers"

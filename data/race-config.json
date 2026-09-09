@@ -31,7 +31,8 @@
     "pageUrl": "https://www.facebook.com/midvaalmadmac/",
     "pageName": "Midvaal Madmac Marathon"
   },
-  "resultsUrl": "https://www.finishtime.co.za",
+  "resultsUrl": "https://results.finishtime.co.za/results.aspx?CId=35&RId=5388",
+  "resultsYear": 2025,
   "qualifiers": {
     "standard": "42.2km in under 4:59:59 (sub-5:00)",
     "cutoffCaveat": "The race cut-off is 6h30. The qualifying standard for both Comrades and Two Oceans is 4:59:59 — finishing inside the cut-off does not mean you have qualified.",
