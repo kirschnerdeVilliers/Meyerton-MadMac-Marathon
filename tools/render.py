@@ -1160,7 +1160,7 @@ def build_what_you_get():
         <h3>Timing &amp; results</h3>
         <p>{esc(rules['timing'])} Distance boards {esc(rules['distanceBoards']).lower()}, waterpoints
         {esc(rules['waterpoints']).lower()} Results published on
-        <a class="link" href="https://{esc(rules['resultsPublishedOn'])}" target="_blank" rel="noopener">{esc(rules['resultsPublishedOn'])}</a>.</p>
+        <a class="link" href="{esc(results_url())}" target="_blank" rel="noopener">{esc(rules['resultsPublishedOn'])}</a>.</p>
       </div>
       <div class="perk-card">
         <h3>Free race shirts</h3>
@@ -1477,6 +1477,32 @@ def build_sponsor_marquee():
 
 # ------------------------------------------------------------------ footer --
 
+def results_url():
+    """Absolute URL of the results page, whatever shape the config value is in."""
+    url = (CONFIG.get("resultsUrl") or "").strip()
+    if url and not url.startswith(("http://", "https://")):
+        url = "https://" + url
+    return url
+
+
+def results_link():
+    """The "past results" footer link.
+
+    The URL used to be scheme-stripped and re-prefixed with https:// so a
+    bare domain in the config would still work. That was fine while the
+    value WAS a bare domain and pointed at finishtime.co.za's homepage —
+    which meant a runner looking for their time landed on a front page and
+    had to go hunting. It is a deep link to a specific event now, so the
+    value is used as given, with the scheme added only if it is missing.
+
+    resultsYear sits next to resultsUrl in the config and is edited in the
+    same breath: after the 2026 race, both move together or the label
+    starts advertising the wrong year."""
+    year = CONFIG.get("resultsYear")
+    label = f"{year} results (finishtime.co.za)" if year else "Past results (finishtime.co.za)"
+    return f'<a href="{esc(results_url())}" target="_blank" rel="noopener">{esc(label)}</a>'
+
+
 def build_footer():
     contact = CONFIG["contact"]
     sponsors = CONFIG["sponsors"]["list"]
@@ -1540,7 +1566,7 @@ def build_footer():
         <h4>Results &amp; entries</h4>
         <ul>
           <li>{entry_link}</li>
-          <li><a href="https://{esc(CONFIG['resultsUrl'].replace('https://','').replace('http://',''))}" target="_blank" rel="noopener">Past results (finishtime.co.za)</a></li>
+          <li>{results_link()}</li>
           <!-- index.html# prefix, not a bare #: this footer renders on
                privacy.html too, where a bare fragment goes nowhere. -->
           <li><a href="index.html#stay-updated" data-list-cta="footer">{esc(ml("ctaButtonLabel"))}</a></li>
