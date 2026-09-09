@@ -17,7 +17,7 @@ editing race-config.json and re-running this script.
 import hashlib
 import json
 import os
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -235,7 +235,7 @@ ML_FALLBACKS = {
     "heading": "Stay in touch with MadMac",
     "body": (
         "The club sends entry dates, prices and route news for the next Midvaal MadMac, plus "
-        "a reminder before this year's online entries close on 22 September 2026. A few "
+        "a reminder before this year's online entries close on 1 October 2026. A few "
         "emails a year."
     ),
     "bodyClosed": (
@@ -832,6 +832,36 @@ def build_qualifying_prose():
     two_oceans = q["twoOceans"]
     flagship = dist_by_id("42_2km")
 
+    # Derived, not asserted. This passage used to state that MadMac's entries
+    # and the Comrades ballot closed on the same day. When MadMac's date moved
+    # to 1 October the sentence stayed grammatical and became false, which is
+    # the hardest kind of error to notice. Computing the gap from the two
+    # config dates keeps the claim true whichever way they land.
+    ballot_iso = comrades["ballotCloseDate"]
+    close_iso = CONFIG["entries"]["onlineCloseDate"][:10]
+    ballot_disp = esc(comrades.get("ballotCloseDisplay") or ballot_iso)
+    close_disp = esc(CONFIG["entries"]["onlineCloseDisplay"])
+    gap = (date.fromisoformat(close_iso) - date.fromisoformat(ballot_iso)).days
+    if gap == 0:
+        ballot_line = (
+            f"MadMac's online entries close {close_disp} &mdash; the same day the "
+            f"Comrades centenary ballot closes."
+        )
+        ballot_tail = "Two qualifier-shaped decisions, one date."
+    elif gap > 0:
+        unit = "day" if gap == 1 else "days"
+        ballot_line = (
+            f"The Comrades centenary ballot closes {ballot_disp}, {gap} {unit} before "
+            f"MadMac's online entries close on {close_disp}."
+        )
+        ballot_tail = "Enter the ballot first, then secure your qualifier here."
+    else:
+        ballot_line = (
+            f"MadMac's online entries close {close_disp}, before the Comrades centenary "
+            f"ballot closes on {ballot_disp}."
+        )
+        ballot_tail = "Secure your qualifier here, then enter the ballot."
+
     def sa_num(n):
         # non-breaking space between thousands groups — a plain space here
         # lets the browser wrap "49 000" into "49" / "000" mid-number,
@@ -867,8 +897,7 @@ def build_qualifying_prose():
     <div class="stat-grid" data-reveal>{stat_cards}</div>
 
     <div class="qual-caveat" data-reveal style="margin-top: 2rem;">
-      <p><strong>MadMac's online entries close 22 September 2026 at 21:00 — the same day the
-      Comrades centenary ballot closes.</strong> Two qualifier-shaped decisions, one week, one date.</p>
+      <p><strong>{ballot_line}</strong> {ballot_tail}</p>
     </div>
 
     <h3>Comrades Marathon 2027 — the centenary</h3>

@@ -19,8 +19,8 @@
   },
   "entries": {
     "entryUrl": "https://racepass.com/za/races/midvaal-madmac",
-    "onlineCloseDate": "2026-09-22T21:00:00+02:00",
-    "onlineCloseDisplay": "22 September 2026 at 21:00",
+    "onlineCloseDate": "2026-10-01T21:00:00+02:00",
+    "onlineCloseDisplay": "1 October 2026 at 21:00",
     "lateFeeStartDate": "2026-08-31T23:59:59+02:00",
     "lateFeeStartDisplay": "after 31 August 2026",
     "manualEntryNote": "Manual entries available at collection points only (not on race day), subject to availability. No entries on race day.",
@@ -47,7 +47,7 @@
       "qualifyingWindowDisplay": "15 June 2026 – 3 May 2027",
       "ballotCloseDate": "2026-09-22",
       "ballotCloseDisplay": "22 September 2026",
-      "ballotNote": "The Comrades general ballot closes 22 September 2026 — the same day MadMac's online entries close."
+      "ballotNote": "The Comrades general ballot closes 22 September 2026, nine days before MadMac's online entries close — so you can enter the ballot first and still secure your qualifier here."
     },
     "twoOceans": {
       "name": "Totalsports Two Oceans Marathon 2027",
@@ -553,7 +553,7 @@
   "mailingList": {
     "eyebrow": "Mailing list",
     "heading": "Stay in touch with MadMac",
-    "body": "The club sends entry dates, prices and route news for the next Midvaal MadMac, plus a reminder before this year's online entries close on 22 September 2026. A few emails a year.",
+    "body": "The club sends entry dates, prices and route news for the next Midvaal MadMac, plus a reminder before this year's online entries close on 1 October 2026. A few emails a year.",
     "bodyClosed": "Online entries for 2026 have closed. Join the mailing list and the club will email you when 2027 entries open, with dates, prices and route news.",
     "buttonLabel": "Sign up",
     "successMessage": "Thanks — you're on the mailing list.",
