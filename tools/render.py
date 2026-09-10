@@ -1834,7 +1834,7 @@ def build_privacy_page():
     practices (analytics, cookies, etc.) the site doesn't actually have.
     Update this alongside README's own notes whenever emailCapture,
     analytics, or the Facebook embed change."""
-    contact_email = CONFIG["contact"].get("email") or "midvaalmadmac@gmail.com"
+    contact_email = CONFIG["contact"].get("email") or "info@midvaalmadmac.co.za"
     organiser = CONFIG["edition"]["organiser"]
 
     return f"""<section class="section-pad">
@@ -2250,7 +2250,7 @@ def build_terms_page():
     rules = CONFIG["raceRules"]
     entries = CONFIG["entries"]
     organiser = CONFIG["edition"]["organiser"]
-    contact_email = CONFIG["contact"].get("email") or "midvaalmadmac@gmail.com"
+    contact_email = CONFIG["contact"].get("email") or "info@midvaalmadmac.co.za"
     updated = (CONFIG.get("terms") or {}).get("lastUpdated")
 
     gaps = terms_gaps()
