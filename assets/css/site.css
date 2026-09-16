@@ -459,16 +459,26 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .route-motif-draw { animation: none; stroke-dashoffset: 0; }
 }
+/* .route-motif-line is on the <svg>, not on the path inside it. Stroke
+   declarations here are inherited by the polyline but lose to the polyline's
+   own presentation attributes, so anything about the line itself has to be
+   said on .route-motif-path below. The gradient is per-instance now (each
+   motif carries its own id, or two on a page collide) so it is set in the
+   markup rather than here. */
 .route-motif-line {
   fill: none;
-  stroke: url(#motifGradient);
-  /* The viewBox is 1000 units wide and the hero scales it to roughly 2x, so
-     this lands near 5px on screen -- a drawn line rather than a hairline. */
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
   opacity: 0.55;
 }
+/* Stroke width is in viewBox units and the viewBox is 400 tall, so the width
+   on screen is this times (rendered height / 400). The hero renders about
+   810px tall and the statement band about 490px, which is why the same number
+   would not give the same line in both. */
+.route-motif-path {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.route-motif--hero .route-motif-path { stroke-width: 2; }
+.route-motif--statement .route-motif-path { stroke-width: 4; }
 
 .section-divider {
   height: 64px;
@@ -613,7 +623,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   box-shadow: 0 8px 20px rgba(0,0,0,0.34);
 }
 @media (prefers-reduced-motion: reduce) { .trust-badge { transition: none; } .trust-badge:hover { transform: none; } }
-.trust-badge img { height: 100%; width: auto; max-width: 110px; object-fit: contain; }
+.trust-badge img { height: 100%; width: 100%; object-fit: contain; }
 
 /* countdown */
 .countdown-card {
@@ -907,7 +917,6 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 /* Bolder and more present than the hero's: this band exists to show the line,
    so nothing here needs protecting from it. */
 .route-motif--statement svg { opacity: 0.85; }
-.route-motif--statement .route-motif-line { stroke-width: 3.2; }
 /* Enough scrim to hold the type, raked the opposite way to the hero's so the
    two bands do not read as the same picture twice. */
 .route-motif--statement::after {
@@ -1223,7 +1232,7 @@ a.marquee-item:hover, a.marquee-item:focus-visible { opacity: 1; }
 a.marquee-item-logo:hover img, a.marquee-item-logo:focus-visible img { box-shadow: 0 0 0 2px var(--yellow); }
 .marquee-item-logo { padding-inline: var(--space-6); }
 .marquee-item-logo img {
-  height: 64px; width: auto; max-width: 190px;
+  height: 64px; width: 170px;
   object-fit: contain;
   background: #fff;
   border-radius: var(--radius-s);
@@ -1240,10 +1249,13 @@ a.marquee-item-logo:hover img, a.marquee-item-logo:focus-visible img { box-shado
 
 .site-footer { background: var(--bg-sunken); padding-block: var(--space-8) var(--space-6); border-top: 1px solid var(--border); overflow: hidden; }
 .footer-grid { display: grid; gap: var(--space-6); }
-@media (min-width: 760px) { .footer-grid { grid-template-columns: repeat(4, 1fr); } }
-.footer-col h4 { font-family: var(--font-mono); font-weight: 500; font-style: normal; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: var(--space-3); }
+/* The sponsors column carries twenty uniform chips and the other three carry
+   four links each, so an equal split leaves it two chips wide and ten rows
+   deep while its neighbours sit half empty. */
+@media (min-width: 760px) { .footer-grid { grid-template-columns: 1fr 1fr 1fr 1.7fr; } }
+.footer-col h3 { font-family: var(--font-mono); font-weight: 500; font-style: normal; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: var(--space-3); }
 .footer-col ul { display: grid; gap: var(--space-2); list-style: none; padding-left: 0; }
-.footer-col a { color: var(--ink-300); text-decoration: none; font-size: 0.92rem; }
+.footer-col a { display: inline-block; padding-block: 3px; color: var(--ink-300); text-decoration: none; font-size: 0.92rem; }
 .footer-col a:hover { color: var(--ink-0); }
 .footer-brand { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
 .footer-brand .brand-mark {
@@ -1263,7 +1275,7 @@ a.marquee-item-logo:hover img, a.marquee-item-logo:focus-visible img { box-shado
 }
 a.sponsor-chip:hover, a.sponsor-chip:focus-visible { border-color: var(--yellow); color: var(--ink-100); }
 .sponsor-chip-logo { padding: 0.3rem; border-radius: var(--radius-s); border-color: transparent; }
-.sponsor-chip-logo img { display: block; height: 24px; width: auto; max-width: 90px; object-fit: contain; background: #fff; border-radius: 4px; padding: 3px 6px; }
+.sponsor-chip-logo img { display: block; height: 24px; width: 84px; object-fit: contain; background: #fff; border-radius: 4px; padding: 3px 6px; }
 a.sponsor-chip-logo:hover img, a.sponsor-chip-logo:focus-visible img { box-shadow: 0 0 0 2px var(--yellow); }
 /* The reference signs off with its own name set as large as the page allows.
    aria-hidden in the markup: it is the logo again, not a heading, and a screen

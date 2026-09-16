@@ -302,7 +302,8 @@ def ml(key):
     return (CONFIG.get("mailingList") or {}).get(key) or ML_FALLBACKS[key]
 
 
-def motif_svg(extra_class="", stroke_width="2", animate=False, preserve="xMidYMid meet"):
+def motif_svg(extra_class="", stroke_width="2", animate=False, preserve="xMidYMid meet",
+              gradient_id="motifGradient"):
     polyline_class = "route-motif-draw" if animate else ""
     dash_attrs = ""
     if animate:
@@ -311,12 +312,12 @@ def motif_svg(extra_class="", stroke_width="2", animate=False, preserve="xMidYMi
     return (
         f'<svg viewBox="{MOTIF["viewBox"]}" preserveAspectRatio="{preserve}" '
         f'class="{extra_class}" aria-hidden="true">'
-        f'<defs><linearGradient id="motifGradient" x1="0" y1="0" x2="1" y2="0">'
+        f'<defs><linearGradient id="{gradient_id}" x1="0" y1="0" x2="1" y2="0">'
         f'<stop offset="0%" stop-color="#2fae6a"/><stop offset="52%" stop-color="#f5c518"/>'
         f'<stop offset="100%" stop-color="#ef6a1f"/></linearGradient></defs>'
-        f'<polyline points="{MOTIF["points"]}" fill="none" stroke="url(#motifGradient)" '
+        f'<polyline points="{MOTIF["points"]}" fill="none" stroke="url(#{gradient_id})" '
         f'stroke-width="{stroke_width}" stroke-linecap="round" stroke-linejoin="round" '
-        f'class="{polyline_class}" {dash_attrs}/>'
+        f'class="route-motif-path {polyline_class}" {dash_attrs}/>'
         f"</svg>"
     )
 
@@ -519,7 +520,8 @@ def build_hero():
 
     return f"""<section class="hero" id="top">
   <div class="route-motif route-motif--hero" aria-hidden="true">{motif_svg(
-      "route-motif-line", animate=True, preserve="xMidYMid slice")}</div>
+      "route-motif-line", animate=True, preserve="xMidYMid slice",
+      gradient_id="motifGradientHero")}</div>
   <div class="hero-display">
     <p class="eyebrow">{ed["dateDisplay"]} &middot; Meyerton, Gauteng</p>
     <h1>Midvaal<br class="masthead-br"> <span class="accent">MadMac</span></h1>
@@ -827,7 +829,8 @@ def build_course_statement():
     label = esc(flagship["label"])
     return f"""<section class="statement" id="one-lap">
   <div class="route-motif route-motif--statement" aria-hidden="true">{motif_svg(
-      "route-motif-line", animate=True, preserve="xMidYMid slice")}</div>
+      "route-motif-line", animate=True, preserve="xMidYMid slice",
+      gradient_id="motifGradientStatement")}</div>
   <div class="container statement-inner">
     <div>
       <p class="eyebrow">The course</p>
@@ -1624,11 +1627,11 @@ def build_footer():
         <p class="footer-clown">Finishing at Café du Cirque — yes, that's the club mascot.</p>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
+        <h3>Contact</h3>
         <ul>{''.join(contact_items)}</ul>
       </div>
       <div class="footer-col">
-        <h4>Results &amp; entries</h4>
+        <h3>Results &amp; entries</h3>
         <ul>
           <li>{entry_link}</li>
           <li>{results_link()}</li>
@@ -1638,7 +1641,7 @@ def build_footer():
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Sponsors</h4>
+        <h3>Sponsors</h3>
         <div class="sponsor-wall">{sponsor_chips}</div>
       </div>
     </div>
