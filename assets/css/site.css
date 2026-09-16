@@ -72,6 +72,16 @@ table { border-collapse: collapse; }
      var(--font-body) reference keeps working without a rule-by-rule edit. */
   --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Monospace carries every micro-label on the page — section eyebrows, stat
+     captions, table headers, meta rows. It is the one new face, and the only
+     typographic element borrowed wholesale rather than adapted. */
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Display type is set at a medium weight, not bold. Combined with the
+     negative tracking and sub-1 leading below, that is what separates an
+     editorial masthead from a generically bold heading. One knob, so the
+     whole page can be turned back to bold by changing this line. */
+  --weight-display: 500;
 
   /* spacing scale */
   --space-1: 0.25rem;
@@ -117,46 +127,54 @@ section { position: relative; }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 800;
-
-  letter-spacing: 0.01em;
-  line-height: 0.98;
+  font-weight: var(--weight-display);
+  letter-spacing: -0.04em;
+  line-height: 0.82;
   text-transform: uppercase;
   color: var(--ink-0);
 }
-h1 { font-size: clamp(2.4rem, 7vw, 4.2rem); }
-h2 { font-size: clamp(1.9rem, 5.5vw, 3rem); }
-h3 { font-size: clamp(1.3rem, 3vw, 1.7rem); }
+h1 { font-size: clamp(3rem, 11vw, 8rem); }
+h2 { font-size: clamp(2.2rem, 7.5vw, 5rem); }
+/* Tight tracking and sub-1 leading are a big-type effect. Below roughly 2rem
+   they stop reading as confident and start reading as cramped, so h3/h4 keep
+   most of the character and give back the legibility. */
+h3 { font-size: clamp(1.4rem, 3.2vw, 2rem); letter-spacing: -0.02em; line-height: 1.02; }
+h4 { letter-spacing: -0.02em; line-height: 1.05; }
 
 .eyebrow {
   display: inline-flex;
-  align-items: center;
+  /* flex-start, not center: once the label wraps to two lines the rule would
+     otherwise float to the middle of the block instead of sitting against the
+     first line. The margin on ::before puts it back on the first line's x-height. */
+  align-items: flex-start;
+  line-height: 1.5;
   gap: var(--space-2);
   max-width: 100%;
-  font-family: var(--font-body);
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-weight: 500;
   /* sized off the width of the actual container it sits in (cqw), not the
      viewport (vw) — the hero's copy column narrows again above the 900px
      breakpoint when the two-column layout kicks in, so a viewport-based
      size would grow exactly where the available space shrinks. This way
      each eyebrow stays on one line by default everywhere on the site, and
      only wraps where its own column genuinely can't fit it. */
-  font-size: clamp(0.85rem, 3.4cqw, 1.3rem);
-  letter-spacing: 0.09em;
+  font-size: clamp(0.7rem, 2.1cqw, 0.82rem);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--yellow);
 }
 .eyebrow::before {
   content: "";
-  width: 32px; height: 4px;
+  margin-top: 0.68em;
+  width: 26px; height: 2px;
   background: var(--gradient-shirt);
   border-radius: 2px;
   flex-shrink: 0;
 }
 /* the hero date/location line reads as the page's dateline — bigger still */
 .hero-copy { container-type: inline-size; }
-.hero .eyebrow { font-size: clamp(0.8rem, 2.9cqw, 1.15rem); letter-spacing: 0.06em; }
-.hero .eyebrow::before { width: 30px; height: 4px; }
+.hero .eyebrow { font-size: clamp(0.7rem, 2cqw, 0.85rem); letter-spacing: 0.14em; }
+.hero .eyebrow::before { width: 26px; height: 2px; }
 
 p { color: var(--text-muted); max-width: 62ch; }
 p.lede { font-size: 1.15rem; color: var(--text); }
@@ -455,7 +473,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 /* hero trust row — qualifier + organiser/municipality logos, the "pull factor" */
 .hero-trust { margin-top: var(--space-6); }
 .hero-trust-label {
-  font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em;
   color: var(--ink-300); max-width: 42ch; margin-bottom: var(--space-3);
 }
 .hero-trust-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
@@ -507,13 +525,13 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 }
 .countdown-unit .num {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: var(--weight-display);
 
   font-size: clamp(1.5rem, 5vw, 2.2rem);
   color: var(--ink-0);
   font-variant-numeric: tabular-nums;
 }
-.countdown-unit .lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
+.countdown-unit .lbl { font-family: var(--font-mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
 .countdown-note { margin-top: var(--space-4); font-size: 0.9rem; color: var(--text-muted); }
 .countdown-note strong { color: var(--yellow); }
 
@@ -575,7 +593,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 .reason-num {
   font-family: var(--font-display);
 
-  font-weight: 800;
+  font-weight: var(--weight-display);
   font-size: 2rem;
   background: var(--gradient-shirt);
   -webkit-background-clip: text;
@@ -603,9 +621,9 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   background: linear-gradient(165deg, rgba(239,106,31,0.14), var(--bg-raised) 60%);
 }
 .distance-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
-.distance-card-head .dist-label { font-family: var(--font-display); font-weight: 800; font-size: 2.1rem; color: var(--ink-0); }
+.distance-card-head .dist-label { font-family: var(--font-display); font-weight: var(--weight-display); font-size: 2.1rem; color: var(--ink-0); }
 .distance-card .flag-tag {
-  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--navy-950); background: var(--gradient-shirt); padding: 0.25rem 0.6rem; border-radius: 999px;
 }
 .dist-fee-row { display: flex; justify-content: space-between; margin-top: var(--space-4); font-size: 0.92rem; padding-block: var(--space-1); border-bottom: 1px dashed var(--border); }
@@ -613,7 +631,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 .dist-fee-row .lbl { color: var(--text-muted); }
 .dist-fee-row .val { font-weight: 700; color: var(--ink-100); }
 .dist-fee-row .val.late { color: var(--orange); }
-.dist-meta { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); font-size: 0.82rem; color: var(--text-faint); }
+.dist-meta { font-family: var(--font-mono); display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); }
 .distance-card .btn { margin-top: var(--space-5); }
 
 @media (min-width: 860px) {
@@ -621,7 +639,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   .distance-table-wrap { display: block; overflow-x: auto; margin-top: var(--space-6); border-radius: var(--radius-m); border: 1px solid var(--border); }
   table.distance-table { width: 100%; min-width: 640px; border-collapse: collapse; background: var(--bg-raised); }
   table.distance-table th, table.distance-table td { padding: var(--space-4); text-align: left; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
-  table.distance-table thead th { font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; color: var(--ink-0); background: var(--bg-sunken); }
+  table.distance-table thead th { font-family: var(--font-display); font-weight: var(--weight-display); font-size: 1.3rem; color: var(--ink-0); background: var(--bg-sunken); }
   table.distance-table th:first-child, table.distance-table td:first-child { color: var(--text-muted); font-weight: 600; }
   table.distance-table tbody tr:last-child td { border-bottom: none; }
   table.distance-table td.late { color: var(--orange); font-weight: 700; }
@@ -644,7 +662,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   gap: var(--space-3);
 }
 .deadline-box .date {
-  font-family: var(--font-display); font-weight: 800;
+  font-family: var(--font-display); font-weight: var(--weight-display);
   font-size: 1.5rem; line-height: 1; color: var(--yellow);
   white-space: nowrap; flex-shrink: 0;
 }
@@ -690,8 +708,8 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 
 .route-stats { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-m); padding: var(--space-5); }
 .route-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-5); }
-.route-stat .num { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; color: var(--ink-0); }
-.route-stat .lbl { font-size: 0.75rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; }
+.route-stat .num { font-family: var(--font-display); font-weight: var(--weight-display); font-size: 1.6rem; color: var(--ink-0); }
+.route-stat .lbl { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; }
 .elevation-profile { margin-top: var(--space-2); }
 .elevation-profile svg { width: 100%; height: auto; color: var(--ink-100); }
 .elevation-draw {
@@ -718,8 +736,8 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-top: var(--space-6); }
 @media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
 .stat-card { padding: var(--space-4); border-radius: var(--radius-m); border: 1px solid var(--border); background: var(--bg-raised); text-align: center; }
-.stat-num { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 5vw, 2rem); background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
-.stat-lbl { margin-top: var(--space-2); font-size: 0.76rem; color: var(--text-muted); line-height: 1.35; }
+.stat-num { font-family: var(--font-display); font-weight: var(--weight-display); font-size: clamp(1.5rem, 5vw, 2rem); background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
+.stat-lbl { font-family: var(--font-mono); margin-top: var(--space-2); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); line-height: 1.35; }
 
 /* ---------- prize money ---------- */
 .prize-highlight {
@@ -730,7 +748,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   border: 1px solid var(--border-strong);
   display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; justify-content: space-between;
 }
-.prize-highlight .total { font-family: var(--font-display); font-weight: 800; font-size: 2.4rem; color: var(--ink-0); }
+.prize-highlight .total { font-family: var(--font-display); font-weight: var(--weight-display); font-size: 2.4rem; color: var(--ink-0); }
 .prize-table-wrap { margin-top: var(--space-5); overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-m); }
 table.prize-table { width: 100%; min-width: 560px; background: var(--bg-raised); }
 table.prize-table th, table.prize-table td { padding: var(--space-3) var(--space-4); text-align: left; font-size: 0.88rem; border-bottom: 1px solid var(--border); }
@@ -892,7 +910,7 @@ table.collection-table tbody tr:last-child td { border-bottom: none; }
 /* ---------- sponsor marquee ---------- */
 .sponsor-marquee { padding-block: var(--space-7); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg-sunken); }
 .marquee-label {
-  text-align: center; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em;
+  font-family: var(--font-mono); text-align: center; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.16em;
   text-transform: uppercase; color: var(--ink-300); margin-bottom: var(--space-5);
 }
 .marquee-viewport {
