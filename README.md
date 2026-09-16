@@ -327,12 +327,14 @@ JPEG, not an overlay. `.photo-frame` crops it in CSS (`height: 116%`, `object-po
 top`) rather than editing the source: non-destructive, and it comes straight back if the club
 ever supplies clean files.
 
-They are also duotoned — greyscaled, then tinted through the brand gradient with
-`mix-blend-mode: color`. They are bright daylight club snapshots on a dark navy site and they
-fight it otherwise, and the tint covers for the source being only 1000px wide.
+They run in **their own colour**, and a duotone was tried and removed. The theory was that
+bright daylight snapshots fight a dark navy site; in practice the colour is the race — the wigs,
+the hi-vis, the yellow distance boards, the medals — and flattening it took the life out of the
+one part of the page showing actual people. If anyone proposes tinting them again, look at the
+race MC photograph first.
 
 **There is no full-bleed photo band, and that is deliberate.** At 1440 these would be upscaled,
-and resolution is the one thing a duotone cannot hide. A hero photograph needs a real shoot.
+and nothing hides that. A hero photograph needs a real shoot.
 
 ### One trap worth knowing
 

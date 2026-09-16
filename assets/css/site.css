@@ -1052,15 +1052,14 @@ table.prize-table tbody tr:last-child td { border-bottom: none; }
    rather than edited out of the source: non-destructive, reversible, and it
    comes straight back if the club ever supplies clean files.
 
-   The duotone is the other half of the job. These are bright daylight club
-   snapshots and the site is dark navy; left alone they fight it. Stripping the
-   colour and tinting the luminosity through the brand gradient makes them look
-   chosen rather than pasted in -- and it hides that the source is only 1000px
-   wide. */
+   These were briefly greyscaled and tinted through the brand gradient, on the
+   theory that bright daylight snapshots fight a dark navy site. They do not:
+   the colour is the race -- the wigs, the shirts, the medals -- and flattening
+   it to a duotone took the life out of the one part of the page showing actual
+   people. The photographs run in their own colour. */
 .photo-frame {
   position: relative;
   overflow: hidden;
-  isolation: isolate;
   aspect-ratio: 3 / 2;
   background: var(--bg-sunken);
 }
@@ -1070,18 +1069,6 @@ table.prize-table tbody tr:last-child td { border-bottom: none; }
   height: 116%;
   object-fit: cover;
   object-position: center top;
-  filter: grayscale(1) contrast(1.08) brightness(0.92);
-}
-.photo-frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(150deg,
-    var(--navy-600) 0%,
-    var(--navy-700) 52%,
-    var(--orange) 100%);
-  mix-blend-mode: color;
-  pointer-events: none;
 }
 .carousel-item figcaption { padding: var(--space-3) var(--space-4); font-size: 0.85rem; color: var(--text-muted); }
 .carousel-nav { display: flex; gap: var(--space-3); margin-top: var(--space-4); justify-content: flex-end; }
