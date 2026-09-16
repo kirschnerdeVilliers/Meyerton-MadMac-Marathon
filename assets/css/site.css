@@ -1043,11 +1043,46 @@ table.prize-table tbody tr:last-child td { border-bottom: none; }
 }
 .carousel-track { display: flex; gap: var(--space-4); }
 .carousel-item {
-  flex: 0 0 min(320px, 82vw); scroll-snap-align: start;
+  flex: 0 0 min(420px, 84vw); scroll-snap-align: start;
   margin: 0; border-radius: var(--radius-m); overflow: hidden;
   border: 1px solid var(--border); background: var(--bg-raised);
 }
-.carousel-item img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+/* Every one of the 2025 photographs has the sponsor banner printed across its
+   bottom edge -- it is part of the JPEG, not an overlay. It is cropped here
+   rather than edited out of the source: non-destructive, reversible, and it
+   comes straight back if the club ever supplies clean files.
+
+   The duotone is the other half of the job. These are bright daylight club
+   snapshots and the site is dark navy; left alone they fight it. Stripping the
+   colour and tinting the luminosity through the brand gradient makes them look
+   chosen rather than pasted in -- and it hides that the source is only 1000px
+   wide. */
+.photo-frame {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  aspect-ratio: 3 / 2;
+  background: var(--bg-sunken);
+}
+.photo-frame img {
+  display: block;
+  width: 100%;
+  height: 116%;
+  object-fit: cover;
+  object-position: center top;
+  filter: grayscale(1) contrast(1.08) brightness(0.92);
+}
+.photo-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(150deg,
+    var(--navy-600) 0%,
+    var(--navy-700) 52%,
+    var(--orange) 100%);
+  mix-blend-mode: color;
+  pointer-events: none;
+}
 .carousel-item figcaption { padding: var(--space-3) var(--space-4); font-size: 0.85rem; color: var(--text-muted); }
 .carousel-nav { display: flex; gap: var(--space-3); margin-top: var(--space-4); justify-content: flex-end; }
 

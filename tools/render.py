@@ -1127,7 +1127,9 @@ def build_proof():
 
     carousel_items = "".join(
         f"""<figure class="carousel-item">
-      <img src="assets/img/gallery/{esc(img_filename(p['file']))}" alt="{esc(p['alt'])}" loading="lazy" width="1000" height="667">
+      <div class="photo-frame">
+        <img src="assets/img/gallery/{esc(img_filename(p['file']))}" alt="{esc(p['alt'])}" loading="lazy" width="1000" height="667">
+      </div>
       <figcaption>{esc(p['caption'])}</figcaption>
     </figure>"""
         for p in gallery["photos"]
