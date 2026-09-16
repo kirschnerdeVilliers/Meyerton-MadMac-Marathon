@@ -1268,7 +1268,7 @@ def build_practical():
         for c in collection
     )
 
-    return f"""<section class="section-pad" id="practical">
+    return f"""<section class="section-pad section-invert" id="practical">
   <div class="container">
     <p class="eyebrow">Practical info</p>
     <h2>Number collection &amp; race-day logistics</h2>

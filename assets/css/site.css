@@ -1351,6 +1351,71 @@ a.sponsor-chip-logo:hover img, a.sponsor-chip-logo:focus-visible img { box-shado
   transform: translateY(0);
 }
 
+/* ---------- inverted section ---------- */
+/* The page is 15 000px of unbroken navy. The reference alternates dark and
+   cream, and that switch carries a lot of its rhythm -- it is the thing that
+   makes a long page feel composed rather than endless.
+
+   This flips by redefining the tokens rather than by restating every rule:
+   the whole stylesheet already reads from them, so everything inside the
+   section inverts on its own. Only the things that were *chosen* against a
+   dark ground need saying again below -- yellow on cream is unreadable, and a
+   white button disappears on it. */
+.section-invert {
+  --navy-950: #0a1128;
+
+  --bg: #f2f1e9;
+  --bg-raised: #ffffff;
+  --bg-sunken: #e7e5da;
+
+  --text: #161a2c;
+  --text-muted: #434a63;
+  --text-faint: #5f6680;
+
+  --ink-0: #0a1128;
+  --ink-100: #161a2c;
+  --ink-300: #434a63;
+  --ink-500: #5f6680;
+
+  --border: rgba(10, 17, 40, 0.16);
+  --border-strong: rgba(10, 17, 40, 0.3);
+
+  --focus-ring: #7a2e00;
+
+  background: var(--bg);
+  color: var(--text);
+}
+/* Yellow carries the eyebrows and inline emphasis on navy and is invisible on
+   cream. It cannot be swapped at the token, though: --yellow is a stop in
+   --gradient-shirt, and custom properties resolve where they are used, so
+   redefining it here repaints the brand gradient on every button in the
+   section. The uses get overridden instead, to a rust dark enough to clear AA
+   on this ground. */
+.section-invert .eyebrow,
+.section-invert a.link,
+.section-invert .practical-note strong,
+.section-invert table.collection-table tr.race-day td:first-child {
+  color: #9a3c06;
+}
+.section-invert a.link:hover { color: #6f2a03; }
+/* The race-day row tints the ground beneath its own text, so the two have to
+   be checked together rather than against the section background. */
+.section-invert table.collection-table tr.race-day { background: rgba(154, 60, 6, 0.1); }
+
+/* .btn-secondary is solid --ink-0, which on this ground would be a dark button
+   sitting next to the dark-text gradient one. Inverted, it becomes the outline
+   button it always was in spirit. */
+.section-invert .btn-secondary {
+  background: transparent;
+  color: var(--ink-0);
+  border: 1.5px solid var(--border-strong);
+  box-shadow: none;
+}
+.section-invert .btn-secondary:hover { background: rgba(10, 17, 40, 0.06); filter: none; }
+/* The crosshairs and the divider motif were both tuned to sit quietly on navy. */
+.section-invert > .container::before,
+.section-invert > .container::after { color: var(--border-strong); }
+
 /* ---------- sticky mobile CTA bar ---------- */
 /* Desktop carries both primary actions in the sticky header. Below 900px
    that header is just a hamburger, so this bar carries them instead —
