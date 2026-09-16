@@ -302,14 +302,14 @@ def ml(key):
     return (CONFIG.get("mailingList") or {}).get(key) or ML_FALLBACKS[key]
 
 
-def motif_svg(extra_class="", stroke_width="2", animate=False):
+def motif_svg(extra_class="", stroke_width="2", animate=False, preserve="xMidYMid meet"):
     polyline_class = "route-motif-draw" if animate else ""
     dash_attrs = ""
     if animate:
         length = MOTIF["pathLength"]
         dash_attrs = f'style="--motif-length: {length}"'
     return (
-        f'<svg viewBox="{MOTIF["viewBox"]}" preserveAspectRatio="xMidYMid meet" '
+        f'<svg viewBox="{MOTIF["viewBox"]}" preserveAspectRatio="{preserve}" '
         f'class="{extra_class}" aria-hidden="true">'
         f'<defs><linearGradient id="motifGradient" x1="0" y1="0" x2="1" y2="0">'
         f'<stop offset="0%" stop-color="#2fae6a"/><stop offset="52%" stop-color="#f5c518"/>'
@@ -518,7 +518,8 @@ def build_hero():
     flagship = dist_by_id("42_2km")
 
     return f"""<section class="hero" id="top">
-  <div class="route-motif" aria-hidden="true">{motif_svg("route-motif-line", animate=True)}</div>
+  <div class="route-motif route-motif--hero" aria-hidden="true">{motif_svg(
+      "route-motif-line", animate=True, preserve="xMidYMid slice")}</div>
   <div class="hero-display">
     <p class="eyebrow">{ed["dateDisplay"]} &middot; Meyerton, Gauteng</p>
     <h1>Midvaal<br class="masthead-br"> <span class="accent">MadMac</span></h1>
@@ -806,6 +807,40 @@ def build_distances():
           f'<div class="cta-strip-actions">'
           f'{list_cta(ml("ctaButtonLabel"), "after-pricing", "btn btn-primary")}</div>',
       )}
+    </div>
+  </div>
+</section>
+"""
+
+
+# ------------------------------------------------------- course statement --
+
+def build_course_statement():
+    """One claim, one screen, with the real course drawn behind it.
+
+    The reference gives its strongest claim a full-bleed band of its own --
+    giant type, the supporting sentence beside it, nothing else competing.
+    MadMac's equivalent claim is the single lap, and the argument for it is
+    literally the shape of the GPX track, so the track is the image. Copy is
+    hardcoded here like the rest of the section prose (see build_why)."""
+    flagship = dist_by_id("42_2km")
+    label = esc(flagship["label"])
+    return f"""<section class="statement" id="one-lap">
+  <div class="route-motif route-motif--statement" aria-hidden="true">{motif_svg(
+      "route-motif-line", animate=True, preserve="xMidYMid slice")}</div>
+  <div class="container statement-inner">
+    <div>
+      <p class="eyebrow">The course</p>
+      <h2 class="statement-claim">One lap.<br>No repeats.</h2>
+    </div>
+    <div class="statement-aside">
+      <p>Most qualifier marathons near Johannesburg send you round a short circuit two
+      or three times. MadMac's {label} runs out to Karee Road, across the R59 into the
+      Randvaal smallholdings and home through Daleside village &mdash; one continuous
+      line, start to finish.</p>
+      <p class="statement-note">The line behind this is that route: the actual GPX
+      track, not a drawing of one.</p>
+      <p><a class="link" href="#route">See the route &rarr;</a></p>
     </div>
   </div>
 </section>
@@ -2219,6 +2254,7 @@ def main():
         build_qualifier_panel(),
         build_why(),
         build_distances(),
+        build_course_statement(),
         build_route(),
         build_qualifying_prose(),
         build_prizes(),

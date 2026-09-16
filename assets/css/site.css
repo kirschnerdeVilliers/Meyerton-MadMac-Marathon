@@ -420,16 +420,41 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   z-index: 0;
 }
 .route-motif svg { width: 100%; height: 100%; opacity: 0.28; }
+
+/* The hero's motif is the real 42.2km GPX track, and it is the page's main
+   image -- there is no photograph that could do this job as well. Paired with
+   preserveAspectRatio="slice" in the markup, it fills the hero and is cropped
+   by it, so the course runs off both edges the way a route actually does
+   rather than sitting in a neat box in the middle. */
+.route-motif--hero svg { opacity: 0.6; }
+/* The same trick the reference uses over its hero photograph: a scrim raked
+   across the image so the type has a dark field to sit on at the left while
+   the picture stays at full strength on the right. It is what lets the line
+   be drawn boldly instead of dimmed to stay out of the copy's way. */
+.route-motif--hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg,
+    var(--bg) 0%,
+    rgba(15, 24, 54, 0.88) 30%,
+    rgba(15, 24, 54, 0.45) 55%,
+    rgba(15, 24, 54, 0.08) 78%,
+    transparent 100%);
+  pointer-events: none;
+}
+
 .route-motif-draw {
   stroke-dasharray: var(--motif-length);
   stroke-dashoffset: var(--motif-length);
-  animation: motif-draw 14s ease-in-out infinite;
+  /* Draws itself once and stays. The old 14s loop spent half its cycle
+     erasing the line again, which is what kept it reading as background
+     decoration instead of as the thing you came to look at. */
+  animation: motif-draw-in 3.2s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
 }
-@keyframes motif-draw {
-  0%   { stroke-dashoffset: var(--motif-length); }
-  55%  { stroke-dashoffset: 0; }
-  80%  { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: calc(-1 * var(--motif-length)); }
+@keyframes motif-draw-in {
+  from { stroke-dashoffset: var(--motif-length); }
+  to   { stroke-dashoffset: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .route-motif-draw { animation: none; stroke-dashoffset: 0; }
@@ -437,7 +462,9 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 .route-motif-line {
   fill: none;
   stroke: url(#motifGradient);
-  stroke-width: 2;
+  /* The viewBox is 1000 units wide and the hero scales it to roughly 2x, so
+     this lands near 5px on screen -- a drawn line rather than a hairline. */
+  stroke-width: 2.4;
   stroke-linecap: round;
   stroke-linejoin: round;
   opacity: 0.55;
@@ -824,6 +851,75 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   white-space: nowrap; flex-shrink: 0;
 }
 .deadline-box p { font-size: 0.88rem; margin: 0; }
+
+/* ---------- course statement ---------- */
+/* One claim, one band, the real course drawn behind it. The reference gives
+   its strongest claim a full-bleed section with nothing competing; this is the
+   MadMac equivalent, and the argument for "one lap" is the shape of the track
+   itself, so the track is the picture rather than a backdrop. */
+.statement {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-sunken);
+  border-block: 1px solid var(--border);
+  padding-block: var(--space-9);
+}
+.statement-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-6);
+}
+@media (min-width: 900px) {
+  .statement-inner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: var(--space-7);
+    align-items: end;
+  }
+}
+.statement-claim {
+  /* Sized to its own column, not the viewport -- at 9.5vw "NO REPEATS." ran
+     out of its track and across the paragraph beside it. */
+  font-size: clamp(2.6rem, 7vw, 5.4rem);
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+  margin-top: var(--space-3);
+  /* The claim is two deliberate lines and the break is in the markup, so
+     text-wrap: balance must not get a vote. */
+  text-wrap: nowrap;
+}
+/* The line is drawn at full strength in this band, which makes it a poor
+   thing to read body copy off. The paragraph gets its own quiet panel rather
+   than the line being dimmed everywhere to protect it. */
+.statement-aside {
+  background: rgba(10, 17, 40, 0.72);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: var(--space-5);
+}
+@supports (backdrop-filter: blur(4px)) {
+  .statement-aside { background: rgba(10, 17, 40, 0.55); backdrop-filter: blur(6px); }
+}
+.statement-aside p { font-size: 1rem; }
+.statement-aside p + p { margin-top: var(--space-4); }
+.statement-note { color: var(--text-faint); font-size: 0.9rem; }
+
+/* Bolder and more present than the hero's: this band exists to show the line,
+   so nothing here needs protecting from it. */
+.route-motif--statement svg { opacity: 0.85; }
+.route-motif--statement .route-motif-line { stroke-width: 3.2; }
+/* Enough scrim to hold the type, raked the opposite way to the hero's so the
+   two bands do not read as the same picture twice. */
+.route-motif--statement::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(10, 17, 40, 0.86) 0%,
+    rgba(10, 17, 40, 0.55) 45%,
+    rgba(10, 17, 40, 0.78) 100%);
+  pointer-events: none;
+}
 
 /* ---------- route section ---------- */
 .route-tabs { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-6); }
