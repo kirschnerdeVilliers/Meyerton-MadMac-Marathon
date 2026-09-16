@@ -282,6 +282,58 @@ rejects a backslash inside an f-string expression.
 The unlit word sits at 6.8:1 against its ground, so the paragraph is readable at every point in
 the scrub.
 
+### The route line, and the course statement
+
+The recurring route graphic is the *actual* 42.2km GPX track (see the bullet above). It is used
+at two strengths. In the hero it bleeds off both edges (`preserveAspectRatio="xMidYMid slice"`,
+not `meet`) under a raked scrim, the same device the reference uses over its hero photograph — a
+dark field for the type at the left, the picture at strength on the right. In `#one-lap` it is
+the picture: full strength, no competition, one claim over it.
+
+It draws itself **once** over 3.2s and stays. It used to loop every 14s, which spent half the
+cycle erasing the line again — that is most of why it read as background decoration.
+`prefers-reduced-motion` gets it fully drawn with no animation.
+
+`#one-lap` exists because the hero is too dense for an image to breathe behind: masthead, badges,
+paragraph, facts, two buttons, trust row and a countdown card all compete for it. The claim is
+sized off its own column — an earlier version sized off the viewport ran out of its track and
+across the paragraph beside it — and that paragraph sits on its own panel, because body copy set
+directly over a full-strength line is not readable.
+
+### The one inverted section
+
+`#practical` carries `.section-invert`, which flips it to a cream ground. The page is otherwise
+15 000px of unbroken navy, and the reference's dark/cream alternation is a large part of why a
+long page there feels composed rather than endless.
+
+It flips by **redefining tokens**, not by restating rules — the stylesheet already reads from
+them, so everything inside inverts on its own. Only what was originally chosen against a dark
+ground needs saying again.
+
+> **Do not override `--yellow` there.** It is a stop inside `--gradient-shirt`, and custom
+> properties resolve where they are *used*, not where they are declared — overriding it at the
+> section repaints the brand gradient on every button inside it. The yellow *uses* are overridden
+> individually instead. If you add a section-scoped token override, assert the computed
+> `background-image` of a `.btn-primary` inside it.
+
+When checking contrast in that section, composite the translucent layers down onto the ground
+rather than comparing text against its own tint — the race-day table row passes the naive check
+at 1:1 and is really 2.8:1 before it is fixed.
+
+### The photographs
+
+Every 2025 photograph has the sponsor banner printed across its bottom edge — it is part of the
+JPEG, not an overlay. `.photo-frame` crops it in CSS (`height: 116%`, `object-position: center
+top`) rather than editing the source: non-destructive, and it comes straight back if the club
+ever supplies clean files.
+
+They are also duotoned — greyscaled, then tinted through the brand gradient with
+`mix-blend-mode: color`. They are bright daylight club snapshots on a dark navy site and they
+fight it otherwise, and the tint covers for the source being only 1000px wide.
+
+**There is no full-bleed photo band, and that is deliberate.** At 1440 these would be upscaled,
+and resolution is the one thing a duotone cannot hide. A hero photograph needs a real shoot.
+
 ### One trap worth knowing
 
 `.reveal-init` sets a `transform`, and a transformed ancestor becomes the containing block for
