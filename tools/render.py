@@ -138,6 +138,18 @@ def rand(n):
     return "R{:,.0f}".format(n).replace(",", " ")
 
 
+def scrub_words(text):
+    """Wrap each word of a plain-text passage in a span, for the scroll-scrubbed
+    reveal in motion.js.
+
+    Done here rather than client-side on purpose: a visitor with no JS, and any
+    crawler, gets ordinary flowing text with ordinary word spacing, and the only
+    thing JS adds is the colour. Pass plain text only -- this splits on spaces
+    and would cut inline markup in half. Entities are safe, they contain none."""
+    words = esc(text).split()
+    return " ".join('<span class="w">%s</span>' % w for w in words)
+
+
 def esc(s):
     if s is None:
         return ""
@@ -874,6 +886,10 @@ def build_route():
 # ------------------------------------------------------- qualifying prose --
 
 def build_qualifying_prose():
+    qualifying_lead = scrub_words(
+        "2027 is a big year for both of South Africa's major ultramarathons, "
+        "and that is why MadMac's October date matters more than usual."
+    )
     q = CONFIG["qualifiers"]
     comrades = q["comrades"]
     two_oceans = q["twoOceans"]
@@ -936,10 +952,7 @@ def build_qualifying_prose():
     <p class="eyebrow">For qualifier hunters</p>
     <h2>Qualifying for Comrades 2027 and Two Oceans 2027</h2>
 
-    <p class="lede mt-6">
-      2027 is a big year for both of South Africa's major ultramarathons, and that is why MadMac's
-      October date matters more than usual.
-    </p>
+    <p class="lede lede-lg mt-6" data-scrub>{qualifying_lead}</p>
 
     <div class="stat-grid" data-reveal>{stat_cards}</div>
 
@@ -1201,6 +1214,10 @@ def build_what_you_get():
 # ---------------------------------------------------------------- practical --
 
 def build_practical():
+    practical_lead = scrub_words(
+        "Five collection points across Johannesburg and the Vaal before race week "
+        "\u2014 a genuine convenience, not just admin."
+    )
     # The closed-phase strip at the end of this section is mailing-list
     # only: the manual-entry collection-point table is directly above it,
     # so a "manual entry options" button pointing back at it would be noise.
@@ -1220,10 +1237,7 @@ def build_practical():
   <div class="container">
     <p class="eyebrow">Practical info</p>
     <h2>Number collection &amp; race-day logistics</h2>
-    <p class="lede mt-6 max-narrow">
-      Five collection points across Johannesburg and the Vaal before race week — a genuine
-      convenience, not just admin.
-    </p>
+    <p class="lede lede-lg mt-6 max-narrow" data-scrub>{practical_lead}</p>
 
     <div class="collection-table-wrap" data-reveal>
       <table class="collection-table">

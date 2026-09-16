@@ -195,6 +195,15 @@ h4 { letter-spacing: -0.02em; line-height: 1.05; }
 
 p { color: var(--text-muted); max-width: 62ch; }
 p.lede { font-size: 1.15rem; color: var(--text); }
+p.lede-lg { font-size: clamp(1.25rem, 2.6vw, 1.9rem); line-height: 1.32; letter-spacing: -0.015em; max-width: 26ch; }
+@media (min-width: 700px) { p.lede-lg { max-width: 34ch; } }
+
+/* Scroll-scrubbed reading: words warm from faint to full as the paragraph
+   crosses the viewport. Like .reveal-init, .scrub-init is only ever added by
+   JS -- without it every word renders at normal body colour, so no-JS visitors
+   and crawlers are never handed dimmed text. */
+.scrub-init .w { color: var(--text-faint); transition: color 0.35s ease; }
+.scrub-init .w.on { color: var(--ink-0); }
 
 a.link { color: var(--yellow); text-decoration: underline; text-underline-offset: 3px; }
 a.link:hover { color: var(--orange); }
@@ -341,9 +350,17 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 .site-nav { display: none; align-items: center; gap: var(--space-5); flex: 1; justify-content: center; }
 .site-nav a {
   font-size: 0.88rem; font-weight: 600; color: var(--ink-300); text-decoration: none;
-  white-space: nowrap; transition: color 0.15s ease;
+  white-space: nowrap; transition: color 0.15s ease, background-size 0.3s ease;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  padding-bottom: 2px;
 }
-.site-nav a:hover { color: var(--ink-0); }
+.site-nav a:hover, .site-nav a:focus-visible { color: var(--ink-0); background-size: 100% 1px; }
+@media (prefers-reduced-motion: reduce) {
+  .site-nav a { transition: color 0.15s ease; }
+}
 @media (min-width: 900px) { .site-nav { display: flex; } }
 
 .nav-toggle {
