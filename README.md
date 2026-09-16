@@ -238,9 +238,56 @@ you have an ID.
   stroke-dashoffset" technique (computed in `build_elevation_svg()`), but draws in once — on
   first scroll into view, and again on every tab switch — rather than looping, since it's
   something a visitor actively opened rather than ambient background motion.
-- Fonts are Google Fonts (Big Shoulders Display for headings, Inter for body), loaded with
-  `preconnect` + `display=swap`. If self-hosting fonts is preferred later, swap the `<link>` tags
-  in `build_head()` for local `@font-face` declarations.
+- Fonts are Google Fonts, loaded with `preconnect` + `display=swap`: **Inter** (400/500/600/700)
+  for everything typographic, and **JetBrains Mono** (400/500) for micro-labels only. If
+  self-hosting is preferred later, swap the `<link>` tags in `build_head()` for local
+  `@font-face` declarations. (An earlier version of this note claimed Big Shoulders Display was
+  loaded for headings; it has not been for some time.)
+
+### Typography
+
+The display face is set at **weight 500**, `letter-spacing: -0.04em` and `line-height: 0.82`,
+and the scale is roughly double a conventional one. Heavy weight with positive tracking reads as
+a generically bold site; medium weight with negative tracking reads as a masthead. The weight is
+a single token, `--weight-display`, so the whole page can be turned back to bold by changing one
+line. `h3`/`h4` keep only part of the effect — below about 2rem the tight tracking stops reading
+as confident and starts reading as cramped.
+
+Every micro-label is monospace: the section eyebrows, stat captions, distance meta rows, table
+column indices, the marquee label. `.eyebrow` is used identically at every section head, so one
+rule governs all of them.
+
+The hero masthead sits outside `.container` so it can run to the viewport gutter, on one line
+above 1000px and two below. **Its size is measured, not chosen**: the lockup renders 887px wide
+per 100px of Inter, so 10.76vw is the largest size that still holds one line inside the gutter,
+and the CSS uses 10.5vw to leave a margin for a wider fallback face. If the wordmark text ever
+changes, re-measure — do not scale by eye.
+
+The constraint that decides the masthead is **the entry button, not the type**. An earlier
+two-line version at 19vw pushed "Enter now" 185px below the fold on a 1440×800 laptop and took
+the whole countdown card with it. Anything that grows the hero needs re-checking against that.
+
+### Scroll-scrubbed paragraphs
+
+Paragraphs marked `data-scrub` warm from faint to full one word at a time as they cross the
+viewport (`initScrub` in `assets/js/motion.js`). The per-word spans are emitted **server-side**
+by `scrub_words()` in `render.py`, so a visitor with no JS and any crawler get ordinary flowing
+text; JS only contributes the colour. Like `.reveal-init`, the faint state lives behind a
+`.scrub-init` class that JS alone ever adds, so without JS nothing renders dimmed.
+
+`scrub_words()` splits on spaces and takes **plain text only** — it would cut inline markup in
+half. Both current passages are hoisted into locals before their f-strings, because Python 3.9
+rejects a backslash inside an f-string expression.
+
+The unlit word sits at 6.8:1 against its ground, so the paragraph is readable at every point in
+the scrub.
+
+### One trap worth knowing
+
+`.reveal-init` sets a `transform`, and a transformed ancestor becomes the containing block for
+`position: sticky`. The stacking "Four reasons" cards therefore cannot live inside a
+`data-reveal` element — they would pin silently to the grid instead of the viewport, with no
+error anywhere. The `data-reveal` was removed from `.reasons-grid` for exactly this reason.
 
 ## Regenerating the OG share image
 
