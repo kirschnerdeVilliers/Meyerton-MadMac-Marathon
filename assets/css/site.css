@@ -123,6 +123,23 @@ body {
 
 section { position: relative; }
 .section-pad { padding-block: var(--space-7); }
+/* The reference marks its grid with small crosshairs at the corners of each
+   block. Here they double as the section rule -- with the cards less boxed
+   than before, the page needed something to say where one section ends. */
+.section-pad > .container { position: relative; }
+.section-pad > .container::before,
+.section-pad > .container::after {
+  content: "+";
+  position: absolute;
+  top: calc(var(--space-7) * -0.75);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--border-strong);
+  pointer-events: none;
+}
+.section-pad > .container::before { left: var(--space-5); }
+.section-pad > .container::after { right: var(--space-5); }
 @media (min-width: 700px) { .section-pad { padding-block: var(--space-8); } }
 
 h1, h2, h3, h4 {
@@ -406,7 +423,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 
 /* ---------- hero ---------- */
 .hero {
-  padding-block: var(--space-8) var(--space-7);
+  padding-block: var(--space-5) var(--space-7);
   background:
     radial-gradient(ellipse 900px 500px at 15% -10%, rgba(47,174,106,0.22), transparent 60%),
     radial-gradient(ellipse 900px 600px at 110% 10%, rgba(239,106,31,0.22), transparent 55%),
@@ -443,6 +460,42 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   background: rgba(255,255,255,0.04);
 }
 .badge strong { color: var(--yellow); font-weight: 800; }
+/* The masthead sits outside .container so it can run to the viewport gutter
+   rather than stopping at the 1120px content measure. This is the single most
+   recognisable move in the reference, and the reason the display scale above
+   needed the headroom. */
+.hero-display {
+  position: relative;
+  z-index: 1;
+  padding-inline: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+.hero-display h1 {
+  margin-top: var(--space-2);
+  font-size: clamp(2.9rem, 13vw, 15rem);
+}
+/* The aggressive fill-the-viewport size is held back until there is room for
+   it. Below 700px a 19vw masthead leaves a phone almost no side gutter, and
+   "MIDVAAL" is the longest word on the page. */
+@media (min-width: 700px) {
+  .hero-display h1 { font-size: min(13.5vw, 14rem); }
+}
+/* Once there is room for the whole lockup on one line, take it. Two lines of
+   194px type pushed "Enter now" and the countdown below the fold on a 1440x800
+   laptop -- measured, not guessed -- and this page has one job, which is the
+   entry button. One line fills the width more completely and costs half the
+   height. The <br> is in the markup and hidden here, with a space after it, so
+   the narrow layout still breaks where it should. */
+@media (min-width: 1000px) {
+  .masthead-br { display: none; }
+  /* Measured, not guessed: the lockup renders 887px wide per 100px of Inter,
+     so 10.76vw is the largest size that still holds one line inside the
+     gutter. 10.5vw leaves a little back, which is also the margin that keeps a
+     wider fallback face wrapping gracefully instead of overflowing. */
+  .hero-display h1 { font-size: min(10.5vw, 13rem); }
+}
+/* Two deliberate lines, as in the reference. The <br> is in the markup rather
+   than left to wrapping so the break does not move around with the viewport. */
 .hero h1 { margin-top: var(--space-3); }
 .hero h1 .accent {
   background: var(--gradient-shirt);
@@ -582,27 +635,50 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   gap: var(--space-5);
   margin-top: var(--space-6);
 }
-@media (min-width: 700px) { .reasons-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1020px) { .reasons-grid { grid-template-columns: repeat(4, 1fr); } }
 .reason-card {
   padding: var(--space-5);
   border-radius: var(--radius-m);
   border: 1px solid var(--border);
   background: linear-gradient(160deg, rgba(255,255,255,0.03), transparent);
 }
+@media (min-width: 700px) {
+  .reason-card {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+    padding: var(--space-6);
+  }
+  /* Stacking cards, the reference's process-step device. Each card pins a
+     little lower than the last so the stack stays visible as an edge, and the
+     background has to be opaque or the pinned cards read through each other.
+     Sticky positioning is layout, but the effect of it is motion, so the
+     reduced-motion branch below unpins the whole thing. */
+  @media (prefers-reduced-motion: no-preference) {
+    .reason-card {
+      position: sticky;
+      background: var(--bg-raised);
+    }
+    .reason-card:nth-child(1) { top: 5.5rem; }
+    .reason-card:nth-child(2) { top: 6.5rem; }
+    .reason-card:nth-child(3) { top: 7.5rem; }
+    .reason-card:nth-child(4) { top: 8.5rem; }
+  }
+}
+/* Flat colour, not the shirt gradient. At 12px a three-stop gradient clips to
+   whichever stop happens to fall under the glyphs -- here the green end -- and
+   reads as a mistake rather than as brand. The gradient stays where it is
+   large enough to actually be a gradient. */
 .reason-num {
-  font-family: var(--font-display);
-
-  font-weight: var(--weight-display);
-  font-size: 2rem;
-  background: var(--gradient-shirt);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
   margin-bottom: var(--space-2);
 }
-.reason-card h3 { font-size: 1.05rem; margin-bottom: var(--space-2); }
-.reason-card p { font-size: 0.92rem; }
+.reason-card h3 { font-size: clamp(1.4rem, 3vw, 2.1rem); margin-bottom: var(--space-3); }
+.reason-card p { font-size: 0.95rem; max-width: 62ch; }
 
 /* ---------- distances & fees ---------- */
 .distance-cards { display: grid; gap: var(--space-4); margin-top: var(--space-6); }
@@ -620,8 +696,22 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   border-color: var(--orange);
   background: linear-gradient(165deg, rgba(239,106,31,0.14), var(--bg-raised) 60%);
 }
+.distance-card-index {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  padding-bottom: var(--space-3); margin-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+.dist-index {
+  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.16em; color: var(--text-faint);
+}
+.distance-card.flagship .dist-index { color: var(--yellow); }
 .distance-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
-.distance-card-head .dist-label { font-family: var(--font-display); font-weight: var(--weight-display); font-size: 2.1rem; color: var(--ink-0); }
+.distance-card-head .dist-label {
+  font-family: var(--font-display); font-weight: var(--weight-display);
+  font-size: clamp(2.2rem, 4.5vw, 3.2rem); line-height: 0.85; letter-spacing: -0.04em;
+  text-transform: uppercase; color: var(--ink-0);
+}
 .distance-card .flag-tag {
   font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--navy-950); background: var(--gradient-shirt); padding: 0.25rem 0.6rem; border-radius: 999px;
@@ -639,7 +729,20 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   .distance-table-wrap { display: block; overflow-x: auto; margin-top: var(--space-6); border-radius: var(--radius-m); border: 1px solid var(--border); }
   table.distance-table { width: 100%; min-width: 640px; border-collapse: collapse; background: var(--bg-raised); }
   table.distance-table th, table.distance-table td { padding: var(--space-4); text-align: left; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
-  table.distance-table thead th { font-family: var(--font-display); font-weight: var(--weight-display); font-size: 1.3rem; color: var(--ink-0); background: var(--bg-sunken); }
+  table.distance-table thead th {
+    font-family: var(--font-display); font-weight: var(--weight-display);
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem); letter-spacing: -0.03em; line-height: 1;
+    color: var(--ink-0); background: var(--bg-sunken); vertical-align: bottom;
+  }
+  /* The four distances are the reference's numbered set. On desktop they are a
+     comparison table rather than cards -- four fees side by side is genuinely
+     easier to read that way -- so the index goes above the column head. */
+  .col-index {
+    display: block; margin-bottom: var(--space-2);
+    font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500;
+    letter-spacing: 0.16em; color: var(--text-faint);
+  }
+  .flagship-col .col-index { color: var(--orange); }
   table.distance-table th:first-child, table.distance-table td:first-child { color: var(--text-muted); font-weight: 600; }
   table.distance-table tbody tr:last-child td { border-bottom: none; }
   table.distance-table td.late { color: var(--orange); font-weight: 700; }
@@ -733,10 +836,12 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 .qualifying-prose li { padding-left: var(--space-5); position: relative; color: var(--text-muted); font-size: 0.95rem; }
 .qualifying-prose li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 2px; background: var(--gradient-shirt); }
 
-.stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-top: var(--space-6); }
+.stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6) var(--space-5); margin-top: var(--space-7); }
 @media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
-.stat-card { padding: var(--space-4); border-radius: var(--radius-m); border: 1px solid var(--border); background: var(--bg-raised); text-align: center; }
-.stat-num { font-family: var(--font-display); font-weight: var(--weight-display); font-size: clamp(1.5rem, 5vw, 2rem); background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
+/* The reference states its numbers rather than boxing them: no card, no fill,
+   just a hairline and a lot of air. */
+.stat-card { padding: var(--space-5) 0 0; border-top: 1px solid var(--border-strong); text-align: left; }
+.stat-num { font-family: var(--font-display); font-weight: var(--weight-display); font-size: clamp(2.6rem, 7vw, 4.5rem); letter-spacing: -0.04em; background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
 .stat-lbl { font-family: var(--font-mono); margin-top: var(--space-2); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); line-height: 1.35; }
 
 /* ---------- prize money ---------- */
@@ -952,7 +1057,7 @@ a.marquee-item-logo:hover img, a.marquee-item-logo:focus-visible img { box-shado
   .marquee-viewport { overflow-x: auto; }
 }
 
-.site-footer { background: var(--bg-sunken); padding-block: var(--space-8) var(--space-6); border-top: 1px solid var(--border); }
+.site-footer { background: var(--bg-sunken); padding-block: var(--space-8) var(--space-6); border-top: 1px solid var(--border); overflow: hidden; }
 .footer-grid { display: grid; gap: var(--space-6); }
 @media (min-width: 760px) { .footer-grid { grid-template-columns: repeat(4, 1fr); } }
 .footer-col h4 { font-family: var(--font-body); font-style: normal; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: var(--space-3); }
@@ -979,7 +1084,28 @@ a.sponsor-chip:hover, a.sponsor-chip:focus-visible { border-color: var(--yellow)
 .sponsor-chip-logo { padding: 0.3rem; border-radius: var(--radius-s); border-color: transparent; }
 .sponsor-chip-logo img { display: block; height: 24px; width: auto; max-width: 90px; object-fit: contain; background: #fff; border-radius: 4px; padding: 3px 6px; }
 a.sponsor-chip-logo:hover img, a.sponsor-chip-logo:focus-visible img { box-shadow: 0 0 0 2px var(--yellow); }
-.footer-bottom { margin-top: var(--space-8); padding-top: var(--space-5); border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: var(--space-3); justify-content: space-between; font-size: 0.8rem; color: var(--text-faint); }
+/* The reference signs off with its own name set as large as the page allows.
+   aria-hidden in the markup: it is the logo again, not a heading, and a screen
+   reader has already been told whose site this is four times by here. */
+.footer-wordmark {
+  margin: var(--space-8) 0 0;
+  padding-inline: var(--space-5);
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  /* Sized so the full lockup fits the gutter at any width -- 14 characters of
+     a tight grotesk, so the vw factor is a lot smaller than the masthead's.
+     .site-footer clips as well, in case a fallback face measures wider. */
+  font-size: min(10.4vw, 11rem);
+  line-height: 0.78;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: var(--ink-0);
+  opacity: 0.07;
+  max-width: none;
+  white-space: nowrap;
+  user-select: none;
+}
+.footer-bottom { margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: var(--space-3); justify-content: space-between; font-size: 0.8rem; color: var(--text-faint); }
 .footer-bottom a { color: var(--text-faint); }
 /* There was no hover rule here at all, so the fine-print privacy link gave
    no feedback that it was live. It keeps its underline (never removed, which

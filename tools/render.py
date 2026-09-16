@@ -507,10 +507,12 @@ def build_hero():
 
     return f"""<section class="hero" id="top">
   <div class="route-motif" aria-hidden="true">{motif_svg("route-motif-line", animate=True)}</div>
+  <div class="hero-display">
+    <p class="eyebrow">{ed["dateDisplay"]} &middot; Meyerton, Gauteng</p>
+    <h1>Midvaal<br class="masthead-br"> <span class="accent">MadMac</span></h1>
+  </div>
   <div class="container hero-inner">
     <div class="hero-copy">
-      <p class="eyebrow">{ed["dateDisplay"]} &middot; Meyerton, Gauteng</p>
-      <h1>Midvaal <span class="accent">MadMac</span></h1>
       <div class="hero-badges">
         <span class="badge"><strong>Single-lap</strong>&nbsp;Comrades &amp; Two&nbsp;Oceans qualifier</span>
         <span class="badge">R{ed["totalPrizeMoney"]//1000} 000 prize money</span>
@@ -670,9 +672,11 @@ def build_why():
     ]
     cards = "".join(
         f"""<div class="reason-card">
-      <div class="reason-num">{i:02d}</div>
-      <h3>{esc(title)}</h3>
-      <p>{esc(body)}</p>
+      <div class="reason-num">{i:03d}</div>
+      <div class="reason-body">
+        <h3>{esc(title)}</h3>
+        <p>{esc(body)}</p>
+      </div>
     </div>"""
         for i, (title, body) in enumerate(reasons, start=1)
     )
@@ -680,7 +684,11 @@ def build_why():
   <div class="container">
     <p class="eyebrow">Why run this one</p>
     <h2>Four reasons</h2>
-    <div class="reasons-grid" data-reveal>{cards}</div>
+    <!-- No data-reveal here. .reveal-init sets a transform, and a transformed
+         ancestor becomes the containing block for position:sticky, which would
+         silently pin these cards to the grid instead of the viewport. The
+         stack is this section's motion; it does not need a fade as well. -->
+    <div class="reasons-grid">{cards}</div>
   </div>
 </section>
 """
@@ -693,7 +701,8 @@ def build_distances():
     entries = CONFIG["entries"]
 
     cards = []
-    for d in distances:
+    for index, d in enumerate(distances, start=1):
+        dist_index = "%03d" % index
         flag_cls = " flagship" if d["flagship"] else ""
         flag_tag = '<span class="flag-tag">Flagship</span>' if d["flagship"] else ""
         shirts = (
@@ -702,9 +711,12 @@ def build_distances():
             else "R90 flat, no late fee"
         )
         cards.append(f"""<div class="distance-card{flag_cls}">
+      <div class="distance-card-index">
+        <span class="dist-index">{dist_index}</span>
+        {flag_tag}
+      </div>
       <div class="distance-card-head">
         <span class="dist-label">{d['label']}</span>
-        {flag_tag}
       </div>
       <div class="dist-fee-row"><span class="lbl">Early bird</span><span class="val">{rand(d['fees']['earlyBird'])}</span></div>
       <div class="dist-fee-row"><span class="lbl">Grandmaster</span><span class="val">{rand(d['fees']['grandmaster'])}</span></div>
@@ -722,7 +734,9 @@ def build_distances():
     </div>""")
 
     thead_cols = "".join(
-        f'<th class="{"flagship-col" if d["flagship"] else ""}">{d["label"]}</th>' for d in distances
+        f'<th class="{"flagship-col" if d["flagship"] else ""}">'
+        f'<span class="col-index">{"%03d" % i}</span>{d["label"]}</th>'
+        for i, d in enumerate(distances, start=1)
     )
 
     def row(label, key, late=False):
@@ -1578,6 +1592,9 @@ def build_footer():
       </div>
     </div>
 
+  </div>
+  <p class="footer-wordmark" aria-hidden="true">Midvaal MadMac</p>
+  <div class="container">
     <div class="footer-bottom">
       <span>&copy; {CONFIG['edition']['year']} {esc(CONFIG['edition']['organiser'])}. All rights reserved.</span>
       <span>By entering you agree to the race rules above and Race Pass's terms of entry.</span>
