@@ -336,6 +336,25 @@ race MC photograph first.
 **There is no full-bleed photo band, and that is deliberate.** At 1440 these would be upscaled,
 and nothing hides that. A hero photograph needs a real shoot.
 
+### Scroll-spy
+
+The header nav marks the section you are currently reading (`initScrollSpy` in
+`assets/js/nav.js`). The page has thirteen sections and five nav links, so most of the time you
+are in a section with no link of its own — `#why`, `#one-lap`, `#qualifying-2027`. The rule is
+"the last linked section you passed", not "the section on screen", which is why `#practical`
+lights *Prizes*. If that stretch ever feels too long, the fix is which five sections get links,
+not the spy.
+
+It sets `aria-current="location"` rather than a class — that is exactly what the state means, and
+a screen reader announces it for free. Nothing is in the static HTML, so with no JS the nav is
+unchanged.
+
+**Throttled on a timestamp, not `requestAnimationFrame`, and deliberately so.** rAF does not run
+in a background tab, which leaves the spy frozen on whatever section you were on when you
+switched away — and makes it untestable headlessly. The work is ten `getBoundingClientRect`
+reads with no writes unless the section actually changed, which is cheap enough to run straight
+off the scroll event.
+
 ### One trap worth knowing
 
 `.reveal-init` sets a `transform`, and a transformed ancestor becomes the containing block for

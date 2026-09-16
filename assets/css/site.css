@@ -372,6 +372,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   padding-bottom: 2px;
 }
 .site-nav a:hover, .site-nav a:focus-visible { color: var(--ink-0); background-size: 100% 1px; }
+.site-nav a[aria-current] { color: var(--ink-0); background-size: 100% 1px; }
 @media (prefers-reduced-motion: reduce) {
   .site-nav a { transition: color 0.15s ease; }
 }
@@ -409,6 +410,12 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   text-decoration: none; border-bottom: 1px solid var(--border);
 }
 .mobile-nav-link:last-child { border-bottom: none; }
+/* The dropdown has no hover state to borrow, so the current section is marked
+   with a rule down the leading edge instead. */
+.mobile-nav-link[aria-current] {
+  color: var(--ink-0);
+  box-shadow: inset 3px 0 0 0 var(--yellow);
+}
 @media (min-width: 900px) { .mobile-nav { display: none !important; } }
 
 /* ---------- route motif (signature element) ---------- */
