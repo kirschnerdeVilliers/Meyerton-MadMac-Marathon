@@ -121,6 +121,18 @@ body {
 }
 .container--narrow { max-width: var(--container-narrow); }
 
+/* A narrow measure is right for long prose, but a narrow *container* centres
+   itself, which put these two section headings 180px right of every other
+   heading on the page. So the container stays full width and the measure moves
+   onto its children: same column width as before, same left edge as everything
+   else. The standalone prose pages keep .container--narrow -- they have nothing
+   to align against, so centred is right there. */
+.container--prose > * { max-width: var(--container-narrow); }
+/* The stat row is a data display, not prose, and four big numerals do not fit
+   a 760px measure -- on the old centred narrow container the tracks quietly
+   overflowed it instead. It gets the full column. */
+.container--prose > .stat-grid { max-width: none; }
+
 section { position: relative; }
 .section-pad { padding-block: var(--space-7); }
 /* The reference marks its grid with small crosshairs at the corners of each
@@ -150,6 +162,8 @@ h1, h2, h3, h4 {
   text-transform: uppercase;
   color: var(--ink-0);
 }
+h2, h3, h4 { text-wrap: balance; }
+p { text-wrap: pretty; }
 h1 { font-size: clamp(3rem, 11vw, 8rem); }
 h2 { font-size: clamp(2.2rem, 7.5vw, 5rem); }
 /* Tight tracking and sub-1 leading are a big-type effect. Below roughly 2rem
@@ -481,11 +495,19 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
    rather than stopping at the 1120px content measure. This is the single most
    recognisable move in the reference, and the reason the display scale above
    needed the headroom. */
+/* The masthead used to run to the viewport gutter while every other element on
+   the page started at the container edge, 153px further in. The size is the
+   drama; the 153px was just a jog. It now sits on the same left edge as the
+   copy beneath it. */
 .hero-display {
   position: relative;
   z-index: 1;
-  padding-inline: var(--space-5);
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
   margin-bottom: var(--space-5);
+  padding-inline: var(--space-5);
+  container-type: inline-size;
 }
 .hero-display h1 {
   margin-top: var(--space-2);
@@ -506,10 +528,14 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 @media (min-width: 1000px) {
   .masthead-br { display: none; }
   /* Measured, not guessed: the lockup renders 887px wide per 100px of Inter,
-     so 10.76vw is the largest size that still holds one line inside the
-     gutter. 10.5vw leaves a little back, which is also the margin that keeps a
-     wider fallback face wrapping gracefully instead of overflowing. */
-  .hero-display h1 { font-size: min(10.5vw, 13rem); }
+     so it fits one line at 11.27cqw of its column. 11cqw leaves a little back,
+     which is also the margin that keeps a wider fallback face wrapping
+     gracefully instead of overflowing.
+
+     cqw, not vw: above 1168px the container stops growing but the viewport
+     does not, so a vw-based size overshoots the column and wraps. This tracks
+     the measure it actually has to fit. */
+  .hero-display h1 { font-size: 11cqw; }
 }
 /* Two deliberate lines, as in the reference. The <br> is in the markup rather
    than left to wrapping so the break does not move around with the viewport. */
@@ -544,7 +570,7 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 .hero-trust { margin-top: var(--space-6); }
 .hero-trust-label {
   font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em;
-  color: var(--ink-300); max-width: 42ch; margin-bottom: var(--space-3);
+  color: var(--ink-300); max-width: 64ch; margin-bottom: var(--space-3);
 }
 .hero-trust-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .trust-badge {
@@ -601,7 +627,8 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   color: var(--ink-0);
   font-variant-numeric: tabular-nums;
 }
-.countdown-unit .lbl { font-family: var(--font-mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
+.countdown-unit .num { display: block; }
+.countdown-unit .lbl { display: block; margin-top: var(--space-1); font-family: var(--font-mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
 .countdown-note { margin-top: var(--space-4); font-size: 0.9rem; color: var(--text-muted); }
 .countdown-note strong { color: var(--yellow); }
 
@@ -615,24 +642,34 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
   display: grid;
   gap: var(--space-5);
   margin-top: var(--space-6);
-  align-items: start;
+  /* stretch, not start: these are four bordered boxes side by side and their
+     copy is different lengths, so align-items:start left their bottom edges
+     in a 114px staircase. */
+  align-items: stretch;
 }
 @media (min-width: 720px) { .qualifier-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1020px) { .qualifier-grid { grid-template-columns: repeat(4, 1fr); } }
+/* Deliberately not four across. At 1072px four tracks give a 25-character
+   measure, which is a column of rag rather than a paragraph. Two matches
+   .practical-notes, which is already 2-up at this width. */
+@media (min-width: 720px) { .qualifier-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .qual-card {
   background: var(--bg-raised);
   border: 1px solid var(--border);
   border-radius: var(--radius-m);
   padding: var(--space-5);
 }
-.qual-card .qual-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--gradient-shirt);
-  color: var(--navy-950);
-  margin-bottom: var(--space-3);
-  font-weight: 800;
+/* Was a gradient chip with a bare digit. Every other numbered set on the page
+   now reads 001-004 in mono -- the distance columns, the reason rows -- so
+   this one joins them rather than speaking its own dialect. */
+.qual-card .qual-index {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
 }
 .qual-card h3 { font-size: 1.1rem; margin-bottom: var(--space-2); }
 .qual-card p { font-size: 0.92rem; }
@@ -808,7 +845,12 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 .route-panel { margin-top: var(--space-5); }
 .route-panel[hidden] { display: none; }
 .route-layout { display: grid; gap: var(--space-5); }
-@media (min-width: 900px) { .route-layout { grid-template-columns: 1.3fr 1fr; } }
+@media (min-width: 900px) {
+  .route-layout { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+  /* Let the map fill its grid row instead of holding 4:3 -- side by side with
+     a content-sized panel, the fixed ratio left the two columns 224px apart. */
+  .route-map { aspect-ratio: auto; }
+}
 
 .route-map {
   border-radius: var(--radius-m);
@@ -853,12 +895,16 @@ html[data-entry-phase="closed"] .phase-open { display: none; }
 .qualifying-prose li { padding-left: var(--space-5); position: relative; color: var(--text-muted); font-size: 0.95rem; }
 .qualifying-prose li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 2px; background: var(--gradient-shirt); }
 
-.stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6) var(--space-5); margin-top: var(--space-7); }
-@media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
+.stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-5); margin-top: var(--space-7); }
+@media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 /* The reference states its numbers rather than boxing them: no card, no fill,
    just a hairline and a lot of air. */
 .stat-card { padding: var(--space-5) 0 0; border-top: 1px solid var(--border-strong); text-align: left; }
-.stat-num { font-family: var(--font-display); font-weight: var(--weight-display); font-size: clamp(2.6rem, 7vw, 4.5rem); letter-spacing: -0.04em; background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
+/* Capped so the widest value fits an equal quarter-track with headroom. The
+   widest is currently "~49 000" at 7 glyphs, which fills about 92% of its
+   250px track here -- if a value in race-config.json ever gets longer than
+   that, this cap is the thing to re-check. */
+.stat-num { font-family: var(--font-display); font-weight: var(--weight-display); font-size: clamp(2.2rem, 5.5vw, 3.7rem); letter-spacing: -0.04em; background: var(--gradient-shirt); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
 .stat-lbl { font-family: var(--font-mono); margin-top: var(--space-2); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); line-height: 1.35; }
 
 /* ---------- prize money ---------- */
@@ -882,7 +928,7 @@ table.prize-table tbody tr:last-child td { border-bottom: none; }
 .prize-footnote { margin-top: var(--space-3); font-size: 0.74rem; color: var(--text-faint); }
 
 /* ---------- proof: testimonials + gallery ---------- */
-.quote-grid { display: grid; gap: var(--space-4); margin-top: var(--space-6); align-items: start; }
+.quote-grid { display: grid; gap: var(--space-4); margin-top: var(--space-6); align-items: stretch; }
 @media (min-width: 700px) { .quote-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1020px) { .quote-grid { grid-template-columns: repeat(4, 1fr); } }
 .quote-card {
@@ -1077,8 +1123,8 @@ a.marquee-item-logo:hover img, a.marquee-item-logo:focus-visible img { box-shado
 .site-footer { background: var(--bg-sunken); padding-block: var(--space-8) var(--space-6); border-top: 1px solid var(--border); overflow: hidden; }
 .footer-grid { display: grid; gap: var(--space-6); }
 @media (min-width: 760px) { .footer-grid { grid-template-columns: repeat(4, 1fr); } }
-.footer-col h4 { font-family: var(--font-body); font-style: normal; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: var(--space-3); }
-.footer-col ul { display: grid; gap: var(--space-2); }
+.footer-col h4 { font-family: var(--font-mono); font-weight: 500; font-style: normal; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: var(--space-3); }
+.footer-col ul { display: grid; gap: var(--space-2); list-style: none; padding-left: 0; }
 .footer-col a { color: var(--ink-300); text-decoration: none; font-size: 0.92rem; }
 .footer-col a:hover { color: var(--ink-0); }
 .footer-brand { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
@@ -1105,20 +1151,24 @@ a.sponsor-chip-logo:hover img, a.sponsor-chip-logo:focus-visible img { box-shado
    aria-hidden in the markup: it is the logo again, not a heading, and a screen
    reader has already been told whose site this is four times by here. */
 .footer-wordmark {
-  margin: var(--space-8) 0 0;
+  width: 100%;
+  max-width: var(--container);
+  margin: var(--space-8) auto 0;
   padding-inline: var(--space-5);
   font-family: var(--font-display);
   font-weight: var(--weight-display);
-  /* Sized so the full lockup fits the gutter at any width -- 14 characters of
-     a tight grotesk, so the vw factor is a lot smaller than the masthead's.
-     .site-footer clips as well, in case a fallback face measures wider. */
-  font-size: min(10.4vw, 11rem);
+  /* Sized off the column it has to fit rather than off the viewport: the
+     container stops growing at 1120px but vw does not, so a vw-based size ran
+     the lockup 220px past the right edge. 8.95 is the lockup's measured width
+     in ems at this tracking; dividing the available width by it fits at ~98%
+     at every viewport. .site-footer clips as well, in case a fallback face
+     measures wider. */
+  font-size: calc((min(var(--container), 100vw) - var(--space-5) * 2) / 8.9);
   line-height: 0.78;
   letter-spacing: -0.045em;
   text-transform: uppercase;
   color: var(--ink-0);
   opacity: 0.07;
-  max-width: none;
   white-space: nowrap;
   user-select: none;
 }

@@ -611,25 +611,25 @@ def build_qualifier_panel():
 
     <div class="qualifier-grid">
       <div class="qual-card">
-        <div class="qual-icon">1</div>
+        <div class="qual-index">001</div>
         <h3>Single lap</h3>
         <p>{q['singleLapNote']}</p>
       </div>
       <div class="qual-card">
-        <div class="qual-icon">2</div>
+        <div class="qual-index">002</div>
         <h3>Sub-5:00 standard</h3>
         <p>{q['standard']} qualifies for both the Comrades centenary and Two Oceans 2027.
         MadMac's own cut-off is generous — see the note below.</p>
       </div>
       <div class="qual-card">
-        <div class="qual-icon">3</div>
+        <div class="qual-index">003</div>
         <h3>Chip-timed and GPX-verified</h3>
         <p>Mat-to-mat chip timing with checkpoints on route. The marathon measures 42.24km
         against the official GPX — within normal route-drawing tolerance of the standard
         42.195km marathon distance.</p>
       </div>
       <div class="qual-card">
-        <div class="qual-icon">4</div>
+        <div class="qual-index">004</div>
         <h3>Early in the window</h3>
         <p>{comrades['dateDisplay'].split()[-1]} qualifying opens {comrades['qualifyingWindowDisplay']}
         for Comrades and {two_oceans['qualifyingWindowDisplay']} for Two Oceans. MadMac falls near the
@@ -948,7 +948,7 @@ def build_qualifying_prose():
     )
 
     return f"""<section class="qualifying-prose section-pad" id="qualifying-2027">
-  <div class="container container--narrow">
+  <div class="container container--prose">
     <p class="eyebrow">For qualifier hunters</p>
     <h2>Qualifying for Comrades 2027 and Two Oceans 2027</h2>
 
@@ -1135,7 +1135,7 @@ def build_faq():
         for item in faqs
     )
     return f"""<section class="section-pad" id="faq">
-  <div class="container container--narrow">
+  <div class="container container--prose">
     <p class="eyebrow">FAQ</p>
     <h2>Questions people actually ask</h2>
     <div class="faq-list mt-6" data-reveal>{items}</div>
