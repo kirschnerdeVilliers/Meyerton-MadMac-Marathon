@@ -1119,6 +1119,8 @@ table.prize-table tbody tr:last-child td { border-bottom: none; }
 /* ---------- practical info ---------- */
 .collection-table-wrap { margin-top: var(--space-6); overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-m); }
 table.collection-table { width: 100%; min-width: 520px; background: var(--bg-raised); }
+table.collection-table.results-table { min-width: 0; }
+table.collection-table.results-table td:first-child { font-weight: 700; color: var(--ink-100); }
 table.collection-table th, table.collection-table td { padding: var(--space-3) var(--space-4); text-align: left; font-size: 0.9rem; border-bottom: 1px solid var(--border); }
 table.collection-table thead th { background: var(--bg-sunken); font-weight: 700; }
 table.collection-table tr.race-day { background: rgba(239,106,31,0.08); }

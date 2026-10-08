@@ -81,7 +81,26 @@ collections:
               - { label: "Channel link", name: "url", widget: string, required: false, hint: "The invite link from WhatsApp (Channel > share). Leave blank to hide the button everywhere." }
               - { label: "Button wording", name: "label", widget: string, required: false, hint: "Shown on the button in the Follow along section." }
 
-          # These two are edited together. After each race, point the URL at that
+          # Race results. Newest year first or last, order does not matter. Once the
+          # newest year here matches this year's race, the site swaps the distances
+          # and entry-fee section for this list and the hero shows a results card.
+          # Remove this year's row to bring the distances section back.
+          - label: "Results by year"
+            name: "results"
+            widget: object
+            required: false
+            fields:
+              - label: "Editions"
+                name: "editions"
+                widget: list
+                summary: "{{fields.year}}"
+                fields:
+                  - { label: "Year", name: "year", widget: number, value_type: int }
+                  - { label: "Results page URL (finishtime.co.za deep link)", name: "url", widget: string }
+
+          # These two are only a fallback now: the footer link follows the newest
+          # row in "Results by year" above when there is one.
+          # (Older note: edited together after each race.) After each race, point the URL at that
           # year's results page on finishtime.co.za and bump the year to match —
           # a stale year here advertises the wrong results in the site footer.
           - { label: "Results page URL (deep link to a specific year's results)", name: "resultsUrl", widget: string }

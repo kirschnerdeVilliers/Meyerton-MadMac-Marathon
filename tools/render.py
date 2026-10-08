@@ -127,6 +127,16 @@ ENTRIES_OPEN = NOW < datetime.fromisoformat(CONFIG["entries"]["onlineCloseDate"]
 BEFORE_LATE_FEES = NOW < datetime.fromisoformat(CONFIG["entries"]["lateFeeStartDate"])
 ENTRY_PHASE = "open" if ENTRIES_OPEN else "closed"
 
+# Results are config, not clock: once the newest edition in results.editions
+# is this year's, the race is over as far as the page is concerned. Gating on
+# data instead of on the date means the page can only claim "results are in"
+# once someone has actually pasted in a results link.
+RESULTS = sorted(
+    (CONFIG.get("results") or {}).get("editions") or [],
+    key=lambda e: e["year"], reverse=True,
+)
+RACE_DONE = bool(RESULTS) and RESULTS[0]["year"] >= CONFIG["edition"]["year"]
+
 
 # ---------------------------------------------------------------- helpers --
 
@@ -240,10 +250,22 @@ def closed_entry_note(classes="btn btn-ghost"):
     """Stands in for an entry CTA once online entries have closed.
 
     Deliberately never links to Race Pass: sending someone to a closed
-    entry page is worse than not offering the link at all. Points instead
-    at #practical, where the manual-entry collection points live — which
-    is the only way left to enter at that point."""
+    entry page is worse than not offering the link at all. Before the race
+    it points at #practical, where the manual-entry collection points live.
+    Once the results are in (RACE_DONE) manual entry is history, so it
+    points at #results instead."""
+    if RACE_DONE:
+        return f'<a class="{classes}" href="#results">{RESULTS[0]["year"]} results</a>'
     return f'<a class="{classes}" href="#practical">Manual entry options</a>'
+
+
+def results_cta(classes="btn btn-primary"):
+    """Straight to the newest results page on finishtime.co.za."""
+    latest = RESULTS[0]
+    return (
+        f'<a class="{classes}" href="{esc(latest["url"])}" target="_blank" '
+        f'rel="noopener">View {latest["year"]} results</a>'
+    )
 
 
 def phase_block(open_html, closed_html):
@@ -472,7 +494,7 @@ def build_head():
 
 NAV_LINKS = [
     ("#qualifiers", "Qualifiers"),
-    ("#distances", "Distances"),
+    ("#results", "Results") if RACE_DONE else ("#distances", "Distances"),
     ("#route", "Route"),
     ("#prizes", "Prizes"),
     ("#faq", "FAQ"),
@@ -513,6 +535,25 @@ def build_header():
 
 # ------------------------------------------------------------------ hero --
 
+def hero_results_card():
+    """Replaces the closed-entries card, where the race dates sat, once the
+    results are in. Reuses the countdown card's frame so the hero keeps its
+    shape; only the contents change."""
+    past = "".join(
+        f'<a class="link" href="{esc(e["url"])}" target="_blank" rel="noopener">{e["year"]}</a>'
+        for e in RESULTS[1:]
+    )
+    earlier = f'<p class="countdown-note">Earlier years: {past}</p>' if past else ""
+    return f'''<div class="countdown-card countdown-card--closed">
+      <p class="eyebrow">Race results</p>
+      <p class="countdown-closed-heading">{RESULTS[0]["year"]} results are in</p>
+      <p class="countdown-note">The {RESULTS[0]["year"]} race was run on {CONFIG["edition"]["dateDisplay"]}.
+      Every distance is on finishtime.co.za.</p>
+      {results_cta("btn btn-primary btn-block")}
+      {earlier}
+    </div>'''
+
+
 def build_hero():
     ed = CONFIG["edition"]
     entries = CONFIG["entries"]
@@ -546,9 +587,14 @@ def build_hero():
       {phase_block(
           f'<div class="hero-actions">{cta("Enter now", "hero")}'
           f'{list_cta(ml("ctaButtonLabel"), "hero")}</div>',
-          f'<div class="hero-actions">'
-          f'{list_cta(ml("ctaButtonLabel"), "hero", "btn btn-primary")}'
-          f'{closed_entry_note()}</div>',
+          (
+              f'<div class="hero-actions">{results_cta()}'
+              f'{list_cta(ml("ctaButtonLabel"), "hero")}</div>'
+              if RACE_DONE else
+              f'<div class="hero-actions">'
+              f'{list_cta(ml("ctaButtonLabel"), "hero", "btn btn-primary")}'
+              f'{closed_entry_note()}</div>'
+          ),
       )}
       <p class="hero-actions-aside"><a class="link" href="#route">See the route &rarr;</a></p>
 
@@ -578,6 +624,7 @@ def build_hero():
         {esc(entries.get('countdownNote') or '')}
       </p>
     </div>''',
+        hero_results_card() if RACE_DONE else
         f'''<div class="countdown-card countdown-card--closed">
       <p class="eyebrow">Entries</p>
       <p class="countdown-closed-heading">{esc(entries.get('closedHeading') or 'Online entries have closed')}</p>
@@ -1333,6 +1380,63 @@ def build_practical():
 """
 
 
+# ------------------------------------------------------------------ results --
+
+def build_results():
+    """Race results, linking out to finishtime.co.za (the club does not host
+    results, and a copy here would go stale the moment a time is corrected).
+
+    Once the race is run (RACE_DONE) this takes the slot of the distances and
+    entry-fee section: prices, deadline pills and per-distance entry buttons
+    are all for a race that has happened. Edit race-config.json -> results to
+    bring distances back. Before the race it renders as a plain "Past
+    results" list after #practical instead."""
+    rules = CONFIG["raceRules"]
+    year = CONFIG["edition"]["year"]
+    rows = "".join(
+        f"""<tr class="{'race-day' if RACE_DONE and i == 0 else ''}">
+      <td>{e['year']}</td>
+      <td>{esc(CONFIG['edition']['raceName'])} {e['year']}</td>
+      <td><a class="link" href="{esc(e['url'])}" target="_blank" rel="noopener">View results &rarr;</a></td>
+    </tr>"""
+        for i, e in enumerate(RESULTS)
+    )
+    if RACE_DONE:
+        heading = "Race results"
+        lead = (
+            f"The {year} race was run on {CONFIG['edition']['dateDisplay']}. Official chip times "
+            f"for every distance are on {rules['resultsPublishedOn']}, along with the "
+            "earlier editions."
+        )
+    else:
+        heading = "Past results"
+        lead = f"Official chip times from earlier editions, on {rules['resultsPublishedOn']}."
+    cta_block = ""
+    if RACE_DONE:
+        cta_block = f"""
+    <div class="cta-strip">
+      <p class="cta-strip-heading">Hear when 2027 entries open.</p>
+      <div class="cta-strip-actions">{list_cta(ml("ctaButtonLabel"), "results", "btn btn-primary")}</div>
+    </div>"""
+
+    return f"""<section class="section-pad" id="results">
+  <div class="container">
+    <p class="eyebrow">Results</p>
+    <h2>{heading}</h2>
+    <p class="lede lede-lg mt-6 max-narrow" data-scrub>{scrub_words(lead)}</p>
+
+    <div class="collection-table-wrap" data-reveal>
+      <table class="collection-table results-table">
+        <thead><tr><th>Year</th><th>Race</th><th>Results</th></tr></thead>
+        <tbody>{rows}</tbody>
+      </table>
+    </div>
+{cta_block}
+  </div>
+</section>
+"""
+
+
 # ------------------------------------------------------------ email capture --
 
 def honeypot_field():
@@ -1547,7 +1651,7 @@ def build_sponsor_marquee():
 
 def results_url():
     """Absolute URL of the results page, whatever shape the config value is in."""
-    url = (CONFIG.get("resultsUrl") or "").strip()
+    url = (RESULTS[0]["url"] if RESULTS else CONFIG.get("resultsUrl") or "").strip()
     if url and not url.startswith(("http://", "https://")):
         url = "https://" + url
     return url
@@ -1566,7 +1670,7 @@ def results_link():
     resultsYear sits next to resultsUrl in the config and is edited in the
     same breath: after the 2026 race, both move together or the label
     starts advertising the wrong year."""
-    year = CONFIG.get("resultsYear")
+    year = RESULTS[0]["year"] if RESULTS else CONFIG.get("resultsYear")
     label = f"{year} results (finishtime.co.za)" if year else "Past results (finishtime.co.za)"
     return f'<a href="{esc(results_url())}" target="_blank" rel="noopener">{esc(label)}</a>'
 
@@ -1960,7 +2064,7 @@ def build_404_page():
 
     <h2>Or jump straight to</h2>
     <ul>
-      <li><a class="link" href="/#distances">Distances, prices and entry</a></li>
+      <li>{('<a class="link" href="/#results">Race results</a>' if RACE_DONE else '<a class="link" href="/#distances">Distances, prices and entry</a>')}</li>
       <li><a class="link" href="/#route">The route and elevation profiles</a></li>
       <li><a class="link" href="/#practical">Race-day practical details</a></li>
       <li><a class="link" href="/#faq">Frequently asked questions</a></li>
@@ -2258,7 +2362,7 @@ def main():
         build_sponsor_marquee(),
         build_qualifier_panel(),
         build_why(),
-        build_distances(),
+        build_results() if RACE_DONE else build_distances(),
         build_course_statement(),
         build_route(),
         build_qualifying_prose(),
@@ -2266,6 +2370,7 @@ def main():
         build_proof(),
         build_what_you_get(),
         build_practical(),
+        *([build_results()] if RESULTS and not RACE_DONE else []),
         build_faq(),
         # #stay-updated is a primary action now, so it comes before the
         # Facebook embed — that's ambient social proof and belongs last.

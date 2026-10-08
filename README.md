@@ -111,6 +111,24 @@ there's still only one place to edit the sponsor roster — each entry now also 
 (sponsor website, opens in a new tab, `rel="noopener sponsored"`) alongside `logo`; leave `url`
 null to render without a link.
 
+## Race results, and the post-race swap
+
+`data/race-config.json` → `results.editions` is a list of `{year, url}` rows pointing at
+finishtime.co.za. It drives three things, all off that data rather than the clock:
+
+- once the newest row's year reaches `edition.year`, the race counts as done (`RACE_DONE` in
+  `tools/render.py`): the `#distances` section (prices, deadline pills, entry buttons) is replaced
+  by `#results`, the nav link becomes "Results", and the hero's closed-entries card becomes a
+  "results are in" card with a "View 2026 results" button;
+- the footer results link follows the newest row (`resultsUrl`/`resultsYear` are only a fallback);
+- with older rows only, `#results` renders as a plain "Past results" list after `#practical` and
+  the entry flow is untouched.
+
+**For 2027:** bump `edition.year` and the dates/fees, and the page flips back to the entry flow on
+its own because no 2027 results row exists yet. Add the 2027 row after the race to flip it again.
+`#practical` (collection points) and the qualifier panel are not swapped by this; retire or
+rewrite them by hand if they should go too.
+
 ## Updating for the 2027 edition
 
 1. Edit `data/race-config.json` — date, fees, collection points, qualifying windows, entry URL,
@@ -434,10 +452,10 @@ placeholders:
 - `data/race-config.json` → `testimonials`: rating, review count, and quote cards — sourced from
   Race Pass's public listing page (name, distance, year, quote text; obvious concatenation typos
   in the source, e.g. "reallyenjoyable", were cleaned up, wording otherwise unchanged).
-- `data/race-config.json` → `faq`: the six Q&As Race Pass itself publishes (their entry
-  cancellation/substitution/transfer policy, number collection, race-number lookup), plus three
-  MadMac-specific ones answered from facts already in this config (qualifier status, race-day
-  entry, the cut-off-vs-qualifying-standard distinction).
+- `data/race-config.json` → `faq`: post-race, four Q&As answered from facts already in this
+  config (where results are, when 2027 entries open, qualifier status, the qualifying standard).
+  The pre-race set (race-day entry, cancellation, substitution, transfer, number collection) was
+  Race Pass's own policy wording and is in git history (`cac5872`) if it is needed again.
 - `data/race-config.json` → `gallery` + `assets/img/gallery/*.jpg`: seven real photos from the
   2025 edition (start line, on-course marshalling, the race MC, finishers, medals), pulled from
   the club's own public Facebook page. The header/footer brand mark (`assets/img/madmac-badge.jpg`)

@@ -31,8 +31,8 @@
     "pageUrl": "https://www.facebook.com/midvaalmadmac/",
     "pageName": "Midvaal Madmac Marathon"
   },
-  "resultsUrl": "https://results.finishtime.co.za/results.aspx?CId=35&RId=5388",
-  "resultsYear": 2025,
+  "resultsUrl": "https://results.finishtime.co.za/results.aspx?CId=35&RId=6001",
+  "resultsYear": 2026,
   "qualifiers": {
     "standard": "42.2km in under 4:59:59 (sub-5:00)",
     "cutoffCaveat": "The race cut-off is 6h30. The qualifying standard for both Comrades and Two Oceans is 4:59:59 — finishing inside the cut-off does not mean you have qualified.",
@@ -402,36 +402,20 @@
   },
   "faq": [
     {
+      "q": "Where can I find my 2026 result?",
+      "a": "Full results for every distance are on finishtime.co.za. The results section above links straight to the 2026 race, and to 2025, 2024 and 2023 as well."
+    },
+    {
+      "q": "When do 2027 entries open?",
+      "a": "The club has not announced 2027 dates or prices yet. Join the mailing list below and you will get them, along with route news, as soon as they are confirmed."
+    },
+    {
       "q": "Is MadMac an approved Comrades and Two Oceans qualifier?",
       "a": "MadMac is positioned and marketed as a single-lap Comrades and Totalsports Two Oceans Marathon qualifier, and has carried that status in previous editions. Written confirmation of the 2027 approved-qualifier listing for both races is being obtained — check back closer to race day if this matters to your entry decision."
     },
     {
       "q": "What time do I need to run to qualify?",
       "a": "Under 4:59:59 for the 42.2km, for both the Comrades centenary and Two Oceans 2027. That's the qualifying standard, not MadMac's own 6h30 cut-off — see the qualifier panel above."
-    },
-    {
-      "q": "Can I enter on race day?",
-      "a": "No. Manual entries are available at the collection points listed above, subject to availability, but there is no entry on race day itself."
-    },
-    {
-      "q": "Can I cancel my entry?",
-      "a": "No, cancellations aren't allowed. This is a Race Pass entry-terms policy, not a MadMac-specific one — see Race Pass's own terms for the full detail."
-    },
-    {
-      "q": "Can I substitute my entry to another person?",
-      "a": "Yes, substitutions are allowed up to 20 days before race day, from your Race Pass \"My races\" page."
-    },
-    {
-      "q": "Can I transfer my entry to another race?",
-      "a": "Yes, transfers to another race are allowed up to 20 days before race day, from your Race Pass \"My races\" page."
-    },
-    {
-      "q": "Where do I collect my race number?",
-      "a": "Five points across Johannesburg and the Vaal in race week, plus the venue itself — see the number collection table above. A Postnet-to-Postnet delivery option is also available through Race Pass."
-    },
-    {
-      "q": "How will I find my race number?",
-      "a": "Race Pass publishes a race-number lookup closer to race day, linked from your entry confirmation."
     }
   ],
   "sponsors": {
@@ -591,5 +575,25 @@
     "minimumAges": null,
     "indemnity": null,
     "imageConsent": null
+  },
+  "results": {
+    "editions": [
+      {
+        "year": 2026,
+        "url": "https://results.finishtime.co.za/results.aspx?CId=35&RId=6001"
+      },
+      {
+        "year": 2025,
+        "url": "https://results.finishtime.co.za/results.aspx?CId=35&RId=5388"
+      },
+      {
+        "year": 2024,
+        "url": "https://results.finishtime.co.za/results.aspx?CId=35&RId=4852"
+      },
+      {
+        "year": 2023,
+        "url": "https://results.finishtime.co.za/results.aspx?CId=35&RId=4117"
+      }
+    ]
   }
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-ZA" data-entry-phase="open">
+<html lang="en-ZA" data-entry-phase="closed">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=33107e4e">
+<link rel="stylesheet" href="assets/css/site.css?v=5c36c221">
 
 <script type="application/ld+json">{
 "@context": "https://schema.org",
@@ -72,7 +72,7 @@
 "name": "42.2km entry",
 "price": 370,
 "priceCurrency": "ZAR",
-"availability": "https://schema.org/InStock",
+"availability": "https://schema.org/LimitedAvailability",
 "validThrough": "2026-09-22",
 "url": "https://racepass.com/za/races/midvaal-madmac"
 },
@@ -81,7 +81,7 @@
 "name": "22km entry",
 "price": 250,
 "priceCurrency": "ZAR",
-"availability": "https://schema.org/InStock",
+"availability": "https://schema.org/LimitedAvailability",
 "validThrough": "2026-09-22",
 "url": "https://racepass.com/za/races/midvaal-madmac"
 },
@@ -90,7 +90,7 @@
 "name": "11km entry",
 "price": 200,
 "priceCurrency": "ZAR",
-"availability": "https://schema.org/InStock",
+"availability": "https://schema.org/LimitedAvailability",
 "validThrough": "2026-09-22",
 "url": "https://racepass.com/za/races/midvaal-madmac"
 },
@@ -99,7 +99,7 @@
 "name": "5km entry",
 "price": 90,
 "priceCurrency": "ZAR",
-"availability": "https://schema.org/InStock",
+"availability": "https://schema.org/LimitedAvailability",
 "validThrough": "2026-09-22",
 "url": "https://racepass.com/za/races/midvaal-madmac"
 }
@@ -155,6 +155,22 @@
 "mainEntity": [
 {
 "@type": "Question",
+"name": "Where can I find my 2026 result?",
+"acceptedAnswer": {
+"@type": "Answer",
+"text": "Full results for every distance are on finishtime.co.za. The results section above links straight to the 2026 race, and to 2025, 2024 and 2023 as well."
+}
+},
+{
+"@type": "Question",
+"name": "When do 2027 entries open?",
+"acceptedAnswer": {
+"@type": "Answer",
+"text": "The club has not announced 2027 dates or prices yet. Join the mailing list below and you will get them, along with route news, as soon as they are confirmed."
+}
+},
+{
+"@type": "Question",
 "name": "Is MadMac an approved Comrades and Two Oceans qualifier?",
 "acceptedAnswer": {
 "@type": "Answer",
@@ -168,54 +184,6 @@
 "@type": "Answer",
 "text": "Under 4:59:59 for the 42.2km, for both the Comrades centenary and Two Oceans 2027. That's the qualifying standard, not MadMac's own 6h30 cut-off \u2014 see the qualifier panel above."
 }
-},
-{
-"@type": "Question",
-"name": "Can I enter on race day?",
-"acceptedAnswer": {
-"@type": "Answer",
-"text": "No. Manual entries are available at the collection points listed above, subject to availability, but there is no entry on race day itself."
-}
-},
-{
-"@type": "Question",
-"name": "Can I cancel my entry?",
-"acceptedAnswer": {
-"@type": "Answer",
-"text": "No, cancellations aren't allowed. This is a Race Pass entry-terms policy, not a MadMac-specific one \u2014 see Race Pass's own terms for the full detail."
-}
-},
-{
-"@type": "Question",
-"name": "Can I substitute my entry to another person?",
-"acceptedAnswer": {
-"@type": "Answer",
-"text": "Yes, substitutions are allowed up to 20 days before race day, from your Race Pass \"My races\" page."
-}
-},
-{
-"@type": "Question",
-"name": "Can I transfer my entry to another race?",
-"acceptedAnswer": {
-"@type": "Answer",
-"text": "Yes, transfers to another race are allowed up to 20 days before race day, from your Race Pass \"My races\" page."
-}
-},
-{
-"@type": "Question",
-"name": "Where do I collect my race number?",
-"acceptedAnswer": {
-"@type": "Answer",
-"text": "Five points across Johannesburg and the Vaal in race week, plus the venue itself \u2014 see the number collection table above. A Postnet-to-Postnet delivery option is also available through Race Pass."
-}
-},
-{
-"@type": "Question",
-"name": "How will I find my race number?",
-"acceptedAnswer": {
-"@type": "Answer",
-"text": "Race Pass publishes a race-number lookup closer to race day, linked from your entry confirmation."
-}
 }
 ]
 }</script>
@@ -228,7 +196,7 @@
       <img class="brand-mark" src="assets/img/madmac-badge.jpg" alt="" width="40" height="40">
       <img class="brand-word" src="assets/img/madmac-wordmark.png" alt="Midvaal MadMac" width="650" height="220">
     </a>
-    <nav class="site-nav" aria-label="Section"><a href="#qualifiers">Qualifiers</a><a href="#distances">Distances</a><a href="#route">Route</a><a href="#prizes">Prizes</a><a href="#faq">FAQ</a></nav>
+    <nav class="site-nav" aria-label="Section"><a href="#qualifiers">Qualifiers</a><a href="#results">Results</a><a href="#route">Route</a><a href="#prizes">Prizes</a><a href="#faq">FAQ</a></nav>
     <div class="header-cta">
       <div class="phase-open"><a class="btn btn-primary btn-sm" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="header">Enter now</a><a class="btn btn-secondary btn-sm" href="#stay-updated" data-list-cta="header">Stay in touch</a></div><div class="phase-closed"><a class="btn btn-primary btn-sm" href="#stay-updated" data-list-cta="header-closed">Stay in touch</a></div>
       <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-nav">
@@ -237,7 +205,7 @@
       </button>
     </div>
   </div>
-  <nav id="mobile-nav" class="mobile-nav" aria-label="Section" hidden><a href="#qualifiers" class="mobile-nav-link">Qualifiers</a><a href="#distances" class="mobile-nav-link">Distances</a><a href="#route" class="mobile-nav-link">Route</a><a href="#prizes" class="mobile-nav-link">Prizes</a><a href="#faq" class="mobile-nav-link">FAQ</a></nav>
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Section" hidden><a href="#qualifiers" class="mobile-nav-link">Qualifiers</a><a href="#results" class="mobile-nav-link">Results</a><a href="#route" class="mobile-nav-link">Route</a><a href="#prizes" class="mobile-nav-link">Prizes</a><a href="#faq" class="mobile-nav-link">FAQ</a></nav>
 </header>
 
 <main id="main">
@@ -264,7 +232,7 @@
         <span><span class="dot"></span>Café du Cirque, Daleside</span>
         <span><span class="dot"></span>42.2 &middot; 22 &middot; 11 &middot; 5&nbsp;km</span>
       </div>
-      <div class="phase-open"><div class="hero-actions"><a class="btn btn-primary" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="hero">Enter now</a><a class="btn btn-secondary" href="#stay-updated" data-list-cta="hero">Stay in touch</a></div></div><div class="phase-closed"><div class="hero-actions"><a class="btn btn-primary" href="#stay-updated" data-list-cta="hero">Stay in touch</a><a class="btn btn-ghost" href="#practical">Manual entry options</a></div></div>
+      <div class="phase-open"><div class="hero-actions"><a class="btn btn-primary" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="hero">Enter now</a><a class="btn btn-secondary" href="#stay-updated" data-list-cta="hero">Stay in touch</a></div></div><div class="phase-closed"><div class="hero-actions"><a class="btn btn-primary" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=6001" target="_blank" rel="noopener">View 2026 results</a><a class="btn btn-secondary" href="#stay-updated" data-list-cta="hero">Stay in touch</a></div></div>
       <p class="hero-actions-aside"><a class="link" href="#route">See the route &rarr;</a></p>
 
       <div class="hero-trust">
@@ -292,10 +260,12 @@
         Late entry fees now apply on the 42.2km, 22km and 11km. The 5km stays at R90.
       </p>
     </div></div><div class="phase-closed"><div class="countdown-card countdown-card--closed">
-      <p class="eyebrow">Entries</p>
-      <p class="countdown-closed-heading">Online entries have closed</p>
-      <p class="countdown-note">Manual entries available at collection points only (not on race day), subject to availability. No entries on race day.</p>
-      <a class="btn btn-primary btn-block" href="#stay-updated" data-list-cta="countdown-closed">Stay in touch</a>
+      <p class="eyebrow">Race results</p>
+      <p class="countdown-closed-heading">2026 results are in</p>
+      <p class="countdown-note">The 2026 race was run on Sunday 4 October 2026.
+      Every distance is on finishtime.co.za.</p>
+      <a class="btn btn-primary btn-block" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=6001" target="_blank" rel="noopener">View 2026 results</a>
+      <p class="countdown-note">Earlier years: <a class="link" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=5388" target="_blank" rel="noopener">2025</a><a class="link" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=4852" target="_blank" rel="noopener">2024</a><a class="link" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=4117" target="_blank" rel="noopener">2023</a></p>
     </div></div>
     <!-- Lives outside the phase blocks so it survives the swap: a visitor
          on the page at the moment entries close sees the whole hero change
@@ -359,7 +329,7 @@
     </div>
 
     <div class="cta-strip">
-      <div class="phase-open"><a class="btn btn-primary" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="qualifier-panel" data-cta-distance="42_2km">Enter the 42.2km</a></div><div class="phase-closed"><a class="btn btn-ghost" href="#practical">Manual entry options</a></div>
+      <div class="phase-open"><a class="btn btn-primary" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="qualifier-panel" data-cta-distance="42_2km">Enter the 42.2km</a></div><div class="phase-closed"><a class="btn btn-ghost" href="#results">2026 results</a></div>
     </div>
   </div>
 </section>
@@ -400,116 +370,38 @@
   </div>
 </section>
 
-<section class="section-pad" id="distances">
+<section class="section-pad" id="results">
   <div class="container">
-    <p class="eyebrow">Distances &amp; entry fees</p>
-    <h2>Pick your distance</h2>
-    <p class="lede mt-6 max-narrow">
-      All four distances start and finish at Café du Cirque.
-    </p>
+    <p class="eyebrow">Results</p>
+    <h2>Race results</h2>
+    <p class="lede lede-lg mt-6 max-narrow" data-scrub><span class="w">The</span> <span class="w">2026</span> <span class="w">race</span> <span class="w">was</span> <span class="w">run</span> <span class="w">on</span> <span class="w">Sunday</span> <span class="w">4</span> <span class="w">October</span> <span class="w">2026.</span> <span class="w">Official</span> <span class="w">chip</span> <span class="w">times</span> <span class="w">for</span> <span class="w">every</span> <span class="w">distance</span> <span class="w">are</span> <span class="w">on</span> <span class="w">finishtime.co.za,</span> <span class="w">along</span> <span class="w">with</span> <span class="w">the</span> <span class="w">earlier</span> <span class="w">editions.</span></p>
 
-    <div class="deadline-strip">
-      <div class="deadline-box">
-        <span class="date">31 Aug</span>
-        <p>Early bird pricing ends. Late fees apply on every distance except the 5km, which
-        stays flat at R90.</p>
-      </div>
-      <div class="deadline-box">
-        <span class="date">22 Sep</span>
-        <p>Online entries close at 21:00. After that, manual entries only, at collection
-        points, subject to availability. None on race day.</p>
-      </div>
-    </div>
-
-    <div class="distance-cards" data-reveal><div class="distance-card flagship">
-      <div class="distance-card-index">
-        <span class="dist-index">001</span>
-        <span class="flag-tag">Flagship</span>
-      </div>
-      <div class="distance-card-head">
-        <span class="dist-label">42.2km</span>
-      </div>
-      <div class="dist-fee-row"><span class="lbl">Early bird</span><span class="val">R350</span></div>
-      <div class="dist-fee-row"><span class="lbl">Grandmaster</span><span class="val">R270</span></div>
-      <div class="dist-fee-row"><span class="lbl">Late (after 31 August 2026)</span><span class="val late">R370</span></div>
-      <div class="dist-meta">
-        <span>Start 06:00</span>
-        <span>Min age 20+</span>
-        <span>Cut-off 6h30</span>
-      </div>
-      <p style="margin-top: 0.75rem; font-size: 0.82rem; color: var(--text-faint);">Free shirt to first 250 entrants</p>
-      <div class="phase-open"><a class="btn btn-primary btn-block btn-sm" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="distance-card" data-cta-distance="42_2km">Enter now</a></div><div class="phase-closed"><span class="btn btn-block btn-sm" aria-disabled="true">Entries closed</span></div>
-    </div><div class="distance-card">
-      <div class="distance-card-index">
-        <span class="dist-index">002</span>
-        
-      </div>
-      <div class="distance-card-head">
-        <span class="dist-label">22km</span>
-      </div>
-      <div class="dist-fee-row"><span class="lbl">Early bird</span><span class="val">R220</span></div>
-      <div class="dist-fee-row"><span class="lbl">Grandmaster</span><span class="val">R180</span></div>
-      <div class="dist-fee-row"><span class="lbl">Late (after 31 August 2026)</span><span class="val late">R250</span></div>
-      <div class="dist-meta">
-        <span>Start 06:15</span>
-        <span>Min age 16+</span>
-        <span>Cut-off 4h00</span>
-      </div>
-      <p style="margin-top: 0.75rem; font-size: 0.82rem; color: var(--text-faint);">Free shirt to first 100 entrants</p>
-      <div class="phase-open"><a class="btn btn-primary btn-block btn-sm" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="distance-card" data-cta-distance="22km">Enter now</a></div><div class="phase-closed"><span class="btn btn-block btn-sm" aria-disabled="true">Entries closed</span></div>
-    </div><div class="distance-card">
-      <div class="distance-card-index">
-        <span class="dist-index">003</span>
-        
-      </div>
-      <div class="distance-card-head">
-        <span class="dist-label">11km</span>
-      </div>
-      <div class="dist-fee-row"><span class="lbl">Early bird</span><span class="val">R180</span></div>
-      <div class="dist-fee-row"><span class="lbl">Grandmaster</span><span class="val">R140</span></div>
-      <div class="dist-fee-row"><span class="lbl">Late (after 31 August 2026)</span><span class="val late">R200</span></div>
-      <div class="dist-meta">
-        <span>Start 06:15</span>
-        <span>Min age 14+</span>
-        <span>Cut-off 2h00</span>
-      </div>
-      <p style="margin-top: 0.75rem; font-size: 0.82rem; color: var(--text-faint);">Free shirt to first 50 entrants</p>
-      <div class="phase-open"><a class="btn btn-primary btn-block btn-sm" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="distance-card" data-cta-distance="11km">Enter now</a></div><div class="phase-closed"><span class="btn btn-block btn-sm" aria-disabled="true">Entries closed</span></div>
-    </div><div class="distance-card">
-      <div class="distance-card-index">
-        <span class="dist-index">004</span>
-        
-      </div>
-      <div class="distance-card-head">
-        <span class="dist-label">5km</span>
-      </div>
-      <div class="dist-fee-row"><span class="lbl">Early bird</span><span class="val">R90</span></div>
-      <div class="dist-fee-row"><span class="lbl">Grandmaster</span><span class="val">R90</span></div>
-      <div class="dist-fee-row"><span class="lbl">Late (after 31 August 2026)</span><span class="val late">R90</span></div>
-      <div class="dist-meta">
-        <span>Start 06:30</span>
-        <span>Min age 9+</span>
-        <span>Cut-off 2h00</span>
-      </div>
-      <p style="margin-top: 0.75rem; font-size: 0.82rem; color: var(--text-faint);">R90 flat, no late fee</p>
-      <div class="phase-open"><a class="btn btn-primary btn-block btn-sm" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="distance-card" data-cta-distance="5km">Enter now</a></div><div class="phase-closed"><span class="btn btn-block btn-sm" aria-disabled="true">Entries closed</span></div>
-    </div></div>
-    <div class="distance-table-wrap">
-      <table class="distance-table">
-        <thead><tr><th scope="col"></th><th class="flagship-col"><span class="col-index">001</span>42.2km</th><th class=""><span class="col-index">002</span>22km</th><th class=""><span class="col-index">003</span>11km</th><th class=""><span class="col-index">004</span>5km</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Early bird entry fee</th><td class="">R350</td><td class="">R220</td><td class="">R180</td><td class="">R90</td></tr>
-          <tr><th scope="row">Grandmaster</th><td class="">R270</td><td class="">R180</td><td class="">R140</td><td class="">R90</td></tr>
-          <tr><th scope="row">Late (after 31 August 2026)</th><td class="late">R370</td><td class="late">R250</td><td class="late">R200</td><td class="late">R90</td></tr>
-          <tr><th scope="row">Start time</th><td>06:00</td><td>06:15</td><td>06:15</td><td>06:30</td></tr>
-          <tr><th scope="row">Minimum age</th><td>20+</td><td>16+</td><td>14+</td><td>9+</td></tr>
-          <tr><th scope="row">Cut-off</th><td>6h30</td><td>4h00</td><td>2h00</td><td>2h00</td></tr>
-        </tbody>
+    <div class="collection-table-wrap" data-reveal>
+      <table class="collection-table results-table">
+        <thead><tr><th>Year</th><th>Race</th><th>Results</th></tr></thead>
+        <tbody><tr class="race-day">
+      <td>2026</td>
+      <td>Midvaal MadMac 2026</td>
+      <td><a class="link" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=6001" target="_blank" rel="noopener">View results &rarr;</a></td>
+    </tr><tr class="">
+      <td>2025</td>
+      <td>Midvaal MadMac 2025</td>
+      <td><a class="link" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=5388" target="_blank" rel="noopener">View results &rarr;</a></td>
+    </tr><tr class="">
+      <td>2024</td>
+      <td>Midvaal MadMac 2024</td>
+      <td><a class="link" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=4852" target="_blank" rel="noopener">View results &rarr;</a></td>
+    </tr><tr class="">
+      <td>2023</td>
+      <td>Midvaal MadMac 2023</td>
+      <td><a class="link" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=4117" target="_blank" rel="noopener">View results &rarr;</a></td>
+    </tr></tbody>
       </table>
     </div>
 
     <div class="cta-strip">
-      <div class="phase-open"><div class="cta-strip-actions"><a class="btn btn-primary" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="after-pricing">Enter now</a><a class="btn btn-secondary" href="#stay-updated" data-list-cta="after-pricing">Stay in touch</a></div></div><div class="phase-closed"><div class="cta-strip-actions"><a class="btn btn-primary" href="#stay-updated" data-list-cta="after-pricing">Stay in touch</a></div></div>
+      <p class="cta-strip-heading">Hear when 2027 entries open.</p>
+      <div class="cta-strip-actions"><a class="btn btn-primary" href="#stay-updated" data-list-cta="results">Stay in touch</a></div>
     </div>
   </div>
 </section>
@@ -878,7 +770,7 @@
         <h3>Timing &amp; results</h3>
         <p>Mat-to-mat chip timing with checkpoints on route. Distance boards every 1km., waterpoints
         roughly every 3km. Results published on
-        <a class="link" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=5388" target="_blank" rel="noopener">finishtime.co.za</a>.</p>
+        <a class="link" href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=6001" target="_blank" rel="noopener">finishtime.co.za</a>.</p>
       </div>
       <div class="perk-card">
         <h3>Free race shirts</h3>
@@ -970,34 +862,22 @@
     <p class="eyebrow">FAQ</p>
     <h2>Questions people actually ask</h2>
     <div class="faq-list mt-6" data-reveal><details class="faq-item">
+      <summary>Where can I find my 2026 result?</summary>
+      <p>Full results for every distance are on finishtime.co.za. The results section above links straight to the 2026 race, and to 2025, 2024 and 2023 as well.</p>
+    </details><details class="faq-item">
+      <summary>When do 2027 entries open?</summary>
+      <p>The club has not announced 2027 dates or prices yet. Join the mailing list below and you will get them, along with route news, as soon as they are confirmed.</p>
+    </details><details class="faq-item">
       <summary>Is MadMac an approved Comrades and Two Oceans qualifier?</summary>
       <p>MadMac is positioned and marketed as a single-lap Comrades and Totalsports Two Oceans Marathon qualifier, and has carried that status in previous editions. Written confirmation of the 2027 approved-qualifier listing for both races is being obtained — check back closer to race day if this matters to your entry decision.</p>
     </details><details class="faq-item">
       <summary>What time do I need to run to qualify?</summary>
       <p>Under 4:59:59 for the 42.2km, for both the Comrades centenary and Two Oceans 2027. That's the qualifying standard, not MadMac's own 6h30 cut-off — see the qualifier panel above.</p>
-    </details><details class="faq-item">
-      <summary>Can I enter on race day?</summary>
-      <p>No. Manual entries are available at the collection points listed above, subject to availability, but there is no entry on race day itself.</p>
-    </details><details class="faq-item">
-      <summary>Can I cancel my entry?</summary>
-      <p>No, cancellations aren't allowed. This is a Race Pass entry-terms policy, not a MadMac-specific one — see Race Pass's own terms for the full detail.</p>
-    </details><details class="faq-item">
-      <summary>Can I substitute my entry to another person?</summary>
-      <p>Yes, substitutions are allowed up to 20 days before race day, from your Race Pass &quot;My races&quot; page.</p>
-    </details><details class="faq-item">
-      <summary>Can I transfer my entry to another race?</summary>
-      <p>Yes, transfers to another race are allowed up to 20 days before race day, from your Race Pass &quot;My races&quot; page.</p>
-    </details><details class="faq-item">
-      <summary>Where do I collect my race number?</summary>
-      <p>Five points across Johannesburg and the Vaal in race week, plus the venue itself — see the number collection table above. A Postnet-to-Postnet delivery option is also available through Race Pass.</p>
-    </details><details class="faq-item">
-      <summary>How will I find my race number?</summary>
-      <p>Race Pass publishes a race-number lookup closer to race day, linked from your entry confirmation.</p>
     </details></div>
 
     <div class="cta-strip">
       <div class="phase-open"><p class="cta-strip-heading">Enter this year, or join the mailing list for next year.</p></div><div class="phase-closed"><p class="cta-strip-heading">Online entries for this year have closed.</p></div>
-      <div class="phase-open"><div class="cta-strip-actions"><a class="btn btn-primary" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="faq">Enter now</a><a class="btn btn-secondary" href="#stay-updated" data-list-cta="faq">Stay in touch</a></div></div><div class="phase-closed"><div class="cta-strip-actions"><a class="btn btn-primary" href="#stay-updated" data-list-cta="faq">Stay in touch</a><a class="btn btn-ghost" href="#practical">Manual entry options</a></div></div>
+      <div class="phase-open"><div class="cta-strip-actions"><a class="btn btn-primary" href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener" data-cta="faq">Enter now</a><a class="btn btn-secondary" href="#stay-updated" data-list-cta="faq">Stay in touch</a></div></div><div class="phase-closed"><div class="cta-strip-actions"><a class="btn btn-primary" href="#stay-updated" data-list-cta="faq">Stay in touch</a><a class="btn btn-ghost" href="#results">2026 results</a></div></div>
     </div>
   </div>
 </section>
@@ -1087,7 +967,7 @@
         <h3>Results &amp; entries</h3>
         <ul>
           <li><div class="phase-open"><a href="https://racepass.com/za/races/midvaal-madmac" target="_blank" rel="noopener">Enter on Race Pass</a></div><div class="phase-closed"><span class="footer-muted">Online entries closed</span></div></li>
-          <li><a href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=5388" target="_blank" rel="noopener">2025 results (finishtime.co.za)</a></li>
+          <li><a href="https://results.finishtime.co.za/results.aspx?CId=35&amp;RId=6001" target="_blank" rel="noopener">2026 results (finishtime.co.za)</a></li>
           <!-- index.html# prefix, not a bare #: this footer renders on
                privacy.html too, where a bare fragment goes nowhere. -->
           <li><a href="index.html#stay-updated" data-list-cta="footer">Stay in touch</a></li>
