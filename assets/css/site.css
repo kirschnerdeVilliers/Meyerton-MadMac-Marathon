@@ -1090,6 +1090,10 @@ table.prize-table tbody tr:last-child td { border-bottom: none; }
 .carousel-nav { display: flex; gap: var(--space-3); margin-top: var(--space-4); justify-content: flex-end; }
 
 /* ---------- FAQ ---------- */
+/* The FAQ is a single narrow column, so it sits centred on the page with a
+   centred heading; the answers stay left-aligned, which is what reads well. */
+.faq-head { text-align: center; }
+.faq-head h2 { text-wrap: balance; }
 .faq-list { display: grid; gap: var(--space-3); }
 .faq-item {
   border: 1px solid var(--border); border-radius: var(--radius-m);

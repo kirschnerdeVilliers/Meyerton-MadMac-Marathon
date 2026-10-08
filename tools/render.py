@@ -539,7 +539,7 @@ def hero_results_card():
     """Replaces the closed-entries card, where the race dates sat, once the
     results are in. Reuses the countdown card's frame so the hero keeps its
     shape; only the contents change."""
-    past = "".join(
+    past = " &middot; ".join(
         f'<a class="link" href="{esc(e["url"])}" target="_blank" rel="noopener">{e["year"]}</a>'
         for e in RESULTS[1:]
     )
@@ -1222,9 +1222,11 @@ def build_faq():
         for item in faqs
     )
     return f"""<section class="section-pad" id="faq">
-  <div class="container container--prose">
-    <p class="eyebrow">FAQ</p>
-    <h2>Questions people actually ask</h2>
+  <div class="container container--narrow">
+    <div class="faq-head">
+      <p class="eyebrow">FAQ</p>
+      <h2>Questions people actually ask</h2>
+    </div>
     <div class="faq-list mt-6" data-reveal>{items}</div>
 
     <div class="cta-strip">
@@ -1419,7 +1421,7 @@ def build_results():
       <div class="cta-strip-actions">{list_cta(ml("ctaButtonLabel"), "results", "btn btn-primary")}</div>
     </div>"""
 
-    return f"""<section class="section-pad" id="results">
+    return f"""<section class="section-pad{' section-invert' if RACE_DONE else ''}" id="results">
   <div class="container">
     <p class="eyebrow">Results</p>
     <h2>{heading}</h2>
@@ -2051,14 +2053,13 @@ def build_404_page():
     <p class="eyebrow">Error 404</p>
     <h1>That page isn't here</h1>
     <p class="lede mt-6">
-      The link you followed is out of date or has a typo in it. The race page below has
-      everything — dates, distances, prices, the route and how to enter.
+      The link you followed is out of date or has a typo in it. {('The race page has the results, the route and how to hear about the next edition.' if RACE_DONE else 'The race page below has everything — dates, distances, prices, the route and how to enter.')}
     </p>
 
     <div class="cta-strip mt-6">
       <div class="cta-strip-actions">
         <a class="btn btn-primary" href="/">Go to the race page</a>
-        <a class="btn btn-secondary" href="{entry_url}" target="_blank" rel="noopener">Enter on Race Pass</a>
+        {results_cta("btn btn-secondary") if RACE_DONE else f'<a class="btn btn-secondary" href="{entry_url}" target="_blank" rel="noopener">Enter on Race Pass</a>'}
       </div>
     </div>
 
@@ -2066,7 +2067,7 @@ def build_404_page():
     <ul>
       <li>{('<a class="link" href="/#results">Race results</a>' if RACE_DONE else '<a class="link" href="/#distances">Distances, prices and entry</a>')}</li>
       <li><a class="link" href="/#route">The route and elevation profiles</a></li>
-      <li><a class="link" href="/#practical">Race-day practical details</a></li>
+      {'<li><a class="link" href="/#stay-updated">Hear when 2027 entries open</a></li>' if RACE_DONE else '<li><a class="link" href="/#practical">Race-day practical details</a></li>'}
       <li><a class="link" href="/#faq">Frequently asked questions</a></li>
       <li><a class="link" href="/privacy.html">Privacy Policy</a></li>
     </ul>
@@ -2369,7 +2370,7 @@ def main():
         build_prizes(),
         build_proof(),
         build_what_you_get(),
-        build_practical(),
+        *([] if RACE_DONE else [build_practical()]),
         *([build_results()] if RESULTS and not RACE_DONE else []),
         build_faq(),
         # #stay-updated is a primary action now, so it comes before the
