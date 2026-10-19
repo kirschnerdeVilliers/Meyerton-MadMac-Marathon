@@ -186,10 +186,20 @@ export default {
       // signup fails with a generic error. updateEnabled:true means a
       // returning address gets them written too, which is right — they
       // have just re-consented under the current wording.
+      //
+      // emailBlacklisted:false is the resubscribe path. Brevo does not
+      // clear an existing blacklist flag on a normal contact update unless
+      // the request says so explicitly — without this line, someone who
+      // unsubscribed and then fills in the form again would still be
+      // silently blacklisted and never actually hear from us again, which
+      // contradicts "resubscribe by signing up again" and leaves them
+      // stuck with no way back in. Safe to send on every request: for a
+      // contact who was never blacklisted this is a no-op.
       body: JSON.stringify({
         email,
         listIds: [LIST_ID],
         updateEnabled: true,
+        emailBlacklisted: false,
         attributes: {
           OPTIN_SCOPE: "race-news",
           OPTIN_DATE: new Date().toISOString().slice(0, 10),

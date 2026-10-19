@@ -27,6 +27,25 @@ without it signed up under the old "one reminder before entries close" wording
 and have **not** consented to next-year marketing — segment on it before sending
 any 2027 campaign. See the privacy notice, which promises exactly this.
 
+## Unsubscribe and resubscribe
+
+Every request to `POST /v3/contacts` includes `emailBlacklisted: false`. Brevo
+does not clear an existing blacklist flag on a normal contact update unless the
+request says so explicitly, so without this a visitor who unsubscribed and then
+filled in the form again would stay silently blacklisted forever, with no way
+back onto the list. This line is what makes "sign up again" the resubscribe
+action. It is a no-op for a contact who was never blacklisted.
+
+This only works end to end if unsubscribe itself is wired correctly on the
+Brevo side: any automation or campaign sent to this list must go out through
+Brevo's **Marketing** email pipeline (Automation "Send an email" / Campaigns),
+not the **Transactional** email API. Transactional and Marketing are separate
+subscription pools in Brevo — a contact can unsubscribe from a transactional
+send without that touching their Marketing blacklist status at all, which
+silently breaks the "we stop emailing you" promise in the privacy notice.
+Check any automation's email step is a Marketing send, not Transactional,
+before relying on this.
+
 ## Deploy (run these yourself — the API key is a secret, never handled by Claude)
 
 From this directory:

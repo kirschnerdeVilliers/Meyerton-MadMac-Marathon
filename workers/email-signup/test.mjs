@@ -12,9 +12,11 @@ import worker from './worker.js';
 
 // Stub Brevo so no real request leaves this machine.
 let brevoCalls = 0;
-globalThis.fetch = async (url) => {
+let lastBrevoBody = null;
+globalThis.fetch = async (url, init) => {
   if (String(url).includes('api.brevo.com')) {
     brevoCalls++;
+    lastBrevoBody = init && init.body ? JSON.parse(init.body) : null;
     return new Response(null, { status: 201 });
   }
   throw new Error('unexpected outbound fetch: ' + url);
@@ -90,6 +92,15 @@ results.push(await run('garbage _elapsed -> treated as absent, allowed',
   const d = await res.json();
   const ok = d.success === true; // silent discard
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${'Turnstile on, no token -> discarded'.padEnd(46)} success=${d.success}`);
+  results.push(ok);
+}
+
+// resubscribe path: every genuine signup must explicitly clear any prior
+// blacklist, or someone who unsubscribed and signs up again stays stuck
+{
+  await worker.fetch(post({ email: 'z@example.com', _elapsed: '9000' }), env);
+  const ok = lastBrevoBody && lastBrevoBody.emailBlacklisted === false;
+  console.log(`${ok ? 'PASS' : 'FAIL'}  ${'signup clears emailBlacklisted'.padEnd(46)} emailBlacklisted=${lastBrevoBody && lastBrevoBody.emailBlacklisted}`);
   results.push(ok);
 }
 
